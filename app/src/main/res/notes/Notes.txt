@@ -2,3 +2,5 @@ Compose is a native UI toolkit , it is not part of the framework it is a library
 It is declarative unlike the views which is imperative . Declarative means the programmers does not step by step
 define how the UI should work , it is declared once in the function @Composable functiom how the UI should
 react on getting some data.
+
+Composable layouts - Box,Row,Column,LazyGrid
