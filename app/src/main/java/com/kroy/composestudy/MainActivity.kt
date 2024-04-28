@@ -1,15 +1,22 @@
 package com.kroy.composestudy
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,11 +34,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
-            Text(
-                text = "Hello Kroy!",
-                modifier = Modifier
-            )
+            PreviewFunction()
 //            ComposeStudyTheme {
 //                // A surface container using the 'background' color from the theme
 //                Surface(
@@ -61,28 +64,65 @@ fun GreetingPreview() {
     }
 
 }
-@Preview(showBackground = true, widthDp = 300 , heightDp = 300)
+@Preview(showBackground = true)
 @Composable
 fun PreviewFunction(){
-        Text(text = "Hello world",
-            fontFamily = FontFamily.Cursive,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.ExtraBold,
-            color = Color.Red,
-            textAlign = TextAlign.Center
+    /** Text */
+//        Text(text = "Hello world",
+//            fontFamily = FontFamily.Cursive,
+//            fontSize = 20.sp,
+//            fontWeight = FontWeight.ExtraBold,
+//            color = Color.Red,
+//            textAlign = TextAlign.Center
+//        )
+    /** Image */
+//    Image(
+//        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+//        contentDescription ="Image",
+//        colorFilter = ColorFilter.tint(Color.Blue),
+//        alignment = Alignment.TopCenter,
+//        alpha = 0.3f,
+//        contentScale = ContentScale.Inside
+//
+//
+//        )
+      /**Button*/
+//    Button(onClick = {},
+//        colors = ButtonDefaults.buttonColors(
+//            containerColor = Color.Red,
+//            contentColor = Color.Black
+//
+//        )
+//
+//        ) {
+//        Column {
+//            Text(text = "Button",
+//                textAlign = TextAlign.Center)
+//            Image(
+//                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+//                contentDescription ="Image",
+//                colorFilter = ColorFilter.tint(Color.Blue),
+//                alpha = 0.3f
+//            )
+//        }
+//
+//
+//
+//    }
+      val state = remember {
+          mutableStateOf("")
+      }
+    TextField(value = state.value,
+        onValueChange = {
+                        state.value =it
+        },
+        label = {
+            Text(text = "Enter String"
+            )
+        },
+        placeholder = {
+
+        }
+
         )
-    Image(
-        painter = painterResource(id = R.drawable.ic_launcher_foreground),
-        contentDescription ="Image",
-        colorFilter = ColorFilter.tint(Color.Blue),
-        alignment = Alignment.TopCenter,
-        alpha = 0.3f,
-        contentScale = ContentScale.Inside
-
-
-        )
-    Button(onClick = { /*TODO*/ }) {
-        Text(text = "Button")
-
-    }
 }
