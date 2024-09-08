@@ -4,3 +4,10 @@ define how the UI should work , it is declared once in the function @Composable 
 react on getting some data.
 
 Composable layouts - Box,Row,Column,LazyGrid
+
+Modifiers - it modifies the size , background , scroll  ,  how it is viewed
+
+ Column (
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+    ){  -- This act as ListView and not RecyclerView , it will render all the list items on the screen , even if not visible
