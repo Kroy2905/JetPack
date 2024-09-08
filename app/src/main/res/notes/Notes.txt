@@ -11,3 +11,23 @@ Modifiers - it modifies the size , background , scroll  ,  how it is viewed
         modifier = Modifier
             .verticalScroll(rememberScrollState())
     ){  -- This act as ListView and not RecyclerView , it will render all the list items on the screen , even if not visible
+
+
+When a composable is hit for the 1st time it undergoes "Initial composition" , when it is hit 2nd time it undergoes
+recomposition basically ,when the state  changes , UI recreates
+**** VERY IMPORTANT***
+The UI creation  inside a composable function  may or may not be sequentially  even though they might be written
+sequentially , it depends on the system completely e.g.-
+
+@Composable
+fun PreviewFunction(){
+    StartScreen()
+    MiddleScreen()
+    BottomScreen()
+}
+The above functions may or may not run sequentially
+
+--- If the state of a compose changes while being generated , it cancels its current state and goes for the updated state
+
+--- remember - saves the state of the data during recomposition but when the activity is again created it goes away
+    rememberSaveable - saves the data in the activity bundle and can retain even on screen rotation
