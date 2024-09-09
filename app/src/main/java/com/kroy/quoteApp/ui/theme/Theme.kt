@@ -1,4 +1,4 @@
-package com.kroy.composestudy.ui.theme
+package com.kroy.quoteApp.ui.theme
 
 import android.app.Activity
 import android.os.Build

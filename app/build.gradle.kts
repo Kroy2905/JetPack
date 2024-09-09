@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.kroy.composestudy"
+    namespace = "com.kroy.quoteApp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.kroy.composestudy"
+        applicationId = "com.kroy.quoteApp"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

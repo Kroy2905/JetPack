@@ -1,4 +1,4 @@
-package com.kroy.composestudy.ui.theme
+package com.kroy.quoteApp.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
