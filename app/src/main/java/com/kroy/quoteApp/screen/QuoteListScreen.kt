@@ -7,16 +7,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.kroy.quoteApp.models.quote
+import com.kroy.quoteApp.models.Quote
 
 
 @Composable
-fun QuoteListScreen(data:Array<quote>,onClick:()->Unit){
+fun QuoteListScreen(data:Array<Quote>, onClick:(quote:Quote)->Unit){
     Column(
                modifier = Modifier.padding(10.dp)
 
@@ -28,11 +26,6 @@ fun QuoteListScreen(data:Array<quote>,onClick:()->Unit){
                     .fillMaxWidth(1f),
                 style = MaterialTheme.typography.titleLarge
             )
-        QuoteList(data = data) {
-            onClick()
-        }
-
-
-
+        QuoteList(data = data,onClick)
     }
 }

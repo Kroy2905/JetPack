@@ -1,5 +1,6 @@
 package com.kroy.quoteApp.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,12 +27,23 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kroy.quoteApp.models.quote
+import com.kroy.quoteApp.DataManager
+import com.kroy.quoteApp.models.Quote
+
+@Preview
+@Composable
+fun previewQuoteDetails(){
+    QuoteDetails(quote = Quote("This is to test a big quote ","Kroy"))
+}
 
 @Composable
- fun QuoteDetails(quote: quote){
+ fun QuoteDetails(quote: Quote){
+     BackHandler {
+         DataManager.switchPages(null)
+     }
     Box(contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize(1f)
@@ -39,10 +51,10 @@ import com.kroy.quoteApp.models.quote
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFFCEF813),
-                        Color(0xFFC3F33C),
-                        Color(0xFF87A337),
-                        Color(0xFFD8EE09)
+                        Color(0xFFB1F5D2),
+                        Color(0xFF83E0B5),
+                        Color(0xFF55F7B3),
+                        Color(0xFFC5C7B3)
 
                     )
 
@@ -74,10 +86,10 @@ import com.kroy.quoteApp.models.quote
                 Text(
                     text = quote.quote,
                     lineHeight = 20.sp,
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Black,
-                    maxLines = 2
+                    maxLines = 5
 
 
                 )

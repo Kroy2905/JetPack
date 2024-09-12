@@ -2,18 +2,20 @@ package com.kroy.quoteApp
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.kroy.quoteApp.models.quote
+import com.kroy.quoteApp.models.Quote
+import com.kroy.quoteApp.screen.Pages
 import java.io.IOException
 
 object DataManager {
 
-    var data = emptyArray<quote>()
+    var data = emptyArray<Quote>()
     var isDataLoaded = mutableStateOf(false)
-    data class QuoteResponse(val quotes: Array<quote>) // A wrapper class for the root object
+    var currentPage = mutableStateOf(Pages.LISTING)
+    var currentQuote:Quote? = null
+    data class QuoteResponse(val quotes: Array<Quote>) // A wrapper class for the root object
 
 
 
@@ -26,26 +28,38 @@ object DataManager {
             inputStream.close()
             val jsonString = String(buffer, Charsets.UTF_8)
 
-            // Print raw JSON string for debugging
-            println("JSON String: $jsonString")
+            Log.d("DataManager", "JSON String: $jsonString")
 
-            // Parse the root object and then access the array of quotes
             val gson = Gson()
             val listType = object : TypeToken<QuoteResponse>() {}.type
             val quoteResponse: QuoteResponse = gson.fromJson(jsonString, listType)
 
-            // Assign the quotes array to the data variable
-            data = quoteResponse.quotes
+            // Check if the data is populated correctly
+            if (quoteResponse.quotes.isNotEmpty()) {
+                Log.d("DataManager", "Quotes Loaded Successfully: ${quoteResponse.quotes.size} quotes")
+            } else {
+                Log.d("DataManager", "Quotes Loaded but empty")
+            }
 
-            // Debugging: print the first quote to check
-//            println("First Quote: ${data.firstOrNull()?.text}")
-//            println("First Author: ${data.firstOrNull()?.author}")
-            println(data.contentToString())
+            data = quoteResponse.quotes
             isDataLoaded.value = true
 
         } catch (ex: IOException) {
-            ex.printStackTrace()
+            Log.e("DataManager", "Error loading quotes", ex)
+        } catch (jsonEx: Exception) {
+            Log.e("DataManager", "Error parsing JSON", jsonEx)
         }
+    }
+
+
+    fun switchPages(quote: Quote?){
+        if (currentPage.value == Pages.LISTING){
+            currentQuote = quote
+            currentPage.value = Pages.DETAIL
+        }
+
+        else
+            currentPage.value = Pages.LISTING
     }
 
 
