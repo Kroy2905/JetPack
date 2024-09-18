@@ -31,3 +31,19 @@ The above functions may or may not run sequentially
 
 --- remember - saves the state of the data during recomposition but when the activity is again created it goes away
     rememberSaveable - saves the data in the activity bundle and can retain even on screen rotation
+
+Side effects - if there is a variable which is changed outside the scope of a jetpack compose
+then it can cause side effects to another part of the compose
+
+LauchedEffect gets executed only once irrespective of the number of times the compose is being called
+ - it also launches a coroutine scope and becomes thread safe
+ - if the orientation changes and the  coroutine inside the
+ lauchedeffect is doing some job , it will throw , standaloneCoroutine exception
+ this is because when orientation changes the existing coroutine gets cancelled
+ and a new one is launcehd
+
+ coroutinescope , in case we want to use a coroutine inside a UI component like a button
+ most propbably inside the onClick
+
+ rememberUpdatedState is used when we want to run a  long running task and then use the updated
+ states value . THis is useful if we want to use an updated value post recomposition

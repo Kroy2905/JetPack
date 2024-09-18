@@ -26,8 +26,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +50,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kroy.composestudy.ui.theme.ComposeStudyTheme
+import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,11 +66,39 @@ class MainActivity : ComponentActivity() {
                    // ListViewItem(R.drawable.img,"Koustav","Android Developer")
                   //  PreviewFunction()
                   //  CircularImage()
-                    PreviewBlog()
+                //    PreviewBlog()
+                 //   Counter()
+                    App()
                 }
             }
         }
     }
+}
+
+@Composable
+fun DerivedAndProduced(){
+    val tableOf = remember {
+        mutableStateOf(5)
+    }
+    val index = produceState(initialValue = 1 ){
+        repeat(9){
+            delay(1000)
+            value+=1
+        }
+    }
+    val message = remember {
+        derivedStateOf {
+            "${tableOf.value} * ${index.value} = ${tableOf.value * index.value}"
+        }
+    }
+    Box(
+        contentAlignment =  Alignment.Center,
+        modifier =  Modifier.fillMaxSize(1f)
+        
+    ){
+        Text(text = message.value)
+    }
+
 }
 @Preview
 @Composable
@@ -235,4 +269,41 @@ fun PreviewFunction(){
 //        }
 //
 //        )
+}
+@Composable
+fun App(){
+    var counter = remember{ mutableStateOf( 0) }
+    DerivedAndProduced()
+    LaunchedEffect(key1 = Unit){
+//        delay(2000)
+//        counter.value  = 10
+
+    }
+    //Counter2(value = counter.value)
+}
+@Composable
+fun Counter2(value:Int){
+val state = rememberUpdatedState(newValue = value)
+    LaunchedEffect(key1 = Unit){ // whenever the key value changes , then only the block gets executed
+        delay (5000) // Long running task
+        Log.d("Button click","Button clicked counter increased ${state.value}")
+    }
+
+        Text(text = "Value  =  ${state.value}")
+
+}
+@Composable
+fun Counter(){
+    var count = remember {
+        mutableStateOf(0)
+    }
+    var key = count.value%3==0
+    LaunchedEffect(key1 = key){ // whenever the key value changes , then only the block gets executed
+
+        Log.d("Button click","Button clicked counter increased ${count.value}")
+    }
+    Button(onClick = { count.value++
+    }) {
+        Text(text = "Increment button")
+    }
 }

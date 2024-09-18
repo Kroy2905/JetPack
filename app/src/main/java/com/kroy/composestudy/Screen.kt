@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
@@ -20,7 +21,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -44,11 +48,27 @@ fun PreviewBlog(){
 //    BlogCategory(imgId = R.drawable.person,
 //        title = "Koustav",
 //        desc ="This is a sample text" )
-    LazyColumn(content ={
-        item { getDummyCategory().map {item->
-                BlogCategory(imgId = item.imgId, title = item.title, desc = item.subTitle )
-        } }
+
+
+    val categoryState = remember { mutableStateOf(emptyList<String>()) }
+    LaunchedEffect(key1 = Unit){
+        categoryState.value = getCategory()
+    }
+    LazyColumn(content = {
+        items(categoryState.value){item ->
+            Text(text = item )
+        }
     })
+
+
+
+
+
+//    LazyColumn(content ={
+//        item { getDummyCategory().map {item->
+//                BlogCategory(imgId = item.imgId, title = item.title, desc = item.subTitle )
+//        } }
+//    })
 }
 
 
@@ -111,6 +131,11 @@ data class Category (
     val title:String,
     val subTitle:String
 )
+
+fun getCategory():List<String>{
+    return  listOf("One","Two","Three")
+}
+
 fun getDummyCategory() : MutableList<Category>{
     val list = mutableStateListOf<Category>()
     list.add(Category(R.drawable.a, "Title a", "Subtitle a"))
