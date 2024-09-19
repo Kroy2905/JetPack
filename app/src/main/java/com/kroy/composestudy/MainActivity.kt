@@ -46,13 +46,31 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kroy.composestudy.api.TweetsyApi
+import com.kroy.composestudy.models.TweetListItem
 import com.kroy.composestudy.ui.theme.ComposeStudyTheme
 import com.kroy.tweetsy.R
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    lateinit var tweetList:List<TweetListItem>
+    @Inject
+    lateinit var tweetsyApi:TweetsyApi
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+//        GlobalScope.launch {
+//            var response = tweetsyApi.getCategory()
+//            Log.d("response body ->","${response.body()!!}")
+//        }
+
         setContent {
 
             ComposeStudyTheme {
