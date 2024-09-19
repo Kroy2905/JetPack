@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.kroy.composestudy"
+    namespace = "com.kroy.tweetsy"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.kroy.composestudy"
+        applicationId = "com.kroy.tweetsy"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
