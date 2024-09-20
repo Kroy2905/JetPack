@@ -48,6 +48,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kroy.composestudy.api.TweetsyApi
 import com.kroy.composestudy.models.TweetListItem
+import com.kroy.composestudy.screens.CategoryScreen
+import com.kroy.composestudy.screens.DetailScreen
 import com.kroy.composestudy.ui.theme.ComposeStudyTheme
 import com.kroy.tweetsy.R
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,10 +61,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    lateinit var tweetList:List<TweetListItem>
-    @Inject
-    lateinit var tweetsyApi:TweetsyApi
-    @OptIn(DelicateCoroutinesApi::class)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -84,7 +83,8 @@ class MainActivity : ComponentActivity() {
                   //  CircularImage()
                 //    PreviewBlog()
                  //   Counter()
-                    App()
+                  //  App()
+                    DetailScreen()
                 }
             }
         }
