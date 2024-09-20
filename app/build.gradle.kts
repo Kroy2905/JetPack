@@ -74,7 +74,12 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.48")
 
     // Navigation dependencies (Compose)
-    implementation("androidx.navigation:navigation-compose:2.8.0")
+    implementation("androidx.navigation:navigation-compose:2.8.1")
+    // Jetpack Navigation for Compose
+
+
+    // Hilt Jetpack Compose integration
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     // Coroutines dependencies
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")

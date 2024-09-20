@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,10 +22,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -37,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -46,6 +52,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.kroy.composestudy.api.TweetsyApi
 import com.kroy.composestudy.models.TweetListItem
 import com.kroy.composestudy.screens.CategoryScreen
@@ -62,34 +75,67 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        GlobalScope.launch {
-//            var response = tweetsyApi.getCategory()
-//            Log.d("response body ->","${response.body()!!}")
-//        }
+
+        // Set the status bar color
+        val window = this.window
+        window.statusBarColor = Color.Black.toArgb() // Change this color to whatever you want
+
+        // Ensure that status bar icons are light
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val insetsController = WindowInsetsControllerCompat(window, window.decorView)
+        insetsController.isAppearanceLightStatusBars = false // Set to true if you want dark icons
 
         setContent {
-
             ComposeStudyTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                   // ListViewItem(R.drawable.img,"Koustav","Android Developer")
-                  //  PreviewFunction()
-                  //  CircularImage()
-                //    PreviewBlog()
-                 //   Counter()
-                  //  App()
-                    DetailScreen()
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = {
+                                Text(text = "Tweetsy")
+                            },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color.Black,
+                                titleContentColor = Color.White
+                            )
+                        )
+                    }
+                ) { paddingValues ->
+                    Box(modifier = Modifier.padding(paddingValues)) {
+                        App2()
+                    }
                 }
             }
         }
     }
+
 }
+
+@Composable
+fun App2() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "category") {
+        composable(route = "category") {
+            CategoryScreen(){
+                navController.navigate("detail/$it")
+            } 
+        }
+
+        composable(route = "detail/{category}",
+            arguments = listOf(
+                navArgument(name = "category") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            DetailScreen()
+        }
+    }
+}
+
 
 @Composable
 fun DerivedAndProduced(){
