@@ -49,6 +49,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHost
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.kroy.composestudy.ui.theme.ComposeStudyTheme
 import kotlinx.coroutines.delay
 
@@ -56,23 +63,97 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            App2() // for navigation
 
-            ComposeStudyTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                   // ListViewItem(R.drawable.img,"Koustav","Android Developer")
-                  //  PreviewFunction()
-                  //  CircularImage()
-                //    PreviewBlog()
-                 //   Counter()
-                    App()
-                }
-            }
+//            ComposeStudyTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colorScheme.background
+//                ) {
+//                   // ListViewItem(R.drawable.img,"Koustav","Android Developer")
+//                  //  PreviewFunction()
+//                  //  CircularImage()
+//                //    PreviewBlog()
+//                 //   Counter()
+//                    App()
+//                }
+//            }
         }
     }
+}
+
+@Composable
+fun App2() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "registration") {
+        composable(route = "Login") {
+            LoginScreen()
+        }
+       // composable(route = "main/{email}/{}/{}", arguments = listOf(
+        composable(route = "main/{email}", arguments = listOf(
+            navArgument("email"){
+                type = NavType.StringType
+            }
+        )) {
+           val email =  it.arguments?.getString("email")
+
+
+            MainScreen(email!!)
+
+        }
+        composable(route = "registration") {
+            RegsiterScreen{email->
+                navController.navigate("main/$email")
+            }
+        }
+
+    }
+}
+
+
+
+@Composable
+fun RegsiterScreen(onclick:(emal:String)->Unit){
+    Text(
+        text = "Register",
+        fontSize = 108.sp,
+        fontStyle =FontStyle.Normal,
+        maxLines = 1,
+        modifier = Modifier
+            .clickable {
+                onclick("kroy@gmail.com")
+            }
+
+
+
+    )
+}
+
+@Composable
+fun LoginScreen(){
+    Text(
+        text = "Login",
+        fontSize = 108.sp,
+        fontStyle =FontStyle.Normal,
+        maxLines = 1
+
+
+
+    )
+}
+
+@Composable
+fun MainScreen(emal: String?){
+    Text(
+        text = "Main - $emal",
+        fontSize = 108.sp,
+        fontStyle =FontStyle.Normal,
+        maxLines = 10
+
+
+
+    )
 }
 
 @Composable

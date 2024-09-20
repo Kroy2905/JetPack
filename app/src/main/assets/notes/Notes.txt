@@ -47,3 +47,86 @@ LauchedEffect gets executed only once irrespective of the number of times the co
 
  rememberUpdatedState is used when we want to run a  long running task and then use the updated
  states value . THis is useful if we want to use an updated value post recomposition
+
+ Navigation :
+ NavHost - the starting point of the navigation
+ NavGraph - The path desginer represented as graph , which contains the allowed paths
+ of navigation. It is a collection of nodes
+ NavController - Handles the interaction between a navhost and navgraph
+
+ We always define a navcontroller first because it manages the navhost and navgraph interaction
+ Values are passed acress screens using NavArguments
+
+ fun App2() {
+     val navController = rememberNavController()
+     NavHost(navController = navController, startDestination = "registration") {
+         composable(route = "Login") {
+             LoginScreen()
+         }
+        // composable(route = "main/{email}/{}/{}", arguments = listOf(
+         composable(route = "main/{email}", arguments = listOf(
+             navArgument("email"){
+                 type = NavType.StringType
+             }
+         )) {
+            val email =  it.arguments?.getString("email")
+
+
+             MainScreen(email!!)
+
+         }
+         composable(route = "registration") {
+             RegsiterScreen{email->
+                 navController.navigate("main/$email")
+             }
+         }
+
+     }
+ }
+
+
+
+ @Composable
+ fun RegsiterScreen(onclick:(emal:String)->Unit){
+     Text(
+         text = "Register",
+         fontSize = 108.sp,
+         fontStyle =FontStyle.Normal,
+         maxLines = 1,
+         modifier = Modifier
+             .clickable {
+                 onclick("kroy@gmail.com")
+             }
+
+
+
+     )
+ }
+
+ @Composable
+ fun LoginScreen(){
+     Text(
+         text = "Login",
+         fontSize = 108.sp,
+         fontStyle =FontStyle.Normal,
+         maxLines = 1
+
+
+
+     )
+ }
+
+ @Composable
+ fun MainScreen(emal: String?){
+     Text(
+         text = "Main - $emal",
+         fontSize = 108.sp,
+         fontStyle =FontStyle.Normal,
+         maxLines = 10
+
+
+
+     )
+ }
+
+
