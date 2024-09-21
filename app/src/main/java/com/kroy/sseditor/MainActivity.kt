@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -59,13 +60,14 @@ import com.kroy.sseditor.screens.CategoryScreen
 import com.kroy.sseditor.screens.ClientScreen
 import com.kroy.sseditor.screens.DetailScreen
 import com.kroy.sseditor.screens.LoginScreen
+import com.kroy.sseditor.screens.SevenDayScreen
 import com.kroy.sseditor.ui.theme.SSEditorTheme
 
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity :FragmentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,11 +93,13 @@ class MainActivity : ComponentActivity() {
 //                            // Handle login action
 //                        }
 
+                        SevenDayScreen()
+
                         // Show the AddClientScreen in your navigation
-                        AddClientScreen(onClientAdded = { name, base64Image ->
-                            //   clients.add(Client(name, base64Image))
-                            // Navigate back or update UI as needed
-                        }, context = LocalContext.current)
+//                        AddClientScreen(onClientAdded = { name, base64Image ->
+//                            //   clients.add(Client(name, base64Image))
+//                            // Navigate back or update UI as needed
+//                        }, context = LocalContext.current)
 
 //                        val clients = remember {
 //                            listOf(
