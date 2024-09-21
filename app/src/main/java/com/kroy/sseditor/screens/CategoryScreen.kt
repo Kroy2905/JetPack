@@ -1,5 +1,6 @@
 package com.kroy.sseditor.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kroy.ssediotor.R
+import com.kroy.sseditor.ui.theme.Primary
 import com.kroy.sseditor.viewmodels.CategoryViewmodel
 
 
@@ -59,10 +61,7 @@ fun CategoryItem(category: String,onClick : (category:String)->Unit) {
             .clickable {
                 onClick(category)
             }
-            .paint(
-                painter = painterResource(id = R.drawable.bg),
-                contentScale = ContentScale.Crop
-            )
+            .background(Primary)
             .border(1.dp, Color(0xFFEEEEEE)),
         contentAlignment = Alignment.BottomCenter
 

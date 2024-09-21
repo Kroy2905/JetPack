@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "composeStudy"
+rootProject.name = "sseditor"
 include(":app")
  

@@ -54,6 +54,7 @@ import androidx.navigation.navArgument
 import com.kroy.ssediotor.R
 import com.kroy.sseditor.screens.CategoryScreen
 import com.kroy.sseditor.screens.DetailScreen
+import com.kroy.sseditor.screens.LoginScreen
 import com.kroy.sseditor.ui.theme.SSEditorTheme
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -80,20 +81,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             SSEditorTheme {
                 Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            title = {
-                                Text(text = "SSEditor")
-                            },
-                            colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = Color.Black,
-                                titleContentColor = Color.White
-                            )
-                        )
-                    }
                 ) { paddingValues ->
                     Box(modifier = Modifier.padding(paddingValues)) {
-                        App2()
+                        LoginScreen { userId, password ->
+                            // Handle login action
+                        }
                     }
                 }
             }
