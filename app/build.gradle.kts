@@ -96,5 +96,6 @@ dependencies {
     // OkHttp (optional, but commonly used with Retrofit)
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
+    implementation("io.coil-kt:coil-compose:2.2.1")
 
 }

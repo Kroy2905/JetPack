@@ -46,13 +46,16 @@ private val LightColorScheme = lightColorScheme(
 
 // Load your custom font
 val CustomFontFamily = FontFamily(
-    Font(R.font.rubit_wght) // Replace with your custom font file
+    Font(R.font.rubit_wght,FontWeight.Normal),
+
+    // Replace with your custom font file,
+
 )
 
 val CustomTypography = Typography(
     titleLarge = androidx.compose.ui.text.TextStyle(
         fontFamily = CustomFontFamily,
-        fontWeight = FontWeight.ExtraBold,
+        fontWeight = FontWeight.Normal,
         fontSize = 30.sp
     ),
     titleMedium = androidx.compose.ui.text.TextStyle(
@@ -62,14 +65,47 @@ val CustomTypography = Typography(
     ),
     bodyLarge = androidx.compose.ui.text.TextStyle(
         fontFamily = CustomFontFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 16.sp
     ),
     bodyMedium = androidx.compose.ui.text.TextStyle(
         fontFamily = CustomFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
-    )
+    ) ,  // Add a bold body text style
+
+
+)
+
+val CustomBoldFontFamily = FontFamily(
+    Font(R.font.rubik_bold,FontWeight.Normal),
+
+    // Replace with your custom font file,
+
+)
+
+val CustomBoldTypography = Typography(
+    titleLarge = androidx.compose.ui.text.TextStyle(
+        fontFamily = CustomBoldFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 30.sp
+    ),
+    titleMedium = androidx.compose.ui.text.TextStyle(
+        fontFamily = CustomBoldFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp
+    ),
+    bodyLarge = androidx.compose.ui.text.TextStyle(
+        fontFamily = CustomBoldFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp
+    ),
+    bodyMedium = androidx.compose.ui.text.TextStyle(
+        fontFamily = CustomBoldFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp
+    ) ,  // Add a bold body text style
+
 
 )
 

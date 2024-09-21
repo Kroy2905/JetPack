@@ -11,4 +11,6 @@ object Dimens {
     val TextSizeSmall = 12.sp
     val TextSizeMedium = 16.sp
     val TextSizeLarge = 20.sp
+    val ButtonText = 18.sp
+    val InputText = 30.sp
 }

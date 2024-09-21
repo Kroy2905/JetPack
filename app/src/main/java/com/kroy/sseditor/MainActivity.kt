@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -53,6 +54,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.kroy.ssediotor.R
 import com.kroy.sseditor.models.Client
+import com.kroy.sseditor.screens.AddClientScreen
 import com.kroy.sseditor.screens.CategoryScreen
 import com.kroy.sseditor.screens.ClientScreen
 import com.kroy.sseditor.screens.DetailScreen
@@ -85,9 +87,15 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                 ) { paddingValues ->
                     Box(modifier = Modifier.padding(paddingValues)) {
-                        LoginScreen { userId, password ->
-                            // Handle login action
-                        }
+//                        LoginScreen { userId, password ->
+//                            // Handle login action
+//                        }
+
+                        // Show the AddClientScreen in your navigation
+                        AddClientScreen(onClientAdded = { name, base64Image ->
+                            //   clients.add(Client(name, base64Image))
+                            // Navigate back or update UI as needed
+                        }, context = LocalContext.current)
 
 //                        val clients = remember {
 //                            listOf(

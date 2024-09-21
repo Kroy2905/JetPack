@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kroy.ssediotor.R
+import com.kroy.sseditor.ui.theme.CustomBoldTypography
 import com.kroy.sseditor.ui.theme.CustomFontFamily
 import com.kroy.sseditor.ui.theme.CustomTypography
 import com.kroy.sseditor.ui.theme.Primary
@@ -93,7 +94,7 @@ fun LoginScreen(
                 Text(
                     text = "Login",
                     fontWeight = FontWeight.ExtraBold,
-                    style = CustomTypography.titleLarge, // Use custom typography
+                    style = CustomBoldTypography.titleLarge, // Use custom typography
                     color = Primary,
                     fontSize = 34.sp,
 
@@ -102,6 +103,7 @@ fun LoginScreen(
                 // User ID Text Field
                 OutlinedTextField(
                     value = userId,
+
                     onValueChange = { userId = it },
                     label = { Text(text = "Username", color = Primary) },
                     modifier = Modifier.fillMaxWidth(),
