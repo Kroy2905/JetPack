@@ -1,8 +1,8 @@
-package com.kroy.composestudy.viewmodels
+package com.kroy.sseditor.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kroy.composestudy.repository.TweetRepository
+import com.kroy.sseditor.repository.TweetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

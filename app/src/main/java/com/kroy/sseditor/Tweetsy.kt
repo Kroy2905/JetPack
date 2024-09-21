@@ -1,4 +1,4 @@
-package com.kroy.composestudy
+package com.kroy.sseditor
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

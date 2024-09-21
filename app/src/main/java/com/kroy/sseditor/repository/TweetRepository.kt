@@ -1,7 +1,7 @@
-package com.kroy.composestudy.repository
+package com.kroy.sseditor.repository
 
-import com.kroy.composestudy.api.TweetsyApi
-import com.kroy.composestudy.models.TweetListItem
+import com.kroy.sseditor.api.TweetsyApi
+import com.kroy.sseditor.models.TweetListItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject

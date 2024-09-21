@@ -1,14 +1,12 @@
-package com.kroy.composestudy.di
+package com.kroy.sseditor.di
 
-import com.google.gson.Gson
-import com.kroy.composestudy.api.TweetsyApi
+import com.kroy.sseditor.api.TweetsyApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
 

@@ -1,11 +1,10 @@
-package com.kroy.composestudy
+package com.kroy.sseditor
 
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,27 +12,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -59,18 +51,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.kroy.composestudy.api.TweetsyApi
-import com.kroy.composestudy.models.TweetListItem
-import com.kroy.composestudy.screens.CategoryScreen
-import com.kroy.composestudy.screens.DetailScreen
-import com.kroy.composestudy.ui.theme.ComposeStudyTheme
-import com.kroy.tweetsy.R
+import com.kroy.ssediotor.R
+import com.kroy.sseditor.screens.CategoryScreen
+import com.kroy.sseditor.screens.DetailScreen
+import com.kroy.sseditor.ui.theme.SSEditorTheme
+
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -78,6 +65,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
 
         // Set the status bar color
@@ -90,12 +78,12 @@ class MainActivity : ComponentActivity() {
         insetsController.isAppearanceLightStatusBars = false // Set to true if you want dark icons
 
         setContent {
-            ComposeStudyTheme {
+            SSEditorTheme {
                 Scaffold(
                     topBar = {
                         TopAppBar(
                             title = {
-                                Text(text = "Tweetsy")
+                                Text(text = "SSEditor")
                             },
                             colors = TopAppBarDefaults.topAppBarColors(
                                 containerColor = Color.Black,

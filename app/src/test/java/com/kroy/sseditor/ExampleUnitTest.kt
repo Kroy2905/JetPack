@@ -1,4 +1,4 @@
-package com.kroy.composestudy
+package com.kroy.sseditor
 
 import org.junit.Test
 

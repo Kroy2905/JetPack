@@ -1,4 +1,4 @@
-package com.kroy.composestudy.models
+package com.kroy.sseditor.models
 
 data class TweetListItem(
     val category:String,

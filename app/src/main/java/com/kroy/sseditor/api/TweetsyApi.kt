@@ -1,6 +1,6 @@
-package com.kroy.composestudy.api
+package com.kroy.sseditor.api
 
-import com.kroy.composestudy.models.TweetListItem
+import com.kroy.sseditor.models.TweetListItem
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header

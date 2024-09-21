@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.kroy.tweetsy"
+    namespace = "com.kroy.ssediotor"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.kroy.tweetsy"
+        applicationId = "com.kroy.sseditor"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

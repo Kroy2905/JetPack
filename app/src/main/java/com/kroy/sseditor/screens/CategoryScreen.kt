@@ -1,4 +1,4 @@
-package com.kroy.composestudy.screens
+package com.kroy.sseditor.screens
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,16 +22,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.kroy.composestudy.viewmodels.CategoryViewmodel
-import com.kroy.tweetsy.R
+import com.kroy.ssediotor.R
+import com.kroy.sseditor.viewmodels.CategoryViewmodel
+
 
 
 

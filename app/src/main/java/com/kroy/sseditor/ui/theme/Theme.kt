@@ -1,4 +1,4 @@
-package com.kroy.composestudy.ui.theme
+package com.kroy.sseditor.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -38,7 +38,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun ComposeStudyTheme(
+fun SSEditorTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,

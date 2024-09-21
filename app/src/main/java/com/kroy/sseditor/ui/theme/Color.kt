@@ -1,4 +1,4 @@
-package com.kroy.composestudy.ui.theme
+package com.kroy.sseditor.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

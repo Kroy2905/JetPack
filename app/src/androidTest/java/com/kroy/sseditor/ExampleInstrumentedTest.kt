@@ -1,4 +1,4 @@
-package com.kroy.composestudy
+package com.kroy.sseditor
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
