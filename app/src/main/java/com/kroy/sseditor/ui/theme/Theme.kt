@@ -52,7 +52,7 @@ val CustomFontFamily = FontFamily(
 val CustomTypography = Typography(
     titleLarge = androidx.compose.ui.text.TextStyle(
         fontFamily = CustomFontFamily,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.ExtraBold,
         fontSize = 30.sp
     ),
     titleMedium = androidx.compose.ui.text.TextStyle(
