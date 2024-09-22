@@ -132,11 +132,17 @@ fun App2() {
 
         composable(route = "login") {
             LoginScreen(){
+                Log.d("passing id->","$it")
                 navController.navigate("client/$it")
             }
         }
-        composable(route = "client/{userId}") {
-            ClientScreen(clients = emptyList(), onAddClient = {  }, onClientClick = {} )
+        composable(route = "client/{userId}",
+            arguments = listOf(
+                navArgument(name = "userId") {
+                    type = NavType.IntType
+                }
+            )) {
+            ClientScreen( onAddClient = {  }, onClientClick = {} )
         }
         composable(route = "category") {
             CategoryScreen(){

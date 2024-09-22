@@ -1,8 +1,7 @@
 package com.kroy.sseditor.api
 
+import com.kroy.sseditor.models.ApiResponse
 import com.kroy.sseditor.models.TweetListItem
-import com.kroy.sseditor.models.allClientResponse
-import com.kroy.sseditor.models.userLoginResponse
 import com.kroy.sseditor.models.userloginBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -23,9 +22,11 @@ interface ApiService {
     @POST("login")    // API to send log details to server
     suspend fun  loginUser(@Body driverLogsBody: userloginBody,
 
-    ) : Response <userLoginResponse>
+    ) : Response <ApiResponse.UserLoginResponse>
 
     @GET("clients")    // API to be written here
     suspend fun getAllClients(@Query("userId") userId:Int,
-    ) : Response <allClientResponse>
+    ) : Response <ApiResponse.AllClientResponse>
+
+
 }

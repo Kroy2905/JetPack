@@ -1,5 +1,6 @@
 package com.kroy.sseditor.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kroy.ssediotor.R
-import com.kroy.sseditor.models.userLoginResponse
+import com.kroy.sseditor.models.ApiResponse
 import com.kroy.sseditor.models.userloginBody
 import com.kroy.sseditor.ui.theme.CustomBoldTypography
 import com.kroy.sseditor.ui.theme.Primary
@@ -50,13 +51,23 @@ fun LoginScreen(
     val userViewModel:UserViewModel = hiltViewModel()
     var userId by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var hasSubmitted by remember { mutableStateOf(false) }
+
     val context = LocalContext.current
 
-    val userlogin: State<userLoginResponse> = userViewModel.userlogin.collectAsState()
-    if(userlogin.value.data!=null){ //setting the userId
-        userViewModel.setIsLoggedIn(true)
-        userViewModel.setUserName(userlogin.value.data!!.userId)
-        onSubmit(userlogin.value.data!!.userId)
+    val userlogin: State<ApiResponse.UserLoginResponse?> = userViewModel.filteredUserLoginResponse.collectAsState()
+    val isloggedIn: State<Boolean> = userViewModel.isLoggedInFlow.collectAsState(false)
+    Log.d("passing id->","Logging pre ${isloggedIn.value}  ${userlogin.value} , ")
+// Check if user data is available and user is not logged in
+    if (userlogin.value!!.data != null && !isloggedIn.value && !hasSubmitted) {
+        Log.d("passing id->", "Logging in ... ")
+        val userId = userlogin.value!!.data!!.userId
+        onSubmit(userId)
+
+        // Update flags to prevent future submissions
+        hasSubmitted = true
+      //  userViewModel.setIsLoggedIn(true)
+        userViewModel.setUserName(userId)
     }
 
 
