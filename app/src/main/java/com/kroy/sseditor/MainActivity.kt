@@ -170,9 +170,7 @@ fun App2() {
 
             )
         ) {
-            AddClientScreen(onClientAdded = {
-                navController.navigate("client/$it")
-            } ,)
+            SevenDayScreen()
         }
 
 

@@ -24,11 +24,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.kroy.sseditor.ui.theme.CustomBoldTypography
 import com.kroy.sseditor.ui.theme.CustomTypography
 import com.kroy.sseditor.ui.theme.Primary
+import com.kroy.sseditor.viewmodels.SelectTimeViewModel
 import java.util.Calendar
 
 
@@ -42,6 +45,9 @@ fun preview4(){
 
 @Composable
 fun SevenDayScreen() {
+    val selectTimeViewModel:SelectTimeViewModel = hiltViewModel()
+    val clientName = selectTimeViewModel.name.collectAsState()
+    val clientId = selectTimeViewModel.id.collectAsState()
     val timeStates = remember { mutableStateListOf("08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM") }
 
     Column(
@@ -61,7 +67,7 @@ fun SevenDayScreen() {
         )
 
         Text(
-            text = "Client : Koustav ", // client name goes here 
+            text = "Client : ${clientName.value}", // client name goes here
             style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
             fontSize = 20.sp,
             modifier = Modifier
