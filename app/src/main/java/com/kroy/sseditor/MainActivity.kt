@@ -92,8 +92,8 @@ class MainActivity :FragmentActivity() {
 //                        LoginScreen { userId, password ->
 //                            // Handle login action
 //                        }
-
-                        SevenDayScreen()
+                        App2()
+                        //SevenDayScreen()
 
                         // Show the AddClientScreen in your navigation
 //                        AddClientScreen(onClientAdded = { name, base64Image ->
@@ -128,7 +128,16 @@ class MainActivity :FragmentActivity() {
 @Composable
 fun App2() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "category") {
+    NavHost(navController = navController, startDestination = "login") {
+
+        composable(route = "login") {
+            LoginScreen(){
+                navController.navigate("client/$it")
+            }
+        }
+        composable(route = "client/{userId}") {
+            ClientScreen(clients = emptyList(), onAddClient = {  }, onClientClick = {} )
+        }
         composable(route = "category") {
             CategoryScreen(){
                 navController.navigate("detail/$it")

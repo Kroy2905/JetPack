@@ -1,6 +1,6 @@
 package com.kroy.sseditor.di
 
-import com.kroy.sseditor.api.TweetsyApi
+import com.kroy.sseditor.api.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +19,8 @@ class NetworkModule {
     @Provides
     fun providesRetrofit():Retrofit{
         return Retrofit.Builder()
-            .baseUrl("https://api.jsonbin.io")
+           // .baseUrl("https://api.jsonbin.io")
+            .baseUrl("http://192.168.0.109:5000/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -27,7 +28,7 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun providesTweetsyApi(retrofit: Retrofit):TweetsyApi{
-        return retrofit.create(TweetsyApi::class.java)
+    fun providesTweetsyApi(retrofit: Retrofit):ApiService{
+        return retrofit.create(ApiService::class.java)
     }
 }

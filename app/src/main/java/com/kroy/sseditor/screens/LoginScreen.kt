@@ -1,15 +1,13 @@
 package com.kroy.sseditor.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -17,28 +15,27 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.kroy.ssediotor.R
+import com.kroy.sseditor.models.userLoginResponse
+import com.kroy.sseditor.models.userloginBody
 import com.kroy.sseditor.ui.theme.CustomBoldTypography
-import com.kroy.sseditor.ui.theme.CustomFontFamily
-import com.kroy.sseditor.ui.theme.CustomTypography
 import com.kroy.sseditor.ui.theme.Primary
-import com.kroy.sseditor.ui.theme.PrimaryLight
+import com.kroy.sseditor.viewmodels.UserViewModel
 
 @Preview
 @Composable
 fun preview(){
-    LoginScreen { userId, password ->
+    LoginScreen { userId->
         // Handle login action
     }
 
@@ -47,11 +44,21 @@ fun preview(){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    onSubmit: (String, String) -> Unit,
+    onSubmit: (Int) -> Unit,
 
 ) {
+    val userViewModel:UserViewModel = hiltViewModel()
     var userId by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
+    val userlogin: State<userLoginResponse> = userViewModel.userlogin.collectAsState()
+    if(userlogin.value.data!=null){ //setting the userId
+        userViewModel.setIsLoggedIn(true)
+        userViewModel.setUserName(userlogin.value.data!!.userId)
+        onSubmit(userlogin.value.data!!.userId)
+    }
+
 
     // Gradient background
     Box(
@@ -136,7 +143,18 @@ fun LoginScreen(
 
                 // Submit Button
                 Button(
-                    onClick = { onSubmit(userId, password) },
+                    onClick = {
+                        if(userId!="" && password!=""){
+                            userViewModel.loginuser(
+                                userloginBody(
+                                    password = password,
+                                    username = userId))
+                        }else{
+                            Toast.makeText(context, "Username or Password cannot be empty", Toast.LENGTH_SHORT).show()
+                        }
+
+
+                              },
                     modifier = Modifier
                         .background(Color.White)
                         .fillMaxWidth(),

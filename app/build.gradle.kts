@@ -103,5 +103,7 @@ dependencies {
 
     implementation ("androidx.fragment:fragment-ktx:1.8.3")
 
+    implementation ("androidx.datastore:datastore-preferences:1.1.1")
+
 
 }
