@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ClientViewModel @Inject constructor(
+class AddClientViewModel @Inject constructor(
     private val dataStoreHelper: DataStoreHelper,
     private val repository: SSEditorRepository,
     private val savedStateHandle: SavedStateHandle
@@ -28,15 +28,6 @@ class ClientViewModel @Inject constructor(
 
     // StateFlow for all clients response
 
-
-    init {
-        viewModelScope.launch {
-            val userId = savedStateHandle.get<Int>("userId") ?: 0
-            Log.d("received viewmodel->", "$userId")
-            setUserId(userId)
-            getAllClients(userId)
-        }
-    }
 
     // Functions to update user state
     private fun setIsLoggedIn(isLoggedIn: Boolean) {
@@ -51,27 +42,11 @@ class ClientViewModel @Inject constructor(
         }
     }
 
-    // Fetch all clients and handle the response
-    val allClients: StateFlow<ApiResponse> get() = repository.allClients
-
-    // Filtered response for all clients
-    private val _filteredClientResponse = MutableStateFlow<ApiResponse.AllClientResponse?>(null)
-    val filteredClientResponse: StateFlow<ApiResponse.AllClientResponse?> get() = _filteredClientResponse
-    fun getAllClients(userId: Int) {
-        viewModelScope.launch {
-            Log.d("ClientViewModel", "Fetching all clients for userId: $userId")
-            repository.getAllClients(userId)
-
-            // Assuming repository.allClients is updated after the API call
-            allClients.collect { response ->
-                handleClientResponse(response)
-            }
-        }
-    }
 
 
     // Fetch all clients and handle the response
-    private val addClients: StateFlow<ApiResponse> get() = repository.allClients
+    private val addClients: StateFlow<ApiResponse>
+        get() = repository.addClients
 
     // Filtered response for all clients
     private val _filteredaddClientResponse = MutableStateFlow<ApiResponse.AddClientResponse?>(null)
@@ -83,6 +58,7 @@ class ClientViewModel @Inject constructor(
 
             // Assuming repository.allClients is updated after the API call
             addClients.collect { response ->
+
                 handleClientResponse(response)
             }
         }
@@ -94,19 +70,6 @@ class ClientViewModel @Inject constructor(
     // Handle and filter the API response
     private fun handleClientResponse(response: ApiResponse) {
         when (response) {
-            is ApiResponse.AllClientResponse -> {
-                if (response.data!!.isNotEmpty()) {
-                    // Emit the successful response
-                    _filteredClientResponse.value = response
-                } else {
-                    // Handle empty data scenario
-                    _filteredClientResponse.value = ApiResponse.AllClientResponse(
-                        data = emptyList(),
-                        message = "No clients found",
-                        statusCode = response.statusCode
-                    )
-                }
-            }
             is ApiResponse.AddClientResponse -> {
                 if (response.data!=null) {
                     // Emit the successful response
@@ -118,12 +81,16 @@ class ClientViewModel @Inject constructor(
                         message = "No clients found",
                         statusCode = response.statusCode
                     )
+
                 }
             }
             else -> {
-                // Handle other response types if necessary
-                _filteredClientResponse.value = null
             }
         }
     }
+
+    fun resetClientState() {
+        _filteredaddClientResponse.value = null
+    }
+
 }

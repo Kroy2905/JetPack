@@ -130,20 +130,61 @@ fun App2() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "login") {
 
-        composable(route = "login") {
+        composable(route = "login") {  // login screen
             LoginScreen(){
                 Log.d("passing id->","$it")
                 navController.navigate("client/$it")
             }
         }
-        composable(route = "client/{userId}",
+        composable(route = "client/{userId}",  // client screen
             arguments = listOf(
                 navArgument(name = "userId") {
                     type = NavType.IntType
                 }
             )) {
-            ClientScreen( onAddClient = {  }, onClientClick = {} )
+            ClientScreen( onAddClient = {
+                // go to add client
+                navController.navigate("addclient")
+            }, onClientClick = { clientItem ->
+
+                // go to days screen
+                navController.navigate("timer/${clientItem.clientName}/${clientItem.clientId}")
+
+
+            } )
         }
+        composable(route = "addclient",
+        ) {
+           AddClientScreen(onClientAdded = {
+               navController.navigate("client/$it")
+           } )
+        }
+        composable(route = "timer/{name}/{id}",
+            arguments = listOf(
+                navArgument(name = "name") {
+                    type = NavType.StringType
+                },
+                navArgument(name = "id") {
+                    type = NavType.IntType
+                },
+
+            )
+        ) {
+            AddClientScreen(onClientAdded = {
+                navController.navigate("client/$it")
+            } ,)
+        }
+
+
+
+
+
+
+
+
+
+
+
         composable(route = "category") {
             CategoryScreen(){
                 navController.navigate("detail/$it")

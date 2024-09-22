@@ -1,8 +1,12 @@
 package com.kroy.sseditor.screens
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Base64
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -24,6 +28,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,14 +46,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.kroy.ssediotor.R
+import com.kroy.sseditor.models.ApiResponse
 import com.kroy.sseditor.models.Client
+import com.kroy.sseditor.models.addClientBody
 import com.kroy.sseditor.ui.theme.CustomBoldTypography
 import com.kroy.sseditor.ui.theme.CustomTypography
 import com.kroy.sseditor.ui.theme.Dimens
 import com.kroy.sseditor.ui.theme.Primary
+import com.kroy.sseditor.viewmodels.AddClientViewModel
+import com.kroy.sseditor.viewmodels.ClientViewModel
+import java.io.ByteArrayOutputStream
 
 
 @Preview(showBackground = true)
@@ -55,20 +67,33 @@ import com.kroy.sseditor.ui.theme.Primary
 @Composable
 fun preview3(){
 
-    // Show the AddClientScreen in your navigation
-    AddClientScreen(onClientAdded = { name, base64Image  ->
-     //   clients.add(Client(name, base64Image))
-        // Navigate back or update UI as needed
-    }, context = LocalContext.current)
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
-fun AddClientScreen(onClientAdded: (String, String) -> Unit, context: Context) {
+fun AddClientScreen(onClientAdded: (Int) -> Unit) {
     var clientName by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var imageBase64 by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
+    val addClientViewModel:AddClientViewModel = hiltViewModel()
+    val addClients: State<ApiResponse.AddClientResponse?> = addClientViewModel.filteredaddClientResponse.collectAsState()
+    val userId: State<Int> = addClientViewModel.userIdFlow.collectAsState(0)
+    var hasNavigated by remember { mutableStateOf(false) } // Track if navigation has occurred
+   // val addedClientId = addClients.value?.data?.clientId
+    //Log.d("add client ->" , "${addedClientId}")
+    val addedClientId = addClients.value?.data?.clientId ?: 0 // Safely access the clientId, default to 0 if null
+    Log.d("add client ->", "Added Client ID: $addedClientId")
+
+    if (addedClientId != 0 && !hasNavigated) {
+        hasNavigated = true // Set the flag to true after first navigation
+        onClientAdded(userId.value) // Trigger navigation or further actions
+        addClientViewModel.resetClientState() // Re
+    }
+
 
     // Activity Result API for image picking
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -76,12 +101,23 @@ fun AddClientScreen(onClientAdded: (String, String) -> Unit, context: Context) {
     ) { uri: Uri? ->
         uri?.let {
             selectedImageUri = it
-            // Convert the image to Base64
             val inputStream = context.contentResolver.openInputStream(it)
-            val bytes = inputStream?.readBytes()
-            imageBase64 = Base64.encodeToString(bytes, Base64.DEFAULT)
+
+            // Decode the input stream into a Bitmap
+            val originalBitmap = BitmapFactory.decodeStream(inputStream)
+
+            // Create a ByteArrayOutputStream to hold the compressed image
+            val outputStream = ByteArrayOutputStream()
+
+            // Compress the bitmap to reduce quality (e.g., 50%)
+            originalBitmap?.compress(Bitmap.CompressFormat.JPEG, 30, outputStream) // Adjust the quality as needed
+            val compressedBytes = outputStream.toByteArray()
+
+            // Convert the compressed image to Base64
+            imageBase64 = Base64.encodeToString(compressedBytes, Base64.DEFAULT)
         }
     }
+
 
     Column(
         modifier = Modifier
@@ -156,7 +192,13 @@ fun AddClientScreen(onClientAdded: (String, String) -> Unit, context: Context) {
         Button(
             onClick = {
                 if (clientName.isNotEmpty() && imageBase64.isNotEmpty()) {
-                    onClientAdded(clientName, imageBase64)
+                    addClientViewModel.addClient(addClientBody(
+                        userId = userId.value,
+                        clientImage = imageBase64,
+                        clientName = clientName
+                    ))
+                }else{
+                    Toast.makeText(context, "Error Saving .. ", Toast.LENGTH_SHORT).show()
                 }
             },
             modifier = Modifier

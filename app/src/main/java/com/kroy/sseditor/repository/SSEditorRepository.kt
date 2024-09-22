@@ -4,6 +4,7 @@ import android.util.Log
 import com.kroy.sseditor.api.ApiService
 import com.kroy.sseditor.models.ApiResponse
 import com.kroy.sseditor.models.TweetListItem
+import com.kroy.sseditor.models.addClientBody
 import com.kroy.sseditor.models.userloginBody
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -70,6 +71,22 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
 
         }
     }
+
+    private val _addClient = MutableStateFlow<ApiResponse.AddClientResponse>(ApiResponse.AddClientResponse())
+    val addClients:StateFlow<ApiResponse>
+        get() = _addClient
+    suspend fun addClient(addClientBody: addClientBody){
+        Log.d("add users->","body = $addClientBody")
+        val response = apiService.addClient(addClientBody)
+        Log.d("add users->","response = ${response.body()}")
+
+        if(response.isSuccessful && response.body()!=null){
+            // get the categories
+            _addClient.emit(response.body()!!)
+
+        }
+    }
+
 
     fun handleApiResponse(response: ApiResponse) {
         when (response) {
