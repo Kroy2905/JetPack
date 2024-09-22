@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.kroy.sseditor.ui.theme.CustomBoldTypography
 import com.kroy.sseditor.ui.theme.CustomTypography
 import com.kroy.sseditor.ui.theme.Primary
 import java.util.Calendar
@@ -56,6 +57,17 @@ fun SevenDayScreen() {
                 .padding(bottom = 16.dp)
                 .fillMaxWidth(),
             textAlign = TextAlign.Center,
+            color = Color.White
+        )
+
+        Text(
+            text = "Client : Koustav ", // client name goes here 
+            style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
+            fontSize = 20.sp,
+            modifier = Modifier
+                .padding(bottom = 16.dp, start = 8.dp)
+                .fillMaxWidth(),
+            textAlign = TextAlign.Start,
             color = Color.White
         )
 
@@ -105,9 +117,15 @@ fun DayWithTimePicker(day: String, time: String, onTimeSelected: (String) -> Uni
             .background(Color.White, RoundedCornerShape(8.dp))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        Text(text = "Day $day: $time", modifier = Modifier.weight(1f))
+        Text(text = "DAY $day :", modifier = Modifier.weight(.5f),
+            style = CustomBoldTypography.titleMedium, fontSize = 16.sp
+            )
+
+        Text(text = " $time", modifier = Modifier.weight(.8f),
+            style = CustomTypography.titleMedium, fontSize = 16.sp
+        )
 
         // Button to open the time picker
         Button(onClick = { showTimePicker = true },
@@ -115,7 +133,7 @@ fun DayWithTimePicker(day: String, time: String, onTimeSelected: (String) -> Uni
                 containerColor = Primary,
                 contentColor = Color.White
             )) {
-            Text("Select Time")
+            Text("Set Time")
         }
 
         // Go button
