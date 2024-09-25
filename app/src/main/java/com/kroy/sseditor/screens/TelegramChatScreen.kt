@@ -2,6 +2,7 @@ package com.kroy.sseditor.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,149 +22,72 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import com.kroy.ssediotor.R
+import com.kroy.sseditor.ui.theme.CustomBoldFontFamily
+import com.kroy.sseditor.ui.theme.CustomBoldTypography
+import com.kroy.sseditor.ui.theme.Telegram
+
+@Preview
+@Composable
+fun previewTelegram(){
+    CustomTelegramLayout()
+}
 
 @Composable
-fun TelegramLayout() {
-    Column(
+fun CustomTelegramLayout() {
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF1B1E2E)) // Background color similar to Telegram
+            .background(Color(0xFF1B1E2E)) // Change to match background if needed
     ) {
-        // Fake Status Bar + Custom Top Bar
-        FakeStatusBarWithTitle()
+        Image(
+            painter = painterResource(id = R.drawable.bg), // Set your actual background image
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
 
-        // Content: Screenshot and chat messages
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .padding(8.dp),
-            horizontalAlignment = Alignment.Start
+            modifier = Modifier.fillMaxSize()
         ) {
-            // Image Screenshot (chart) - Receiver's reply (right-aligned)
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Image(
-                    painter = painterResource(id = com.kroy.ssediotor.R.drawable.f), // Replace with actual image resource
-                    contentDescription = "Chart Screenshot",
-                    modifier = Modifier
-                        .width(250.dp)
-                        .heightIn(min = 200.dp, max = 300.dp) // Limit the image size
-                        .padding(8.dp),
-                    contentScale = ContentScale.FillWidth
-                )
-            }
+            CustomTopBar()
 
-            // Sender's messages (left-aligned)
-            ChatBubble(
-                message = "Very deep candle",
-                time = "12:51 AM",
-                isSender = true // Sender's message will be left-aligned
-            )
-            ChatBubble(
-                message = "Amazing 😍😍",
-                time = "12:51 AM",
-                isSender = true
-            )
-            ChatBubble(
-                message = "Loved it ma'am 😅",
-                time = "12:52 AM",
-                isSender = true
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Bottom animated image (Sticker) - Receiver's reply (right-aligned)
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                Image(
-                    painter = painterResource(id = com.kroy.ssediotor.R.drawable.f), // Replace with actual sticker image
-                    contentDescription = "Sure Shot Sticker",
-                    modifier = Modifier
-                        .width(150.dp)
-                        .heightIn(min = 100.dp, max = 150.dp) // Limit the size of the bottom image
-                        .padding(8.dp),
-                    contentScale = ContentScale.FillWidth
-                )
-            }
-        }
-
-        // Chatbox with attachment icon
-        ChatBoxInput()
-    }
-}
-
-@Composable
-fun FakeStatusBarWithTitle() {
-    Column {
-        // Fake Status Bar
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Black)
-                .padding(4.dp)
-                .height(24.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "12:52", color = Color.White, fontSize = 12.sp)
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(painterResource(id = com.kroy.ssediotor.R.drawable.ic_signal), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(12.dp))
-                Spacer(modifier = Modifier.width(4.dp))
-                Icon(painterResource(id = com.kroy.ssediotor.R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier.size(12.dp))
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "86%", color = Color.White, fontSize = 12.sp)
-                Spacer(modifier = Modifier.width(2.dp))
-                Icon(painterResource(id = com.kroy.ssediotor.R.drawable.ic_battery), contentDescription = "Battery", tint = Color.White, modifier = Modifier.size(12.dp))
-            }
-        }
-
-        // Custom Title Bar
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0xFF0088CC))
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Back icon
-            IconButton(onClick = { /* Handle back */ }) {
-                Icon(painterResource(id = com.kroy.ssediotor.R.drawable.ic_back), contentDescription = "Back", tint = Color.White)
-            }
-
-            // Title Text
-            Text(
-                text = "Fake Id",
-                color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-
-            // Profile icon on the right
-            Icon(
-                painter = painterResource(id = com.kroy.ssediotor.R.drawable.logo),
-                contentDescription = "Profile",
+            Column(
                 modifier = Modifier
-                    .size(32.dp)
-                    .background(Color.White, CircleShape), // Circle-shaped background for the profile icon
-                tint = Color.Unspecified // Use the default colors of the profile image
-            )
+                    .weight(1f)
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+            ) {
+                // Receiver's Screenshot Message
+                ReceiverImageMessage()
+
+                // Sender's Messages
+                ChatBubble("Very deep candle", "12:51 AM", isSender = true)
+                ChatBubble("Amazing 😍😍", "12:51 AM", isSender = true)
+                ChatBubble("Loved it ma'am 😅", "12:52 AM", isSender = true)
+
+                // Receiver's Sticker Message
+                Spacer(modifier = Modifier.height(16.dp))
+                ReceiverStickerMessage()
+            }
+
+            // Chat Input Box
+            ChatBoxInput()
         }
     }
 }
+
 
 @Composable
 fun ChatBubble(message: String, time: String, isSender: Boolean) {
@@ -188,7 +112,6 @@ fun ChatBubble(message: String, time: String, isSender: Boolean) {
                     text = message,
                     color = Color.White,
                     fontSize = 18.sp,
-                   // modifier = Modifier.weight(1f) // Let the message take up remaining space
                 )
                 Spacer(modifier = Modifier.width(8.dp)) // Space between message and time
                 Text(
@@ -236,8 +159,213 @@ fun ChatBoxInput() {
     }
 }
 
-@Preview(showBackground = true)
+
+
+
 @Composable
-fun PreviewTelegramLayout() {
-    TelegramLayout()
+fun CustomTopBar() {
+    Column {
+        // Top Status Bar
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.Black)
+                .padding(8.dp)
+                .height(30.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Time
+            Text(
+                text = "12:52",
+                color = Color.White,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 25.dp)
+            )
+
+            // Telegram Logo and Title in Rounded Box
+            Box(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .weight(1f)
+                    .background(Telegram, shape = RoundedCornerShape(12.dp))
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_telegram_logo),
+                        contentDescription = "Telegram Logo",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .rotate(-40f)
+                            .size(15.dp)
+                    )
+                    Text(
+                        text = "TELEGRAM",
+                        color = Color.White,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
+            }
+
+            // Status Icons
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(end = 15.dp,)
+            ) {
+                Icon(painterResource(id = R.drawable.ic_signal), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(20.dp))
+                Spacer(modifier = Modifier.width(5.dp))
+                Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier.size(20.dp))
+                Spacer(modifier = Modifier.width(5.dp))
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_battery),
+                    contentDescription = "Battery",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(25.dp)
+                        .rotate(90f)
+                )
+            }
+        }
+
+        // Title Bar with Back Button, Pending Messages, and Profile
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.Black)
+                .height(60.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.align(Alignment.CenterStart)
+            ) {
+                // Back Button
+                IconButton(onClick = { /* Handle back */ }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_back),
+                        contentDescription = "Back",
+                        tint = Color.White
+                    )
+                }
+
+                // Pending Messages Box
+                Box(
+                    modifier = Modifier
+                        .background(Telegram, shape = RoundedCornerShape(8.dp))
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                ) {
+                    Text(
+                        text = "1141", // Example message count
+                        color = Color.White,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            Column(
+                modifier = Modifier.align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Fake Id",
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = "last recently seen",
+                    color = Color(0xFFD1E3FF),
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(top = 2.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            // Profile Picture Positioning
+            Icon(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Profile",
+                modifier = Modifier
+                    .size(32.dp)
+                    .background(Color(0xFF40BAF7), CircleShape)
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 35.dp), // Adjusted to shift left
+                tint = Color.Unspecified
+            )
+        }
+    }
 }
+
+
+@Composable
+fun ReceiverImageMessage() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Box(
+            modifier = Modifier
+                .width(250.dp)
+                .heightIn(min = 200.dp, max = 300.dp)
+                .padding(8.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.f), // Set your actual screenshot resource
+                contentDescription = "Chart Screenshot",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillBounds
+            )
+            Text(
+                text = "12:51 AM",
+                color = Color.White,
+                fontSize = 12.sp,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(4.dp)
+                    .background(Color(0x80000000), RoundedCornerShape(10.dp))
+                    .padding(horizontal = 6.dp, vertical = 2.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun ReceiverStickerMessage() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.End
+    ) {
+        Box(
+            modifier = Modifier
+                .width(150.dp)
+                .heightIn(min = 100.dp, max = 200.dp)
+                .padding(8.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_sticker_image), // Set your actual sticker image
+                contentDescription = "Sure Shot Sticker",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillBounds
+            )
+            Text(
+                text = "12:52 AM",
+                color = Color.White,
+                fontSize = 12.sp,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(4.dp)
+                    .background(Color(0x80000000), RoundedCornerShape(10.dp))
+                    .padding(horizontal = 6.dp, vertical = 2.dp)
+            )
+        }
+    }
+}
+
