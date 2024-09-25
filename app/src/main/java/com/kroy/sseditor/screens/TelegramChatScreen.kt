@@ -182,6 +182,8 @@ fun CustomTopBar() {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(start = 25.dp)
             )
+            Spacer(modifier = Modifier
+                .width(16.dp))
 
             // Telegram Logo and Title in Rounded Box
             Box(
@@ -207,7 +209,7 @@ fun CustomTopBar() {
                     Text(
                         text = "TELEGRAM",
                         color = Color.White,
-                        fontSize = 15.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(start = 4.dp)
                     )
@@ -234,7 +236,7 @@ fun CustomTopBar() {
             }
         }
 
-        // Title Bar with Back Button, Pending Messages, and Profile
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -243,14 +245,18 @@ fun CustomTopBar() {
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.align(Alignment.CenterStart)
+                horizontalArrangement = Arrangement.SpaceAround // Adjust spacing as needed
             ) {
                 // Back Button
-                IconButton(onClick = { /* Handle back */ }) {
+                IconButton(onClick = { /* Handle back */ },
+                    modifier = Modifier
+                        .wrapContentSize()) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_back),
+                        modifier = Modifier
+                        ,
                         contentDescription = "Back",
-                        tint = Color.White
+                        tint = Telegram // Ensure Telegram color is defined
                     )
                 }
 
@@ -263,7 +269,7 @@ fun CustomTopBar() {
                     Text(
                         text = "1141", // Example message count
                         color = Color.White,
-                        fontSize = 14.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
