@@ -1,7 +1,13 @@
 package com.kroy.sseditor
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -36,6 +42,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -58,13 +65,18 @@ import com.kroy.sseditor.models.Client
 import com.kroy.sseditor.screens.AddClientScreen
 import com.kroy.sseditor.screens.CategoryScreen
 import com.kroy.sseditor.screens.ClientScreen
+import com.kroy.sseditor.screens.CustomTelegramLayout
 import com.kroy.sseditor.screens.DetailScreen
 import com.kroy.sseditor.screens.LoginScreen
 import com.kroy.sseditor.screens.SevenDayScreen
 import com.kroy.sseditor.ui.theme.SSEditorTheme
+import com.kroy.sseditor.utils.Permissions
 
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 @AndroidEntryPoint
 class MainActivity :FragmentActivity() {
@@ -78,6 +90,12 @@ class MainActivity :FragmentActivity() {
         // Set the status bar color
         val window = this.window
         window.statusBarColor = Color.Black.toArgb() // Change this color to whatever you want
+        Permissions().checkAndRequestPermissions(this,this)
+        Handler().postDelayed(Runnable {
+       //saveComposableToLocalStorage(this,640,480)
+        },5000)
+
+
 
         // Ensure that status bar icons are light
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -92,8 +110,9 @@ class MainActivity :FragmentActivity() {
 //                        LoginScreen { userId, password ->
 //                            // Handle login action
 //                        }
-                        App2()
+                       // App2()
                         //SevenDayScreen()
+                        CustomTelegramLayout()
 
                         // Show the AddClientScreen in your navigation
 //                        AddClientScreen(onClientAdded = { name, base64Image ->
@@ -183,6 +202,9 @@ fun App2() {
 
 
 
+
+
+
         composable(route = "category") {
             CategoryScreen(){
                 navController.navigate("detail/$it")
@@ -198,6 +220,53 @@ fun App2() {
         ) {
             DetailScreen()
         }
+    }
+}
+
+fun saveComposableToLocalStorage(context: Context, width: Int, height: Int) {
+    // Create a ComposeView offscreen
+    val composeView = ComposeView(context).apply {
+        setContent {
+            // Replace this with your composable layout
+            CustomTelegramLayout()
+        }
+
+        // Set size for the layout
+        layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+    }
+
+    // Measure and layout the ComposeView
+    composeView.measure(
+        View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+        View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY)
+    )
+    composeView.layout(0, 0, width, height)
+
+    // Create a bitmap and draw the ComposeView onto it
+    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    composeView.draw(canvas)
+
+    // Save the bitmap to local storage
+    saveBitmapToLocalStorage(context, bitmap)
+}
+
+// Function to save bitmap to storage
+fun saveBitmapToLocalStorage(context: Context, bitmap: Bitmap) {
+    val fileName = "composable_image_${System.currentTimeMillis()}.png"
+    val file = File(context.getExternalFilesDir(null), fileName)
+    try {
+        val outputStream = FileOutputStream(file)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+        outputStream.flush()
+        outputStream.close()
+        Log.d("SaveBitmap", "Image saved: ${file.absolutePath}")
+    } catch (e: IOException) {
+        e.printStackTrace()
+        Log.e("SaveBitmap", "Error saving image: ${e.localizedMessage}")
     }
 }
 
