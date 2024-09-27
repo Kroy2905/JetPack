@@ -22,9 +22,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -67,7 +69,7 @@ fun CustomTelegramLayout() {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
             ) {
                 // Receiver's Screenshot Message
                 ReceiverImageMessage()
@@ -78,7 +80,7 @@ fun CustomTelegramLayout() {
                 ChatBubble("Loved it ma'am 😅", "12:52 AM", isSender = true)
 
                 // Receiver's Sticker Message
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(5.dp))
                 ReceiverStickerMessage()
             }
 
@@ -94,18 +96,20 @@ fun ChatBubble(message: String, time: String, isSender: Boolean) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(start = 5.dp, bottom = 8.dp),
         horizontalArrangement = if (isSender) Arrangement.Start else Arrangement.End // Align based on sender or receiver
     ) {
         Column(
             modifier = Modifier
                 .background(Color(0xFF2D2F33), shape = RoundedCornerShape(32.dp))
-                .padding(7.dp)
+                .padding(2.dp)
                 .widthIn(max = 250.dp) // Limit the message bubble width
         ) {
             // Row to display message and time on the same line
             Row(
-                modifier = Modifier.wrapContentSize(),
+                modifier = Modifier
+                    .padding(6.dp,4.dp,4.dp,4.dp)
+                    .wrapContentSize(),
                 horizontalArrangement = Arrangement.Start // Ensure the time stays at the end
             ) {
                 Text(
@@ -164,7 +168,7 @@ fun ChatBoxInput() {
 
 @Composable
 fun CustomTopBar() {
-    Column {
+    Column() {
         // Top Status Bar
         Row(
             modifier = Modifier
@@ -178,12 +182,12 @@ fun CustomTopBar() {
             Text(
                 text = "12:52",
                 color = Color.White,
-                fontSize = 17.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(start = 25.dp)
             )
             Spacer(modifier = Modifier
-                .width(16.dp))
+                .width(18.dp))
 
             // Telegram Logo and Title in Rounded Box
             Box(
@@ -219,7 +223,7 @@ fun CustomTopBar() {
             // Status Icons
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(end = 15.dp,)
+                modifier = Modifier.padding(end = 20.dp,)
             ) {
                 Icon(painterResource(id = R.drawable.ic_signal), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(20.dp))
                 Spacer(modifier = Modifier.width(5.dp))
@@ -235,78 +239,99 @@ fun CustomTopBar() {
                 )
             }
         }
-
-
-        Box(
+     //2nd line of status bar
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Black)
-                .height(60.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceAround // Adjust spacing as needed
+                .padding(end = 15.dp)
+                .wrapContentHeight(),
+
+        ){
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Black)
+                    .height(60.dp)
             ) {
-                // Back Button
-                IconButton(onClick = { /* Handle back */ },
-                    modifier = Modifier
-                        .wrapContentSize()) {
+
+                    // Back Button
+                Row(modifier = Modifier
+                    .padding(top=10.dp)) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_back),
                         modifier = Modifier
+                            .size(30.dp)
                         ,
                         contentDescription = "Back",
                         tint = Telegram // Ensure Telegram color is defined
                     )
-                }
 
-                // Pending Messages Box
-                Box(
-                    modifier = Modifier
-                        .background(Telegram, shape = RoundedCornerShape(8.dp))
-                        .padding(horizontal = 6.dp, vertical = 2.dp)
+
+                    // Pending Messages Box
+                    Box(modifier = Modifier
+                        .padding(top = 5.dp)){
+                        Box(
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .background(Telegram, shape = RoundedCornerShape(12.dp))
+                                .padding(horizontal = 8.dp, vertical = 2.dp)
+                        ) {
+                            Text(
+                                text = "1141", // Example message count
+                                color = Color.White,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+
+                }
+                // Spacer to create space between the Row and Column
+                Spacer(modifier = Modifier.height(16.dp).align(Alignment.Center).width(5.dp)) // Adjust the height as needed
+
+
+
+
+
+                Column(
+                    modifier = Modifier.align(Alignment.Center),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "1141", // Example message count
+                        text = "Fake Id",
                         color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(start = 10.dp)
+                    )
+                    Text(
+                        text = "last recently seen",
+                        color = Color(0xFFD1E3FF),
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(top = 2.dp,start = 10.dp),
+                        textAlign = TextAlign.Center
                     )
                 }
-            }
 
-            Column(
-                modifier = Modifier.align(Alignment.Center),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Fake Id",
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                // Profile Picture Positioning
+                Image(
+                    painter = painterResource(id = R.drawable.e),
+                    contentDescription = "Profile",
+                    modifier = Modifier
+                        .size(40.dp)
+                        .background(Color(0xFF40BAF7), CircleShape)
+                        .clip(CircleShape) // Clip the image to a circular shape
+                        .align(Alignment.CenterEnd),
+                    contentScale = ContentScale.Crop // Ensures the image fills the bounds of the circular shape
                 )
-                Text(
-                    text = "last recently seen",
-                    color = Color(0xFFD1E3FF),
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(top = 2.dp),
-                    textAlign = TextAlign.Center
-                )
-            }
 
-            // Profile Picture Positioning
-            Icon(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Profile",
-                modifier = Modifier
-                    .size(32.dp)
-                    .background(Color(0xFF40BAF7), CircleShape)
-                    .align(Alignment.CenterEnd)
-                    .padding(end = 35.dp), // Adjusted to shift left
-                tint = Color.Unspecified
-            )
+
+            }
         }
+
     }
 }
 
@@ -321,7 +346,7 @@ fun ReceiverImageMessage() {
             modifier = Modifier
                 .width(250.dp)
                 .heightIn(min = 200.dp, max = 300.dp)
-                .padding(8.dp)
+                .padding(2.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.f), // Set your actual screenshot resource
@@ -353,7 +378,7 @@ fun ReceiverStickerMessage() {
             modifier = Modifier
                 .width(150.dp)
                 .heightIn(min = 100.dp, max = 200.dp)
-                .padding(8.dp)
+                .padding(2.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_sticker_image), // Set your actual sticker image
