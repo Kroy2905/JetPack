@@ -383,7 +383,7 @@ fun CustomTopBar() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier
-                        .width(85.dp)
+                        .width(90.dp)
 
                 ) {
                     Icon(

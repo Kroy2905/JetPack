@@ -1,13 +1,17 @@
 package com.kroy.sseditor
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -30,12 +34,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,9 +79,11 @@ import com.kroy.sseditor.screens.LoginScreen
 import com.kroy.sseditor.screens.SevenDayScreen
 import com.kroy.sseditor.ui.theme.SSEditorTheme
 import com.kroy.sseditor.utils.Permissions
+import com.kroy.sseditor.utils.Utils.CaptureAndSaveComposable
 
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -91,9 +101,7 @@ class MainActivity :FragmentActivity() {
         val window = this.window
         window.statusBarColor = Color.Black.toArgb() // Change this color to whatever you want
         Permissions().checkAndRequestPermissions(this,this)
-        Handler().postDelayed(Runnable {
-       //saveComposableToLocalStorage(this,640,480)
-        },5000)
+
 
 
 
@@ -112,6 +120,11 @@ class MainActivity :FragmentActivity() {
 //                        }
                        // App2()
                         //SevenDayScreen()
+                       CaptureAndSaveComposable()
+
+
+
+
                         CustomTelegramLayout()
 
                         // Show the AddClientScreen in your navigation
@@ -143,6 +156,11 @@ class MainActivity :FragmentActivity() {
     }
 
 }
+
+
+
+
+
 
 @Composable
 fun App2() {
@@ -223,36 +241,6 @@ fun App2() {
     }
 }
 
-fun saveComposableToLocalStorage(context: Context, width: Int, height: Int) {
-    // Create a ComposeView offscreen
-    val composeView = ComposeView(context).apply {
-        setContent {
-            // Replace this with your composable layout
-            CustomTelegramLayout()
-        }
-
-        // Set size for the layout
-        layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-    }
-
-    // Measure and layout the ComposeView
-    composeView.measure(
-        View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
-        View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY)
-    )
-    composeView.layout(0, 0, width, height)
-
-    // Create a bitmap and draw the ComposeView onto it
-    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-    val canvas = Canvas(bitmap)
-    composeView.draw(canvas)
-
-    // Save the bitmap to local storage
-    saveBitmapToLocalStorage(context, bitmap)
-}
 
 // Function to save bitmap to storage
 fun saveBitmapToLocalStorage(context: Context, bitmap: Bitmap) {
