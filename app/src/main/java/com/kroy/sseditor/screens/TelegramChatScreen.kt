@@ -2,6 +2,7 @@ package com.kroy.sseditor.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -22,9 +23,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.RenderEffect
+import androidx.compose.ui.graphics.Shader
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
@@ -55,10 +64,12 @@ fun CustomTelegramLayout() {
             .background(Color(0xFF1B1E2E)) // Change to match background if needed
     ) {
         Image(
-            painter = painterResource(id = R.drawable.bg), // Set your actual background image
+            painter = painterResource(id = R.drawable.a), // Set your actual background image
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .blur(10.dp, 10.dp)
+                .fillMaxSize()
         )
 
         Column(
@@ -96,7 +107,7 @@ fun ChatBubble(message: String, time: String, isSender: Boolean) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 5.dp, bottom = 8.dp),
+            .padding(start = 5.dp, bottom = 3.dp),
         horizontalArrangement = if (isSender) Arrangement.Start else Arrangement.End // Align based on sender or receiver
     ) {
         Column(
@@ -108,18 +119,20 @@ fun ChatBubble(message: String, time: String, isSender: Boolean) {
             // Row to display message and time on the same line
             Row(
                 modifier = Modifier
-                    .padding(6.dp,4.dp,4.dp,4.dp)
+                    .padding(6.dp, 4.dp, 10.dp, 4.dp)
                     .wrapContentSize(),
                 horizontalArrangement = Arrangement.Start // Ensure the time stays at the end
             ) {
                 Text(
                     text = message,
+                    fontWeight = FontWeight.Bold,
                     color = Color.White,
                     fontSize = 18.sp,
                 )
                 Spacer(modifier = Modifier.width(8.dp)) // Space between message and time
                 Text(
                     text = time,
+                    fontWeight = FontWeight.ExtraBold,
                     color = Color.Gray,
                     fontSize = 12.sp,
                     modifier = Modifier.align(Alignment.Bottom) // Align time to the bottom of the row
@@ -168,12 +181,25 @@ fun ChatBoxInput() {
 
 @Composable
 fun CustomTopBar() {
-    Column() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color.Black.copy(alpha = 0.8f), Color.Black.copy(alpha = 0.6f))
+                )
+            )
+            .graphicsLayer {
+                //shadowElevation = 8.dp.toPx() // Adding shadow for a blurred effect
+                shape = RoundedCornerShape(0.dp) // Keeping it rectangular
+                clip = true // Clip to bounds
+            }
+    ){
         // Top Status Bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Black)
+
                 .padding(8.dp)
                 .height(30.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -243,7 +269,7 @@ fun CustomTopBar() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Black)
+
                 .padding(end = 15.dp)
                 .wrapContentHeight(),
 
@@ -252,13 +278,13 @@ fun CustomTopBar() {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.Black)
+
                     .height(60.dp)
             ) {
 
                     // Back Button
                 Row(modifier = Modifier
-                    .padding(top=10.dp)) {
+                    .padding(top=16.dp)) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_back),
                         modifier = Modifier
@@ -289,7 +315,10 @@ fun CustomTopBar() {
 
                 }
                 // Spacer to create space between the Row and Column
-                Spacer(modifier = Modifier.height(16.dp).align(Alignment.Center).width(5.dp)) // Adjust the height as needed
+                Spacer(modifier = Modifier
+                    .height(16.dp)
+                    .align(Alignment.Center)
+                    .width(5.dp)) // Adjust the height as needed
 
 
 
@@ -344,16 +373,22 @@ fun ReceiverImageMessage() {
     ) {
         Box(
             modifier = Modifier
-                .width(250.dp)
-                .heightIn(min = 200.dp, max = 300.dp)
+                .width(230.dp)
+                .heightIn(min = 200.dp, max = 400.dp)
                 .padding(2.dp)
+
+                .clip(RoundedCornerShape(16.dp)) // Rounded corners
+                .background(Color.Gray) // Optional background color
         ) {
+            // Main image
             Image(
                 painter = painterResource(id = R.drawable.f), // Set your actual screenshot resource
                 contentDescription = "Chart Screenshot",
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.FillBounds
+                contentScale = ContentScale.Crop // Use Crop to maintain aspect ratio
             )
+
+            // Time text
             Text(
                 text = "12:51 AM",
                 color = Color.White,
@@ -365,8 +400,41 @@ fun ReceiverImageMessage() {
                     .padding(horizontal = 6.dp, vertical = 2.dp)
             )
         }
+
+        // Forward icon placed outside the chart box
+        Box(
+            modifier = Modifier
+                .align(Alignment.Bottom) // Align to the bottom of the row
+                .padding(start = 4.dp, bottom = 4.dp)
+                .size(36.dp) // Circular size for the forward icon background
+                .clip(CircleShape)
+                .background(
+                    Brush.radialGradient(
+                        colors = listOf(
+                            Color.White.copy(alpha = 0.3f), // Very light version of background
+                            Color.Transparent
+                        ),
+                        radius = 60f
+                    )
+                )
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_forward), // Replace with your forward icon resource
+                contentDescription = "Telegram Forward",
+                modifier = Modifier
+                    .size(18.dp) // Adjust size for the forward icon
+                    .align(Alignment.Center) // Center the forward icon
+                    .background(Color.Transparent),
+                colorFilter = ColorFilter.tint(Color.White) // Make forward icon white
+            )
+        }
     }
 }
+
+
+
+
+
 
 @Composable
 fun ReceiverStickerMessage() {
