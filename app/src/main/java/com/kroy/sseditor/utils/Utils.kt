@@ -2,12 +2,14 @@ package com.kroy.sseditor.utils
 
 import android.R
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -38,8 +40,8 @@ object Utils {
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     fun CaptureAndSaveComposable(
-        contactName:String,
-        contactPic:Bitmap?,
+        contactName: String,
+        contactPic: Bitmap?,
         messages: List<ChatMessage>,
         initialTimeString: String, // Time in "hh:mm a" format, e.g., "12:48 AM"
         backgroundBitmap: Bitmap?,
@@ -48,34 +50,42 @@ object Utils {
     ) {
         val context = LocalContext.current
 
-
         LaunchedEffect(Unit) {
             delay(5000) // Wait for 5 seconds
-            captureAndSaveComposableToBitmap(context, contactName =contactName,
+            captureAndSaveComposableToBitmap(
+                context = context,
+                contactName = contactName,
                 contactPic = contactPic,
                 messages = messages,
                 initialTimeString = initialTimeString,
                 backgroundBitmap = backgroundBitmap,
                 senderImage = senderImage,
-                userReplySticker = userReplySticker)
+                userReplySticker = userReplySticker
+            )
         }
 
-        // Show some UI while waiting for the capture
+        // Optionally, show some UI while waiting for the capture
         // Text(text = "Capturing Composable in 5 seconds...")
     }
 
-    // Captures the Composable content as a bitmap outside the Composable context
     @RequiresApi(Build.VERSION_CODES.O)
-    fun captureAndSaveComposableToBitmap(context: Context,   contactName:String,
-                                         contactPic:Bitmap?,
-                                         messages: List<ChatMessage>,
-                                         initialTimeString: String, // Time in "hh:mm a" format, e.g., "12:48 AM"
-                                         backgroundBitmap: Bitmap?,
-                                         senderImage: Bitmap?,
-                                         userReplySticker: Bitmap?) {
+    fun captureAndSaveComposableToBitmap(
+        context: Context,
+        contactName: String,
+        contactPic: Bitmap?,
+        messages: List<ChatMessage>,
+        initialTimeString: String, // Time in "hh:mm a" format, e.g., "12:48 AM"
+        backgroundBitmap: Bitmap?,
+        senderImage: Bitmap?,
+        userReplySticker: Bitmap?
+    ) {
+        // Ensure context is an Activity
+        val activity = context as? Activity ?: return
+
         val composeView = ComposeView(context).apply {
             setContent {
-                CustomTelegramLayout(   contactName ="Random Name",
+                CustomTelegramLayout(
+                    contactName = contactName,
                     contactPic = contactPic,
                     messages = messages,
                     initialTimeString = initialTimeString,
@@ -87,23 +97,32 @@ object Utils {
         }
 
         // Attach ComposeView to the window so it can be rendered
-        val parentView = (context as? Activity)?.findViewById<ViewGroup>(android.R.id.content)
+        val parentView = activity.findViewById<ViewGroup>(android.R.id.content)
         parentView?.addView(composeView)
+
+        // Define the target resolution
+        val targetWidth = 1290 // iPhone 15 Pro Max width in pixels
+        val targetHeight = 2796 // iPhone 15 Pro Max height in pixels
 
         // Wait for the ComposeView to be attached to the window and laid out
         composeView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                // Ensure it's attached
                 if (composeView.isAttachedToWindow) {
-                    // Remove listener after it's been called once
                     composeView.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-                    // Capture the bitmap
-                    val bitmap = Bitmap.createBitmap(composeView.width, composeView.height, Bitmap.Config.ARGB_8888)
+                    // Create a bitmap with the target resolution
+                    val bitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888)
                     val canvas = Canvas(bitmap)
+
+                    // Scale the canvas to fit the content correctly if needed
+                    val scaleX = targetWidth.toFloat() / composeView.width
+                    val scaleY = targetHeight.toFloat() / composeView.height
+                    canvas.scale(scaleX, scaleY)
+
+                    // Draw the ComposeView on the canvas
                     composeView.draw(canvas)
 
-                    // Save the bitmap (you can modify this to save it wherever needed)
+                    // Save the bitmap to gallery
                     saveBitmapToGallery(context, bitmap)
 
                     // Clean up: remove the view from its parent once done
@@ -112,21 +131,39 @@ object Utils {
             }
         })
     }
-    fun saveBitmapToGallery(context: Context, bitmap: Bitmap) {
-        val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        val file = File(picturesDir, "saved_image_${System.currentTimeMillis()}.png")
-        Log.d("Image capturing->","saving image at ${file.absolutePath}")
 
-        try {
-            FileOutputStream(file).use { out ->
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+    fun saveBitmapToGallery(context: Context, bitmap: Bitmap) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Use MediaStore for Android 10 and above
+            val contentValues = ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, "saved_image_${System.currentTimeMillis()}.png")
+                put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
+                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
             }
-            Toast.makeText(context, "Image saved to gallery", Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) {
-            Toast.makeText(context, "Error saving image: ${e.message}", Toast.LENGTH_SHORT).show()
+            val uri = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            uri?.let {
+                context.contentResolver.openOutputStream(it).use { outputStream ->
+                    if (outputStream != null) {
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                    }
+                }
+                Toast.makeText(context, "Image saved to gallery", Toast.LENGTH_SHORT).show()
+            } ?: Toast.makeText(context, "Error saving image", Toast.LENGTH_SHORT).show()
+        } else {
+            // Save directly for older Android versions
+            val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            val file = File(picturesDir, "saved_image_${System.currentTimeMillis()}.png")
+
+            try {
+                FileOutputStream(file).use { out ->
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                }
+                Toast.makeText(context, "Image saved to gallery", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(context, "Error saving image: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
-
     fun getBitmapFromResource(context: Context, resourceId: Int): Bitmap? {
         return BitmapFactory.decodeResource(context.resources, resourceId)
     }

@@ -115,9 +115,9 @@ class MainActivity :FragmentActivity() {
         val insetsController = WindowInsetsControllerCompat(window, window.decorView)
         insetsController.isAppearanceLightStatusBars = false // Set to true if you want dark icons
         val sampleMessages = listOf(
-            ChatMessage("Hello!", "12:50 AM", isSender = true),
-            ChatMessage("Hi there!", "12:51 AM", isSender = true),
-            ChatMessage("How are you?", "12:52 AM", isSender = true)
+            ChatMessage("Hello dsfdsfs  dsfdsf  sdfsfdssfafaafasdasdsadadas!", "12:50 AM", isSender = true),
+            ChatMessage("Hi there jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj!", "12:51 AM", isSender = true),
+            ChatMessage("How are you   kkkkkkkkkkkkkkkkkkkk  df      asdddddddddddddddddddddddddddddd?", "12:50 AM", isSender = true)
         )
 
         // Replace with actual Bitmap objects for testing

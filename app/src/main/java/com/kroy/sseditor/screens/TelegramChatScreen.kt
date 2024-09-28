@@ -51,6 +51,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
@@ -79,9 +80,9 @@ import kotlin.random.Random
 fun previewTelegram(){
     val context = LocalContext.current
     val sampleMessages = listOf(
-        ChatMessage("Hello!", "12:50 AM", isSender = true),
-        ChatMessage("Hi there!", "12:51 AM", isSender = false),
-        ChatMessage("How are you?", "12:52 AM", isSender = true)
+        ChatMessage("Hello 34000000000000000", "12:50 AM", isSender = true),
+        ChatMessage("Hi there!", "12:50 AM", isSender = true),
+        ChatMessage("How are you?", "12:50 AM", isSender = true)
     )
 
     // Replace with actual Bitmap objects for testing
@@ -136,41 +137,64 @@ fun CustomTelegramLayout(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            // Pass the formatted initial time to CustomTopBar
-            CustomTopBar(time = initialTime.format(DateTimeFormatter.ofPattern("hh:mm")),contactName,contactPic)
+            // Top bar with the formatted initial time
+            CustomTopBar(
+                time = initialTime.format(DateTimeFormatter.ofPattern("hh:mm")),
+                contactName = contactName,
+                contactPic = contactPic
+            )
 
+            // LazyColumn that fills available space and aligns to the ChatBoxInput
             LazyColumn(
+                reverseLayout = true,
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    .weight(1f) // This makes the LazyColumn take up the available space
+                    .padding(horizontal = 8.dp) // Only horizontal padding to keep alignment with ChatBoxInput
             ) {
-                // Render Receiver's Screenshot Message
-                item {
-                    ReceiverImageMessage(time = initialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),senderImage)
-                }
 
+                // Render Receiver's Sticker Message with random time
+                item {
+
+                    ReceiverStickerMessage(
+                        time = randomStickerTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
+                        userReplySticker= userReplySticker
+                    )
+
+                }
                 // Render dynamic Chat Messages
                 items(messages) { message ->
                     ChatBubble(
                         message = message.message,
-                        time= message.timestamp,
+                        time = message.timestamp,
                         isSender = message.isSender
                     )
-                }
+                    Spacer(modifier = Modifier.height(3.dp)) // Space between message and time
 
-                // Render Receiver's Sticker Message with random time
+                }
+                // Render Receiver's Screenshot Message
                 item {
                     Spacer(modifier = Modifier.height(5.dp))
-                    ReceiverStickerMessage(time = randomStickerTime.format(DateTimeFormatter.ofPattern("hh:mm a")),userReplySticker)
+                    ReceiverImageMessage(
+                        time = initialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
+                        senderImage = senderImage
+                    )
+
                 }
+
+
+
+
             }
 
-            // Chat Input Box with adding new messages capability
+            // Chat Input Box aligned with the bottom of the screen
             ChatBoxInput(
+                 // Match padding to LazyColumn for alignment
             )
         }
+
     }
-}
+    }
+
 
 // Function to parse the time string ("hh:mm a" format) into LocalTime
 @RequiresApi(Build.VERSION_CODES.O)
@@ -199,82 +223,87 @@ fun ChatBubble(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 5.dp, bottom = 3.dp),
+
+
+            .fillMaxWidth(.9f)
+            .heightIn(30.dp, 60.dp)
+            .padding(start = 5.dp, bottom = 3.dp, end = 10.dp),
         horizontalArrangement = if (isSender) Arrangement.Start else Arrangement.End
     ) {
-        Column(
+        Row(
             modifier = Modifier
-
                 .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(Color.Black.copy(alpha = 0.72f), Color.Black.copy(alpha = 0.7f))
-                    ),
-
-                    shape = if (isLastMessage) {
-                        BubbleShape(
-                            tailSize = 10.dp,
-                            isSender = isSender
-                        ) // Use custom shape for last message
-                    } else {
-                        RoundedCornerShape(
-                            topStart = 8.dp, topEnd = 32.dp, bottomEnd = 32.dp, bottomStart = 8.dp
-                        )
-                    }
-                )
-
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Black.copy(alpha = 0.72f),
+                        Color.Black.copy(alpha = 0.7f)
+                    )
+                ),
+                shape = if (isLastMessage) {
+                    BubbleShape(
+                        tailSize = 10.dp,
+                        isSender = isSender
+                    ) // Use custom shape for last message
+                } else {
+                    RoundedCornerShape(
+                        topStart = 8.dp, topEnd = 32.dp, bottomEnd = 32.dp, bottomStart = 8.dp
+                    )
+                }
+            )
                 .graphicsLayer {
-                    //shadowElevation = 8.dp.toPx() // Adding shadow for a blurred effect
                     shape = RoundedCornerShape(0.dp) // Keeping it rectangular
                     clip = true // Clip to bounds
                 }
+                .wrapContentSize()
+                .padding(start = 6.dp, top = 5.dp, end = 12.dp, bottom = 5.dp)
+                .wrapContentWidth(Alignment.Start) // Allow bubble to wrap content
 
-                .padding(2.dp)
-                .widthIn(max = 250.dp) // Limit the message bubble width
         ) {
             // Row to display message and time on the same line
-            Row(
-                modifier = Modifier
-                    .padding(6.dp, 2.dp, 10.dp, 3.dp)
-                    .wrapContentSize(),
-                horizontalArrangement = Arrangement.Start
-            ) {
+
                 Text(
                     text = message,
                     style = CustomRegularTypography.titleMedium,
-
                     fontWeight = FontWeight.W400,
                     color = Color.White,
                     fontSize = 18.sp,
+                    maxLines = 3, // Limit lines if necessary
+                    overflow = TextOverflow.Ellipsis // Handle overflow gracefully
                 )
-                Spacer(modifier = Modifier.width(8.dp)) // Space between message and time
-                Text(
-                    text = time,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Gray,
-                    fontSize = 12.sp,
-                    modifier = Modifier.align(Alignment.Bottom) // Align time to the bottom of the row
-                )
-            }
+            Spacer(modifier = Modifier.width(6.dp))
+
+            Text(
+                text = time,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.Gray,
+                fontSize = 12.sp,
+                modifier = Modifier
+                    .align(Alignment.Bottom) // Align time to the bottom of the row
+            )
         }
+
+
+
+
     }
 }
+
 
 @Composable
 fun ChatBoxInput() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-        .background(
-            brush = Brush.verticalGradient(
-                colors = listOf(Color.Black.copy(alpha = 0.7f), Color.Black.copy(alpha = 0.85f))
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color.Black.copy(alpha = 0.7f), Color.Black.copy(alpha = 0.85f))
+                )
             )
-            )
-        .graphicsLayer {
-            //shadowElevation = 8.dp.toPx() // Adding shadow for a blurred effect
-            shape = RoundedCornerShape(0.dp) // Keeping it rectangular
-            clip = true // Clip to bounds
-        }
+            .graphicsLayer {
+                //shadowElevation = 8.dp.toPx() // Adding shadow for a blurred effect
+                shape = RoundedCornerShape(0.dp) // Keeping it rectangular
+                clip = true // Clip to bounds
+            }
     ) {
         Row(
             modifier = Modifier
@@ -341,7 +370,7 @@ fun ChatBoxInput() {
                     modifier = Modifier
 
 
-                    .padding(end = 10.dp, start = 10.dp)
+                        .padding(end = 10.dp, start = 10.dp)
                         .size(23.dp)
                 )
 
@@ -497,10 +526,10 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                             modifier = Modifier
                                 .wrapContentSize()
                                 .background(Telegram, shape = RoundedCornerShape(12.dp))
-                                .padding(start = 7.dp,end = 7.dp, bottom = 2.dp,top = 2.dp )
+                                .padding(start = 8.dp, end = 8.dp, bottom = 1.dp, top = 2.dp)
                         ) {
                             Text(
-                                text = "1141", // Example message count
+                                text = "${Random.nextInt(600, 900 + 1)}", // Example message count
                                 color = Color.White,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold
@@ -634,13 +663,14 @@ fun ReceiverImageMessage(time: String,senderImage: Bitmap?) {
 @Composable
 fun ReceiverStickerMessage(time: String,userReplySticker: Bitmap?) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxSize(),
+        verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.End
     ) {
         Box(
             modifier = Modifier
                 .width(150.dp)
-                .heightIn(min = 100.dp, max = 200.dp)
+                .heightIn(min = 100.dp, max = 210.dp)
                 .padding(2.dp)
         ) {
             Image(
