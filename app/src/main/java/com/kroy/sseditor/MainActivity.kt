@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -14,6 +15,7 @@ import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -69,6 +71,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.kroy.ssediotor.R
+import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.models.Client
 import com.kroy.sseditor.screens.AddClientScreen
 import com.kroy.sseditor.screens.CategoryScreen
@@ -79,6 +82,7 @@ import com.kroy.sseditor.screens.LoginScreen
 import com.kroy.sseditor.screens.SevenDayScreen
 import com.kroy.sseditor.ui.theme.SSEditorTheme
 import com.kroy.sseditor.utils.Permissions
+import com.kroy.sseditor.utils.Utils
 import com.kroy.sseditor.utils.Utils.CaptureAndSaveComposable
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -91,6 +95,7 @@ import java.io.IOException
 @AndroidEntryPoint
 class MainActivity :FragmentActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,6 +114,19 @@ class MainActivity :FragmentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         val insetsController = WindowInsetsControllerCompat(window, window.decorView)
         insetsController.isAppearanceLightStatusBars = false // Set to true if you want dark icons
+        val sampleMessages = listOf(
+            ChatMessage("Hello!", "12:50 AM", isSender = true),
+            ChatMessage("Hi there!", "12:51 AM", isSender = true),
+            ChatMessage("How are you?", "12:52 AM", isSender = true)
+        )
+
+        // Replace with actual Bitmap objects for testing
+        val contactPic: Bitmap? = Utils.getBitmapFromResource(this, R.drawable.f)
+        val backgroundBitmap: Bitmap? = Utils.getBitmapFromResource(this, R.drawable.telegram_bg)
+        val senderImage: Bitmap? = Utils.getBitmapFromResource(this, R.drawable.b)
+        val userReplySticker: Bitmap? = Utils.getBitmapFromResource(this, R.drawable.d)
+
+
 
         setContent {
             SSEditorTheme {
@@ -120,12 +138,28 @@ class MainActivity :FragmentActivity() {
 //                        }
                        // App2()
                         //SevenDayScreen()
-                       CaptureAndSaveComposable()
+                       CaptureAndSaveComposable(
+                           contactName ="Random Name",
+                           contactPic = contactPic,
+                           messages = sampleMessages,
+                           initialTimeString = "12:48 AM",
+                           backgroundBitmap = backgroundBitmap,
+                           senderImage = senderImage,
+                           userReplySticker = userReplySticker
+                       )
 
 
 
 
-                        CustomTelegramLayout()
+                        CustomTelegramLayout(
+                            contactName ="Random Name",
+                            contactPic = contactPic,
+                            messages = sampleMessages,
+                            initialTimeString = "12:48 AM",
+                            backgroundBitmap = backgroundBitmap,
+                            senderImage = senderImage,
+                            userReplySticker = userReplySticker
+                        )
 
                         // Show the AddClientScreen in your navigation
 //                        AddClientScreen(onClientAdded = { name, base64Image ->

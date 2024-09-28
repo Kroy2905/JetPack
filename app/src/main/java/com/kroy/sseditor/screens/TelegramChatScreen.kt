@@ -1,10 +1,17 @@
 package com.kroy.sseditor.screens
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,9 +40,11 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.RenderEffect
 import androidx.compose.ui.graphics.Shader
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -47,6 +57,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import com.kroy.ssediotor.R
+import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.ui.theme.BottomIconTint
 import com.kroy.sseditor.ui.theme.CustomBoldFontFamily
 import com.kroy.sseditor.ui.theme.CustomBoldTypography
@@ -56,22 +67,65 @@ import com.kroy.sseditor.ui.theme.CustomRegularTypography
 import com.kroy.sseditor.ui.theme.CustomTypography
 import com.kroy.sseditor.ui.theme.Telegram
 import com.kroy.sseditor.utils.BubbleShape
+import com.kroy.sseditor.utils.Utils.getBitmapFromResource
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import kotlin.random.Random
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun previewTelegram(){
-    CustomTelegramLayout()
+    val context = LocalContext.current
+    val sampleMessages = listOf(
+        ChatMessage("Hello!", "12:50 AM", isSender = true),
+        ChatMessage("Hi there!", "12:51 AM", isSender = false),
+        ChatMessage("How are you?", "12:52 AM", isSender = true)
+    )
+
+    // Replace with actual Bitmap objects for testing
+    val contactPic: Bitmap? = getBitmapFromResource(context,R.drawable.f)
+    val backgroundBitmap: Bitmap? = getBitmapFromResource(context,R.drawable.telegram_bg)
+    val senderImage: Bitmap? = getBitmapFromResource(context,R.drawable.b)
+    val userReplySticker: Bitmap? = getBitmapFromResource(context,R.drawable.d)
+
+    CustomTelegramLayout(
+        contactName ="Random Name",
+        contactPic = contactPic,
+        messages = sampleMessages,
+        initialTimeString = "12:48 AM",
+        backgroundBitmap = backgroundBitmap,
+        senderImage = senderImage,
+        userReplySticker = userReplySticker
+    )
 }
 
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CustomTelegramLayout() {
+fun CustomTelegramLayout(
+    contactName:String,
+    contactPic:Bitmap?,
+    messages: List<ChatMessage>,
+    initialTimeString: String, // Time in "hh:mm a" format, e.g., "12:48 AM"
+    backgroundBitmap: Bitmap?,
+    senderImage: Bitmap?,
+    userReplySticker: Bitmap?
+) {
+    // Parse the initial time string to LocalTime
+    val initialTime = parseTimeString(initialTimeString)
+
+    // Generate a random time between 20 to 30 minutes from the initial time
+    val randomStickerTime = remember { generateRandomTime(initialTime, 20, 30) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF1B1E2E)) // Change to match background if needed
+            .background(Color(0xFF1B1E2E))
     ) {
         Image(
-            painter = painterResource(id = R.drawable.telegram_bg), // Set your actual background image
+            bitmap = backgroundBitmap!!.asImageBitmap(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -82,78 +136,59 @@ fun CustomTelegramLayout() {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            CustomTopBar()
+            // Pass the formatted initial time to CustomTopBar
+            CustomTopBar(time = initialTime.format(DateTimeFormatter.ofPattern("hh:mm")),contactName,contactPic)
 
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 8.dp, vertical = 2.dp)
             ) {
-                // Receiver's Screenshot Message
-                ReceiverImageMessage()
+                // Render Receiver's Screenshot Message
+                item {
+                    ReceiverImageMessage(time = initialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),senderImage)
+                }
 
-                // Sender's Messages
-                ChatBubble("Very deep candle", "12:51 AM", isSender = true)
-                ChatBubble("Amazing 😍😍", "12:51 AM", isSender = true)
-                ChatBubble("Loved it ma'am 😅", "12:52 AM", isSender = true)
+                // Render dynamic Chat Messages
+                items(messages) { message ->
+                    ChatBubble(
+                        message = message.message,
+                        time= message.timestamp,
+                        isSender = message.isSender
+                    )
+                }
 
-                // Receiver's Sticker Message
-                Spacer(modifier = Modifier.height(5.dp))
-                ReceiverStickerMessage()
+                // Render Receiver's Sticker Message with random time
+                item {
+                    Spacer(modifier = Modifier.height(5.dp))
+                    ReceiverStickerMessage(time = randomStickerTime.format(DateTimeFormatter.ofPattern("hh:mm a")),userReplySticker)
+                }
             }
 
-            // Chat Input Box
-            ChatBoxInput()
+            // Chat Input Box with adding new messages capability
+            ChatBoxInput(
+            )
         }
     }
 }
 
-
-// Custom Bubble Shape with a pointer
-// Custom Bubble Shape with a pointer
-// Custom Bubble Shape with a pointer
-class BubbleShape(private val tailSize: Dp = 12.dp, private val cornerRadius: Dp = 16.dp, private val isSender: Boolean) : Shape {
-    override fun createOutline(
-        size: androidx.compose.ui.geometry.Size,
-        layoutDirection: androidx.compose.ui.unit.LayoutDirection,
-        density: androidx.compose.ui.unit.Density
-    ): androidx.compose.ui.graphics.Outline {
-        val path = Path().apply {
-            val tailSizePx = with(density) { tailSize.toPx() }
-            val cornerRadiusPx = with(density) { cornerRadius.toPx() }
-
-            if (isSender) {
-                // Sender's tail
-                moveTo(tailSizePx, cornerRadiusPx) // Move to the starting point
-                lineTo(size.width - cornerRadiusPx, 0f) // Top edge
-                lineTo(size.width, cornerRadiusPx) // Top right corner
-                lineTo(size.width, size.height - cornerRadiusPx) // Right edge
-                lineTo(size.width - cornerRadiusPx, size.height) // Bottom right corner
-                lineTo(size.width - tailSizePx, size.height) // Bottom edge
-                lineTo(size.width - tailSizePx, size.height - tailSizePx) // Tail pointer bottom
-                lineTo(size.width, size.height / 2) // Point of the tail
-                lineTo(size.width - tailSizePx, tailSizePx) // Right side of tail pointer
-                lineTo(tailSizePx, tailSizePx) // Left side of tail pointer
-                lineTo(tailSizePx, cornerRadiusPx) // Finish the shape
-            } else {
-                // Receiver's tail
-                moveTo(cornerRadiusPx, 0f) // Top left corner
-                lineTo(size.width - tailSizePx, 0f) // Top edge
-                lineTo(size.width, cornerRadiusPx) // Top right corner
-                lineTo(size.width, size.height - cornerRadiusPx) // Right edge
-                lineTo(size.width - cornerRadiusPx, size.height) // Bottom right corner
-                lineTo(tailSizePx, size.height) // Bottom edge
-                lineTo(tailSizePx, size.height - tailSizePx) // Tail pointer bottom
-                lineTo(0f, size.height / 2) // Point of the tail
-                lineTo(tailSizePx, tailSizePx) // Left side of tail pointer
-                lineTo(cornerRadiusPx, tailSizePx) // Left side of the top left corner
-            }
-            close()
-        }
-        return androidx.compose.ui.graphics.Outline.Generic(path)
+// Function to parse the time string ("hh:mm a" format) into LocalTime
+@RequiresApi(Build.VERSION_CODES.O)
+fun parseTimeString(timeString: String): LocalTime {
+    return try {
+        LocalTime.parse(timeString, DateTimeFormatter.ofPattern("hh:mm a"))
+    } catch (e: DateTimeParseException) {
+        // Handle parsing error by returning a default time, e.g., midnight
+        LocalTime.MIDNIGHT
     }
 }
 
+// Function to generate a random time between a given range (in minutes)
+@RequiresApi(Build.VERSION_CODES.O)
+fun generateRandomTime(baseTime: LocalTime, minMinutes: Int, maxMinutes: Int): LocalTime {
+    val randomMinutes = Random.nextInt(minMinutes, maxMinutes + 1)
+    return baseTime.plusMinutes(randomMinutes.toLong())
+}
 
 @Composable
 fun ChatBubble(
@@ -177,7 +212,7 @@ fun ChatBubble(
                     ),
 
                     shape = if (isLastMessage) {
-                        com.kroy.sseditor.screens.BubbleShape(
+                        BubbleShape(
                             tailSize = 10.dp,
                             isSender = isSender
                         ) // Use custom shape for last message
@@ -334,7 +369,7 @@ fun ChatBoxInput() {
 
 
 @Composable
-fun CustomTopBar() {
+fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -360,7 +395,7 @@ fun CustomTopBar() {
         ) {
             // Time
             Text(
-                text = "12:52",
+                text = time,
                 color = Color.White,
                 fontSize = 18.sp,
                 style = CustomBoldTypography.titleMedium,
@@ -489,7 +524,7 @@ fun CustomTopBar() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Fake Id",
+                        text = contactName,
                         color = Color.White,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -507,7 +542,7 @@ fun CustomTopBar() {
 
                 // Profile Picture Positioning
                 Image(
-                    painter = painterResource(id = R.drawable.e),
+                    bitmap = contactPic!!.asImageBitmap(),
                     contentDescription = "Profile",
                     modifier = Modifier
                         .size(40.dp)
@@ -526,7 +561,7 @@ fun CustomTopBar() {
 
 
 @Composable
-fun ReceiverImageMessage() {
+fun ReceiverImageMessage(time: String,senderImage: Bitmap?) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start
@@ -541,7 +576,7 @@ fun ReceiverImageMessage() {
         ) {
             // Main image
             Image(
-                painter = painterResource(id = R.drawable.f), // Set your actual screenshot resource
+                bitmap = senderImage!!.asImageBitmap(), // Set your actual screenshot resource
                 contentDescription = "Chart Screenshot",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.FillBounds // Use Crop to maintain aspect ratio
@@ -549,7 +584,7 @@ fun ReceiverImageMessage() {
 
             // Time text
             Text(
-                text = "12:51 AM",
+                text = time,
                 color = Color.White,
                 fontSize = 12.sp,
                 modifier = Modifier
@@ -597,7 +632,7 @@ fun ReceiverImageMessage() {
 
 
 @Composable
-fun ReceiverStickerMessage() {
+fun ReceiverStickerMessage(time: String,userReplySticker: Bitmap?) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.End
@@ -609,7 +644,7 @@ fun ReceiverStickerMessage() {
                 .padding(2.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_sticker_image), // Set your actual sticker image
+                bitmap = userReplySticker!!.asImageBitmap(), // Set your actual sticker image
                 contentDescription = "Sure Shot Sticker",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.FillBounds
@@ -624,7 +659,7 @@ fun ReceiverStickerMessage() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "12:52 AM",
+                    text = time,
                     color = Color.White,
                     fontSize = 12.sp,
                 )
