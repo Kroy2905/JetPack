@@ -34,7 +34,7 @@ import com.kroy.sseditor.utils.Utils.base64ToBitmap
 import com.kroy.sseditor.viewmodels.ClientViewModel
 
 @Composable
-fun ClientScreen(onAddClient: () -> Unit, onClientClick: (clientItem) -> Unit) {
+fun ClientScreen(onAddClient: () -> Unit, onClientClick: (clientItem) -> Unit,onEditClick: (clientItem) -> Unit) {
     val clientViewModel: ClientViewModel = hiltViewModel()
     val allClients: State<ApiResponse.AllClientResponse?> = clientViewModel.filteredClientResponse.collectAsState()
 
@@ -57,7 +57,7 @@ fun ClientScreen(onAddClient: () -> Unit, onClientClick: (clientItem) -> Unit) {
                 textAlign = TextAlign.Center
             )
 
-            ClientList(clients = allClients.value?.data ?: emptyList(), onClick = onClientClick)
+            ClientList(clients = allClients.value?.data ?: emptyList(), onClick = onClientClick,onEditClick)
         }
             // Explicitly using Modifier.align here
             FloatingActionButton(
@@ -80,19 +80,19 @@ fun ClientScreen(onAddClient: () -> Unit, onClientClick: (clientItem) -> Unit) {
 
 
 @Composable
-fun ClientList(clients: List<clientItem>, onClick: (clientItem) -> Unit) {
+fun ClientList(clients: List<clientItem>, onClick: (clientItem) -> Unit,onEditClick: (clientItem) -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(0.2.dp)
     ) {
         items(clients) { client ->
-            ClientItem(client = client, onClick)
+            ClientItem(client = client, onClick,onEditClick)
         }
     }
 }
 
 @Composable
-fun ClientItem(client: clientItem, onClick: (clientItem) -> Unit) {
+fun ClientItem(client: clientItem, onClick: (clientItem) -> Unit, onEditClick: (clientItem) -> Unit) {
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
 
     LaunchedEffect(client.clientImage) {
@@ -130,13 +130,36 @@ fun ClientItem(client: clientItem, onClick: (clientItem) -> Unit) {
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        Text(
-            text = client.clientName,
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
-            ),
-            color = Color.Black
-        )
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = client.clientName,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                ),
+                color = Color.Black
+            )
+        }
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        // Adding Edit Button
+        IconButton(
+            onClick = {
+                // returning the same client on edit
+                onEditClick(client)
+            },
+            modifier = Modifier
+                .size(40.dp)
+                .background(Primary, CircleShape)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_edit), // Edit icon
+                contentDescription = "Edit Client",
+                tint = Color.White
+            )
+        }
+
+        Spacer(modifier = Modifier.width(10.dp))
     }
 }

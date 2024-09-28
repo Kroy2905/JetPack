@@ -136,7 +136,7 @@ class MainActivity :FragmentActivity() {
 //                        LoginScreen { userId, password ->
 //                            // Handle login action
 //                        }
-                       // App2()
+                    //   App2()
                         //SevenDayScreen()
 //                       CaptureAndSaveComposable(
 //                           contactName ="Random Name",
@@ -222,7 +222,10 @@ fun App2() {
                 navController.navigate("timer/${clientItem.clientName}/${clientItem.clientId}")
 
 
-            } )
+            },
+                onEditClick = {
+
+                })
         }
         composable(route = "addclient",
         ) {

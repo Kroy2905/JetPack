@@ -32,6 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.screens.CustomTelegramLayout
 import kotlinx.coroutines.delay
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
@@ -178,5 +179,15 @@ object Utils {
             null
         }
     }
+
+    // Function to convert a drawable resource to Base64 string
+    fun drawableToBase64(context: Context, drawableResId: Int): String {
+        val bitmap = BitmapFactory.decodeResource(context.resources, drawableResId)
+        val outputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+        val byteArray = outputStream.toByteArray()
+        return Base64.encodeToString(byteArray, Base64.DEFAULT)
+    }
+
 
 }
