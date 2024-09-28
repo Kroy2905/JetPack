@@ -19,6 +19,11 @@ sealed class ApiResponse {
         val message: String = "",
         val statusCode: Int = 0
     ) : ApiResponse()
+    data class AllContactResponse(
+        val data: List<ContactItem>? = emptyList(),
+        val message: String = "",
+        val statusCode: Int = 0
+    ) : ApiResponse()
 }
 
 // Example user data class

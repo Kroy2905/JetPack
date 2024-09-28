@@ -10,6 +10,7 @@ import android.graphics.Canvas
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -166,6 +167,16 @@ object Utils {
     }
     fun getBitmapFromResource(context: Context, resourceId: Int): Bitmap? {
         return BitmapFactory.decodeResource(context.resources, resourceId)
+    }
+
+    fun base64ToBitmap(base64String: String): Bitmap? {
+        return try {
+            val decodedString = Base64.decode(base64String, Base64.DEFAULT)
+            BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
 }

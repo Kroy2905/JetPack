@@ -30,6 +30,7 @@ import com.kroy.sseditor.models.ApiResponse
 import com.kroy.sseditor.models.clientItem
 import com.kroy.sseditor.ui.theme.CustomTypography
 import com.kroy.sseditor.ui.theme.Primary
+import com.kroy.sseditor.utils.Utils.base64ToBitmap
 import com.kroy.sseditor.viewmodels.ClientViewModel
 
 @Composable
@@ -76,15 +77,7 @@ fun ClientScreen(onAddClient: () -> Unit, onClientClick: (clientItem) -> Unit) {
         }
 
 }
-fun base64ToBitmap(base64String: String): Bitmap? {
-    return try {
-        val decodedString = Base64.decode(base64String, Base64.DEFAULT)
-        BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
-    }
-}
+
 
 @Composable
 fun ClientList(clients: List<clientItem>, onClick: (clientItem) -> Unit) {

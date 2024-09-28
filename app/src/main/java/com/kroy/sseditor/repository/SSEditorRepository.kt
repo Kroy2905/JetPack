@@ -87,30 +87,4 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
         }
     }
 
-
-    fun handleApiResponse(response: ApiResponse) {
-        when (response) {
-            is ApiResponse.UserLoginResponse -> {
-                // Handle user login response
-                val userData = response.data
-                val message = response.message
-                val statusCode = response.statusCode
-                // Process user login data
-            }
-            is ApiResponse.AddClientResponse -> {
-                // Handle add client response
-                val newClientData = response.data
-                val message = response.message
-                val statusCode = response.statusCode
-                // Process new client data
-            }
-            is ApiResponse.AllClientResponse -> {
-                // Handle all clients response
-                val clients = response.data ?: emptyList()
-                val message = response.message
-                val statusCode = response.statusCode
-                // Process clients
-            }
-        }
-    }
 }
