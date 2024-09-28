@@ -63,61 +63,65 @@ import java.io.ByteArrayOutputStream
 
 
 @Preview(showBackground = true)
-
 @Composable
 fun preview3(){
-
+  AddClientScreen(onClientAdded = {})
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-
 fun AddClientScreen(onClientAdded: (Int) -> Unit) {
     var clientName by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedBackgroundUri by remember { mutableStateOf<Uri?>(null) } // For background image
     var imageBase64 by remember { mutableStateOf("") }
+    var backgroundImageBase64 by remember { mutableStateOf("") } // For background image
     val context = LocalContext.current
 
-    val addClientViewModel:AddClientViewModel = hiltViewModel()
+    val addClientViewModel: AddClientViewModel = hiltViewModel()
     val addClients: State<ApiResponse.AddClientResponse?> = addClientViewModel.filteredaddClientResponse.collectAsState()
     val userId: State<Int> = addClientViewModel.userIdFlow.collectAsState(0)
     var hasNavigated by remember { mutableStateOf(false) } // Track if navigation has occurred
-   // val addedClientId = addClients.value?.data?.clientId
-    //Log.d("add client ->" , "${addedClientId}")
     val addedClientId = addClients.value?.data?.clientId ?: 0 // Safely access the clientId, default to 0 if null
+
     Log.d("add client ->", "Added Client ID: $addedClientId")
 
     if (addedClientId != 0 && !hasNavigated) {
         hasNavigated = true // Set the flag to true after first navigation
         onClientAdded(userId.value) // Trigger navigation or further actions
-        addClientViewModel.resetClientState() // Re
+        addClientViewModel.resetClientState()
     }
 
-
-    // Activity Result API for image picking
+    // Activity Result API for client image picking
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
             selectedImageUri = it
             val inputStream = context.contentResolver.openInputStream(it)
-
-            // Decode the input stream into a Bitmap
             val originalBitmap = BitmapFactory.decodeStream(inputStream)
-
-            // Create a ByteArrayOutputStream to hold the compressed image
             val outputStream = ByteArrayOutputStream()
-
-            // Compress the bitmap to reduce quality (e.g., 50%)
-            originalBitmap?.compress(Bitmap.CompressFormat.JPEG, 30, outputStream) // Adjust the quality as needed
+            originalBitmap?.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
             val compressedBytes = outputStream.toByteArray()
-
-            // Convert the compressed image to Base64
             imageBase64 = Base64.encodeToString(compressedBytes, Base64.DEFAULT)
         }
     }
 
+    // Activity Result API for background image picking
+    val backgroundPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            selectedBackgroundUri = it
+            val inputStream = context.contentResolver.openInputStream(it)
+            val originalBitmap = BitmapFactory.decodeStream(inputStream)
+            val outputStream = ByteArrayOutputStream()
+            originalBitmap?.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+            val compressedBytes = outputStream.toByteArray()
+            backgroundImageBase64 = Base64.encodeToString(compressedBytes, Base64.DEFAULT)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -125,7 +129,6 @@ fun AddClientScreen(onClientAdded: (Int) -> Unit) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Heading above the LazyColumn
         Text(
             text = "Add Client",
             style = CustomBoldTypography.titleMedium.copy(
@@ -139,7 +142,6 @@ fun AddClientScreen(onClientAdded: (Int) -> Unit) {
             textAlign = TextAlign.Center
         )
 
-        // Client Name Text Field
         OutlinedTextField(
             value = clientName,
             onValueChange = { clientName = it },
@@ -156,12 +158,9 @@ fun AddClientScreen(onClientAdded: (Int) -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Image Selection Button
+        // Client Image Selection Button
         Button(
-            onClick = {
-                // Launch the image picker
-                imagePickerLauncher.launch("image/*")
-            },
+            onClick = { imagePickerLauncher.launch("image/*") },
             modifier = Modifier
                 .background(Color.White)
                 .align(Alignment.CenterHorizontally)
@@ -171,40 +170,73 @@ fun AddClientScreen(onClientAdded: (Int) -> Unit) {
                 contentColor = Color.White
             )
         ) {
-            Text("Select Image", Modifier.padding(8.dp), fontSize = Dimens.ButtonText)
+            Text("Select Client Image", Modifier.padding(8.dp), fontSize = Dimens.ButtonText)
         }
+
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Show selected image or default image
+        // Show selected client image or default image
         Image(
-            painter = rememberAsyncImagePainter(selectedImageUri ?: R.drawable.default_pic), // Default image resource
+            painter = rememberAsyncImagePainter(selectedImageUri ?: R.drawable.default_pic),
             contentDescription = "Client Image",
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(0.9f)
-                .weight(1f) // Occupies remaining space
+                .weight(1f)
                 .padding(vertical = 16.dp),
             contentScale = ContentScale.Fit
         )
 
-        // Add Client Button
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Background Image Selection Button
+        Button(
+            onClick = { backgroundPickerLauncher.launch("image/*") },
+            modifier = Modifier
+                .background(Color.White)
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(0.9f),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Primary,
+                contentColor = Color.White
+            )
+        ) {
+            Text("Select Background Image", Modifier.padding(8.dp), fontSize = Dimens.ButtonText)
+        }
+
+        // Show selected background image or default image
+        Image(
+            painter = rememberAsyncImagePainter(selectedBackgroundUri ?: R.drawable.default_pic),
+            contentDescription = "Background Image",
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(0.9f)
+                .weight(1f)
+                .padding(vertical = 16.dp),
+            contentScale = ContentScale.Fit
+        )
+
         Button(
             onClick = {
                 if (clientName.isNotEmpty() && imageBase64.isNotEmpty()) {
-                    addClientViewModel.addClient(addClientBody(
-                        userId = userId.value,
-                        clientImage = imageBase64,
-                        clientName = clientName
-                    ))
-                }else{
+                    addClientViewModel.addClient(
+                        addClientBody(
+                            userId = userId.value,
+                            clientImage = imageBase64,
+                            clientName = clientName,
+                            //backgroundImage = backgroundImageBase64 // Add background image to the request
+                        )
+                    )
+                } else {
                     Toast.makeText(context, "Error Saving .. ", Toast.LENGTH_SHORT).show()
                 }
             },
             modifier = Modifier
                 .background(Color.White)
                 .align(Alignment.CenterHorizontally)
-                .padding(bottom = 10.dp) // 10.dp from bottom
+                .padding(bottom = 10.dp)
                 .fillMaxWidth(0.9f),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Primary,

@@ -138,34 +138,34 @@ class MainActivity :FragmentActivity() {
 //                        }
                        // App2()
                         //SevenDayScreen()
-                       CaptureAndSaveComposable(
-                           contactName ="Random Name",
-                           contactPic = contactPic,
-                           messages = sampleMessages,
-                           initialTimeString = "12:48 AM",
-                           backgroundBitmap = backgroundBitmap,
-                           senderImage = senderImage,
-                           userReplySticker = userReplySticker
-                       )
+//                       CaptureAndSaveComposable(
+//                           contactName ="Random Name",
+//                           contactPic = contactPic,
+//                           messages = sampleMessages,
+//                           initialTimeString = "12:48 AM",
+//                           backgroundBitmap = backgroundBitmap,
+//                           senderImage = senderImage,
+//                           userReplySticker = userReplySticker
+//                       )
 
 
 
 
-                        CustomTelegramLayout(
-                            contactName ="Random Name",
-                            contactPic = contactPic,
-                            messages = sampleMessages,
-                            initialTimeString = "12:48 AM",
-                            backgroundBitmap = backgroundBitmap,
-                            senderImage = senderImage,
-                            userReplySticker = userReplySticker
-                        )
+//                        CustomTelegramLayout(
+//                            contactName ="Random Name",
+//                            contactPic = contactPic,
+//                            messages = sampleMessages,
+//                            initialTimeString = "12:48 AM",
+//                            backgroundBitmap = backgroundBitmap,
+//                            senderImage = senderImage,
+//                            userReplySticker = userReplySticker
+//                        )
 
                         // Show the AddClientScreen in your navigation
-//                        AddClientScreen(onClientAdded = { name, base64Image ->
-//                            //   clients.add(Client(name, base64Image))
-//                            // Navigate back or update UI as needed
-//                        }, context = LocalContext.current)
+                        AddClientScreen(onClientAdded = {
+                            //   clients.add(Client(name, base64Image))
+                            // Navigate back or update UI as needed
+                        })
 
 //                        val clients = remember {
 //                            listOf(
