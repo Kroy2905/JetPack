@@ -76,6 +76,7 @@ object Utils {
                 userReplySticker = userReplySticker
             )
             contactViewModel.setLoading(false)
+            contactViewModel.resetContactState()
         }
 
         // Optionally, show some UI while waiting for the capture
