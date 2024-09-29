@@ -73,15 +73,18 @@ import androidx.navigation.navArgument
 import com.kroy.ssediotor.R
 import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.models.Client
+import com.kroy.sseditor.models.clientItem
 import com.kroy.sseditor.screens.AddClientScreen
 import com.kroy.sseditor.screens.CategoryScreen
 import com.kroy.sseditor.screens.ClientScreen
 import com.kroy.sseditor.screens.CustomTelegramLayout
 import com.kroy.sseditor.screens.DetailScreen
+import com.kroy.sseditor.screens.EditClientScreen
 import com.kroy.sseditor.screens.LoginScreen
 import com.kroy.sseditor.screens.SevenDayScreen
 import com.kroy.sseditor.ui.theme.SSEditorTheme
 import com.kroy.sseditor.utils.Permissions
+import com.kroy.sseditor.utils.SelectedClient
 import com.kroy.sseditor.utils.Utils
 import com.kroy.sseditor.utils.Utils.CaptureAndSaveComposable
 
@@ -136,7 +139,7 @@ class MainActivity :FragmentActivity() {
 //                        LoginScreen { userId, password ->
 //                            // Handle login action
 //                        }
-                    //   App2()
+                       App2()
                         //SevenDayScreen()
 //                       CaptureAndSaveComposable(
 //                           contactName ="Random Name",
@@ -161,11 +164,11 @@ class MainActivity :FragmentActivity() {
 //                            userReplySticker = userReplySticker
 //                        )
 
-                        // Show the AddClientScreen in your navigation
-                        AddClientScreen(onClientAdded = {
-                            //   clients.add(Client(name, base64Image))
-                            // Navigate back or update UI as needed
-                        })
+//                        // Show the AddClientScreen in your navigation
+//                        AddClientScreen(onClientAdded = {
+//                            //   clients.add(Client(name, base64Image))
+//                            // Navigate back or update UI as needed
+//                        })
 
 //                        val clients = remember {
 //                            listOf(
@@ -217,14 +220,23 @@ fun App2() {
                 // go to add client
                 navController.navigate("addclient")
             }, onClientClick = { clientItem ->
+                SelectedClient.clientId = clientItem.clientId
+                SelectedClient.clientImage = clientItem.clientImage
+                SelectedClient.clientName = clientItem.clientName
+                SelectedClient.backgroundImage = clientItem.backgroundImage
 
                 // go to days screen
                 navController.navigate("timer/${clientItem.clientName}/${clientItem.clientId}")
 
 
             },
-                onEditClick = {
+                onEditClick = {clientItem ->
+                    SelectedClient.clientId = clientItem.clientId
+                    SelectedClient.clientImage = clientItem.clientImage
+                    SelectedClient.clientName = clientItem.clientName
+                    SelectedClient.backgroundImage = clientItem.backgroundImage
 
+                    navController.navigate("editclient")
                 })
         }
         composable(route = "addclient",
@@ -232,6 +244,18 @@ fun App2() {
            AddClientScreen(onClientAdded = {
                navController.navigate("client/$it")
            } )
+        }
+
+        composable(route = "editclient",
+        ) {
+
+          EditClientScreen(clientItem = clientItem(
+              clientName = SelectedClient.clientName,
+              clientImage = SelectedClient.clientImage,
+              clientId = SelectedClient.clientId,
+              backgroundImage = SelectedClient.backgroundImage
+
+          ) )
         }
         composable(route = "timer/{name}/{id}",
             arguments = listOf(

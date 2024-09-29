@@ -226,7 +226,7 @@ fun AddClientScreen(onClientAdded: (Int) -> Unit) {
                             userId = userId.value,
                             clientImage = imageBase64,
                             clientName = clientName,
-                            //backgroundImage = backgroundImageBase64 // Add background image to the request
+                            backgroundImage = backgroundImageBase64 // Add background image to the request
                         )
                     )
                 } else {

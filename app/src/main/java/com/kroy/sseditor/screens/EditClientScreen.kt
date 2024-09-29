@@ -37,6 +37,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kroy.ssediotor.R
+import com.kroy.sseditor.models.clientItem
+import com.kroy.sseditor.ui.theme.CustomRegularTypography
 import com.kroy.sseditor.ui.theme.Primary
 import com.kroy.sseditor.utils.Utils.base64ToBitmap
 import com.kroy.sseditor.utils.Utils.drawableToBase64
@@ -47,19 +49,17 @@ import java.io.PipedReader
 
 @Composable
 fun EditClientScreen(
-    defaultClientImageBase64: String,
-    defaultBackgroundImageBase64: String
+    clientItem: clientItem, // Assuming clientItem contains a name property, like clientItem.clientName
 ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var selectedBackgroundUri by remember { mutableStateOf<Uri?>(null) }
-    var imageBase64 by remember { mutableStateOf(defaultClientImageBase64) }
-    var backgroundImageBase64 by remember { mutableStateOf(defaultBackgroundImageBase64) }
+    var imageBase64 by remember { mutableStateOf(clientItem.clientImage) }
+    var backgroundImageBase64 by remember { mutableStateOf(clientItem.backgroundImage) }
     val context = LocalContext.current
 
     // Helper function to convert Base64 string to Bitmap
-
-    val clientImageBitmap = remember { base64ToBitmap(defaultClientImageBase64) }
-    val backgroundImageBitmap = remember { base64ToBitmap(defaultBackgroundImageBase64) }
+    val clientImageBitmap = remember { base64ToBitmap(clientItem.clientImage) }
+    val backgroundImageBitmap = remember { base64ToBitmap(clientItem.backgroundImage) }
 
     // Activity Result API for client image picking
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -97,6 +97,7 @@ fun EditClientScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        // Title
         Text(
             text = "Edit Client",
             fontSize = 40.sp,
@@ -105,9 +106,23 @@ fun EditClientScreen(
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .fillMaxWidth(),
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            textAlign = TextAlign.Center
         )
 
+        // Display client name just below the "Edit Client" title
+        Text(
+            text = "Name : ${clientItem.clientName}", // Assuming clientItem has a clientName field
+            fontSize = 24.sp,
+            style = CustomRegularTypography.titleMedium,
+            fontWeight = FontWeight.Medium,
+            color = Primary,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            textAlign = TextAlign.Center
+        )
+
+        // Client Image Picker Button
         Button(
             onClick = { imagePickerLauncher.launch("image/*") },
             modifier = Modifier
@@ -140,6 +155,7 @@ fun EditClientScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Background Image Picker Button
         Button(
             onClick = { backgroundPickerLauncher.launch("image/*") },
             modifier = Modifier
@@ -194,13 +210,14 @@ fun EditClientScreen(
     }
 }
 
+
 @Preview
 @Composable
 fun PreviewEditClientScreen() {
     val context = LocalContext.current
-    EditClientScreen(
-        defaultClientImageBase64 = drawableToBase64(context, R.drawable.f),
-        defaultBackgroundImageBase64 = drawableToBase64(context,R.drawable.d)
-    )
+//    EditClientScreen(
+//        defaultClientImageBase64 = drawableToBase64(context, R.drawable.f),
+//        defaultBackgroundImageBase64 = drawableToBase64(context,R.drawable.d)
+//    )
 }
 
