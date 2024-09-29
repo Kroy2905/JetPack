@@ -66,24 +66,51 @@ import com.kroy.sseditor.utils.Utils
 import com.kroy.sseditor.utils.Utils.CaptureAndSaveComposable
 import com.kroy.sseditor.utils.Utils.base64ToBitmap
 import com.kroy.sseditor.viewmodels.ContactViewModel
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import kotlin.random.Random
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun addRandomMinutesToTime(initialTime: String, min: Int, max: Int): String {
+    val trimmedTime = initialTime.trim()
+
+    return try {
+        val parsedTime = LocalTime.parse(trimmedTime, timeFormatter)
+
+        // Generate a random number of minutes within the range
+        val randomMinutes = Random.nextInt(min, max)
+
+        // Adjust the parsed time by the random minutes
+        val adjustedTime = parsedTime.plusMinutes(randomMinutes.toLong())
+
+        // Format and return the adjusted time in 12-hour format
+        adjustedTime.format(timeFormatter)
+    } catch (e: DateTimeParseException) {
+        // In case of error, return the original time
+        initialTime
+    }
+}
 
 
 @SuppressLint("UnrememberedMutableState")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> Unit = {}) {
-    // Commenting out the ViewModel for the preview
-
     val contactViewModel: ContactViewModel = hiltViewModel()
     val isLoading: State<Boolean> = contactViewModel.isLoading.collectAsState()
 
     val allContacts: State<ApiResponse.AllContactResponse?> = contactViewModel.filteredContactResponse.collectAsState()
     val contactDetails: State<ApiResponse.ContactDetailsResponse?> = contactViewModel.filteredgetContactDetailsResponse.collectAsState()
 
+    Log.d("contact loading ->", " loading value ${isLoading.value} ,${contactDetails.value?.data?.contactId} ")
 
-    Log.d("contact loading ->"," loading value ${isLoading.value} ,${contactDetails.value?.data?.contactId} ")
-    if(contactDetails.value?.data!=null && isLoading.value){
-        Log.d("contact loading ->"," Entered image saving  ")
+    if (contactDetails.value?.data != null && isLoading.value) {
+        Log.d("contact loading ->", " Entered image saving  ")
 
         val comments = mutableStateListOf<String>().apply {
             add(contactDetails.value?.data!!.comment1)
@@ -93,43 +120,54 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
 
         // Prepare other parameters for CaptureAndSaveComposable
         val contactName = contactDetails.value?.data!!.contactName
-        val contactPic = base64ToBitmap(contactDetails.value?.data!!.contactImage) // Assuming this is correct
+        val contactPic = base64ToBitmap(contactDetails.value?.data!!.contactImage)
+
+        // Start with the initial time
+        var currentTime = addRandomMinutesToTime(SelectedClient.time, 1, 2)
+
+        // Generate times for each message with specific differences
         val messages = comments
-            .filter { it.trim().isNotEmpty() } // Filter out empty or whitespace-only strings
-            .map { trimmedComment ->
-                ChatMessage(trimmedComment.trim(), SelectedClient.time, isSender = true)
+            .filter { it.trim().isNotEmpty() }
+            .mapIndexed { index, trimmedComment ->
+                // Update the time for each message based on the index
+                currentTime = when (index) {
+                    0 -> addRandomMinutesToTime(currentTime, 1, 2) // 1st message: 1-2 min difference
+                    1 -> addRandomMinutesToTime(currentTime, 2, 3) // 2nd message: 2-3 min difference
+                    2 -> addRandomMinutesToTime(currentTime, 5, 7) // 3rd message: 5-7 min difference
+                    else -> currentTime
+                }
+
+                ChatMessage(trimmedComment.trim(), currentTime, isSender = true)
             }
 
-        val initialTimeString = SelectedClient.time // Example
-        val backgroundBitmap =base64ToBitmap(SelectedClient.backgroundImage ) // You can add a valid Bitmap if needed
-        val senderImage = base64ToBitmap(contactDetails.value?.data!!.uploadedImage) // You can add a valid Bitmap if needed
-        val userReplySticker = base64ToBitmap(SelectedClient.clientImage) // You can add a valid Bitmap if needed
+        // Update SelectedClient.time for future use
+      //  SelectedClient.time = addRandomMinutesToTime(SelectedClient.time, 2, 30)
 
-       Log.d("time set->","contact $initialTimeString")
+        val initialTimeString = currentTime // New time after random increment
+        val backgroundBitmap = base64ToBitmap(SelectedClient.backgroundImage)
+        val senderImage = base64ToBitmap(contactDetails.value?.data!!.uploadedImage)
+        val userReplySticker = base64ToBitmap(SelectedClient.clientImage)
+
+        Log.d("time set->", "contact $initialTimeString")
 
         // Call the saving function
         CaptureAndSaveComposable(
             contactName = contactName,
             contactPic = contactPic,
             messages = messages,
-            initialTimeString = initialTimeString,
+            initialTimeString = currentTime,
             backgroundBitmap = backgroundBitmap,
             senderImage = senderImage,
             userReplySticker = userReplySticker,
             contactViewModel
         )
-
-
-
-           // contactViewModel.setLoading(false)
     }
-
 
     // Using a dummy list for preview
     val dummyContacts = listOf(
         ContactItem(contactName = "John Doe"),
-        ContactItem(contactName = "Jane Smith"))
-
+        ContactItem(contactName = "Jane Smith")
+    )
 
     Box(
         modifier = Modifier
@@ -151,8 +189,8 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
             )
 
             ContactList(contacts = allContacts.value?.data ?: emptyList(), onEditClick = onEditClick, contactViewModel = contactViewModel)
-
         }
+
         // Show CircularProgressIndicator if loading is true
         if (isLoading.value) {
             CircularProgressIndicator(
@@ -160,6 +198,7 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
                 color = Primary
             )
         }
+
         FloatingActionButton(
             onClick = onAddContact,
             modifier = Modifier

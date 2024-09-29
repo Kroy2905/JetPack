@@ -1,6 +1,7 @@
 package com.kroy.sseditor.screens
 
 import android.app.Activity
+import android.os.Build
 import androidx.compose.material3.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -96,6 +98,7 @@ fun SevenDayScreen(onGoClicked :(time:String,dayName:String)->Unit) {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DayWithTimePicker(day: String, time: String, onTimeSelected: (String) -> Unit,onGoClicked: (time: String, dayName: String) -> Unit) {
     var showTimePicker by remember { mutableStateOf(false) }
@@ -219,11 +222,13 @@ fun TimePickerDialog(
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun formatTime(hour: Int, minute: Int): String {
     val amPm = if (hour < 12) "AM" else "PM"
     val formattedHour = if (hour % 12 == 0) 12 else hour % 12
     return String.format("%02d:%02d %s", formattedHour, minute, amPm)
 }
+
 
 //@Composable
 //fun DayWithTimePicker(day: String, time: String, onTimeSelected: (String) -> Unit) {
