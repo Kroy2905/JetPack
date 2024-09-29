@@ -181,8 +181,9 @@ class ContactViewModel @Inject constructor(
     }
 
     fun resetContactState() {
-        _filteredaddContactResponse.value = null
-        _filteredContactResponse.value = null
+       // _filteredaddContactResponse.value = null
+        //_filteredContactResponse.value = null
+        _filteredgetContactDetailsResponse.value = null
     }
 
 }
