@@ -255,7 +255,10 @@ fun App2() {
               clientId = SelectedClient.clientId,
               backgroundImage = SelectedClient.backgroundImage
 
-          ) )
+          )){
+              Log.d("CLient id ->","client id received after editing = $it")
+              navController.navigate("client/$it")
+          }
         }
         composable(route = "timer/{name}/{id}",
             arguments = listOf(

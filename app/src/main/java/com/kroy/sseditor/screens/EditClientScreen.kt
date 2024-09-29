@@ -19,6 +19,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,12 +38,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.kroy.ssediotor.R
+import com.kroy.sseditor.models.ApiResponse
 import com.kroy.sseditor.models.clientItem
+import com.kroy.sseditor.models.editClientBody
 import com.kroy.sseditor.ui.theme.CustomRegularTypography
 import com.kroy.sseditor.ui.theme.Primary
 import com.kroy.sseditor.utils.Utils.base64ToBitmap
 import com.kroy.sseditor.utils.Utils.drawableToBase64
+import com.kroy.sseditor.viewmodels.EditClientViewModel
 
 import java.io.ByteArrayOutputStream
 import java.io.PipedReader
@@ -50,12 +56,27 @@ import java.io.PipedReader
 @Composable
 fun EditClientScreen(
     clientItem: clientItem, // Assuming clientItem contains a name property, like clientItem.clientName
+    onClientEdited: (Int) -> Unit
 ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var selectedBackgroundUri by remember { mutableStateOf<Uri?>(null) }
     var imageBase64 by remember { mutableStateOf(clientItem.clientImage) }
     var backgroundImageBase64 by remember { mutableStateOf(clientItem.backgroundImage) }
+
     val context = LocalContext.current
+    var hasNavigated by remember { mutableStateOf(false) } // Track if navigation has occurred
+    val editClientViewModel:EditClientViewModel = hiltViewModel()
+    val editClients: State<ApiResponse.AddClientResponse?> = editClientViewModel.filteredEditClientResponse.collectAsState()
+
+    val userId: State<Int> = editClientViewModel.userIdFlow.collectAsState(0)
+
+    if (editClients.value !=null && !hasNavigated) {
+        hasNavigated = true // Set the flag to true after first navigation
+       // onClientAdded(userId.value) // Trigger navigation or further actions
+        Toast.makeText(context, "Client Updated", Toast.LENGTH_SHORT).show()
+        onClientEdited(userId.value)
+        editClientViewModel.resetClientState()
+    }
 
     // Helper function to convert Base64 string to Bitmap
     val clientImageBitmap = remember { base64ToBitmap(clientItem.clientImage) }
@@ -189,8 +210,15 @@ fun EditClientScreen(
         // Save button
         Button(
             onClick = {
-                if (imageBase64.isNotEmpty()) {
-                    Toast.makeText(context, "Client Updated", Toast.LENGTH_SHORT).show()
+                if (imageBase64.isNotEmpty() && backgroundImageBase64.isNotEmpty()) {
+                    editClientViewModel.editClient(
+                        editClientBody = editClientBody(
+                            clientName = clientItem.clientName,
+                            clientImage = clientItem.clientImage,
+                            backgroundImage = clientItem.backgroundImage
+                        ), clientId = clientItem.clientId,context
+                    )
+
                 } else {
                     Toast.makeText(context, "Error Updating .. ", Toast.LENGTH_SHORT).show()
                 }

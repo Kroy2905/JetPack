@@ -1,13 +1,18 @@
 package com.kroy.sseditor.repository
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import com.kroy.sseditor.api.ApiService
 import com.kroy.sseditor.models.ApiResponse
 import com.kroy.sseditor.models.TweetListItem
 import com.kroy.sseditor.models.addClientBody
+import com.kroy.sseditor.models.editClientBody
 import com.kroy.sseditor.models.userloginBody
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SSEditorRepository @Inject constructor(private  val apiService: ApiService){
@@ -44,7 +49,7 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
         }
     }
 
-    suspend fun loginuser(userloginBody: userloginBody){
+    suspend fun loginuser(userloginBody: userloginBody,context: Context){
         Log.d("userlogin->","body = $userloginBody")
         val response = apiService.loginUser(userloginBody)
         Log.d("userlogin->","response = ${response.body()}")
@@ -53,6 +58,12 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
         if(response.isSuccessful && response.body()!=null){
             // get the categories
             _userlogin.emit(response.body()!!)
+
+        }else{
+            // Show success toast
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+            }
 
         }
     }
@@ -83,6 +94,27 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
         if(response.isSuccessful && response.body()!=null){
             // get the categories
             _addClient.emit(response.body()!!)
+
+        }
+    }
+
+    private val _editClient = MutableStateFlow<ApiResponse.AddClientResponse>(ApiResponse.AddClientResponse())
+    val editClients:StateFlow<ApiResponse>
+        get() = _addClient
+    suspend fun editClient(context: Context, clientId:Int, editClientBody: editClientBody){
+        Log.d("edit users->","body = $editClientBody")
+        val response = apiService.editClient(clientId = clientId,editClientBody)
+        Log.d("edit users->","response = ${response.body()}")
+
+        if(response.isSuccessful && response.body()!=null){
+            // get the categories
+            _editClient.emit(response.body()!!)
+
+        }else{
+            // Show success toast
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+            }
 
         }
     }

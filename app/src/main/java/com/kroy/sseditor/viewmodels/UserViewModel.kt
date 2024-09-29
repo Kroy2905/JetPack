@@ -1,5 +1,6 @@
 package com.kroy.sseditor.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kroy.sseditor.models.ApiResponse
@@ -53,9 +54,9 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun loginuser(userloginBody: userloginBody) {
+    fun loginuser(userloginBody: userloginBody,context: Context) {
         viewModelScope.launch {
-            repository.loginuser(userloginBody)
+            repository.loginuser(userloginBody,context)
         }
     }
 
