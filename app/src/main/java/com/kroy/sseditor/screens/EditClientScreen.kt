@@ -214,8 +214,8 @@ fun EditClientScreen(
                     editClientViewModel.editClient(
                         editClientBody = editClientBody(
                             clientName = clientItem.clientName,
-                            clientImage = clientItem.clientImage,
-                            backgroundImage = clientItem.backgroundImage
+                            clientImage = imageBase64,
+                            backgroundImage = backgroundImageBase64
                         ), clientId = clientItem.clientId,context
                     )
 
