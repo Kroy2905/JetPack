@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -68,39 +69,14 @@ import com.kroy.sseditor.ui.theme.CustomRegularTypography
 import com.kroy.sseditor.ui.theme.CustomTypography
 import com.kroy.sseditor.ui.theme.Telegram
 import com.kroy.sseditor.utils.BubbleShape
+import com.kroy.sseditor.utils.Utils.generateRandomTime
 import com.kroy.sseditor.utils.Utils.getBitmapFromResource
+import com.kroy.sseditor.utils.Utils.parseTimeString
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import java.util.Locale
 import kotlin.random.Random
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview
-@Composable
-fun previewTelegram(){
-    val context = LocalContext.current
-    val sampleMessages = listOf(
-        ChatMessage("Hello 34000000000000000", "12:50 AM", isSender = true),
-        ChatMessage("Hi there!", "12:50 AM", isSender = true),
-        ChatMessage("How are you?", "12:50 AM", isSender = true)
-    )
-
-    // Replace with actual Bitmap objects for testing
-    val contactPic: Bitmap? = getBitmapFromResource(context,R.drawable.f)
-    val backgroundBitmap: Bitmap? = getBitmapFromResource(context,R.drawable.telegram_bg)
-    val senderImage: Bitmap? = getBitmapFromResource(context,R.drawable.b)
-    val userReplySticker: Bitmap? = getBitmapFromResource(context,R.drawable.d)
-
-    CustomTelegramLayout(
-        contactName ="Random Name",
-        contactPic = contactPic,
-        messages = sampleMessages,
-        initialTimeString = "12:48 AM",
-        backgroundBitmap = backgroundBitmap,
-        senderImage = senderImage,
-        userReplySticker = userReplySticker
-    )
-}
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -115,7 +91,11 @@ fun CustomTelegramLayout(
     userReplySticker: Bitmap?
 ) {
     // Parse the initial time string to LocalTime
-    val initialTime = parseTimeString(initialTimeString)
+    Log.d("time set->","TES $initialTimeString")
+    val initialTime = remember {
+        parseTimeString(initialTimeString)
+    }
+    Log.d("time set->","parse $initialTimeString")
 
     // Generate a random time between 20 to 30 minutes from the initial time
     val randomStickerTime = remember { generateRandomTime(initialTime, 20, 30) }
@@ -139,7 +119,7 @@ fun CustomTelegramLayout(
         ) {
             // Top bar with the formatted initial time
             CustomTopBar(
-                time = initialTime.format(DateTimeFormatter.ofPattern("hh:mm")),
+                time = randomStickerTime.format(DateTimeFormatter.ofPattern("hh:mm")),
                 contactName = contactName,
                 contactPic = contactPic
             )
@@ -197,22 +177,7 @@ fun CustomTelegramLayout(
 
 
 // Function to parse the time string ("hh:mm a" format) into LocalTime
-@RequiresApi(Build.VERSION_CODES.O)
-fun parseTimeString(timeString: String): LocalTime {
-    return try {
-        LocalTime.parse(timeString, DateTimeFormatter.ofPattern("hh:mm a"))
-    } catch (e: DateTimeParseException) {
-        // Handle parsing error by returning a default time, e.g., midnight
-        LocalTime.MIDNIGHT
-    }
-}
 
-// Function to generate a random time between a given range (in minutes)
-@RequiresApi(Build.VERSION_CODES.O)
-fun generateRandomTime(baseTime: LocalTime, minMinutes: Int, maxMinutes: Int): LocalTime {
-    val randomMinutes = Random.nextInt(minMinutes, maxMinutes + 1)
-    return baseTime.plusMinutes(randomMinutes.toLong())
-}
 
 @Composable
 fun ChatBubble(
@@ -233,23 +198,23 @@ fun ChatBubble(
         Row(
             modifier = Modifier
                 .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color.Black.copy(alpha = 0.72f),
-                        Color.Black.copy(alpha = 0.7f)
-                    )
-                ),
-                shape = if (isLastMessage) {
-                    BubbleShape(
-                        tailSize = 10.dp,
-                        isSender = isSender
-                    ) // Use custom shape for last message
-                } else {
-                    RoundedCornerShape(
-                        topStart = 8.dp, topEnd = 32.dp, bottomEnd = 32.dp, bottomStart = 8.dp
-                    )
-                }
-            )
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.72f),
+                            Color.Black.copy(alpha = 0.7f)
+                        )
+                    ),
+                    shape = if (isLastMessage) {
+                        BubbleShape(
+                            tailSize = 10.dp,
+                            isSender = isSender
+                        ) // Use custom shape for last message
+                    } else {
+                        RoundedCornerShape(
+                            topStart = 8.dp, topEnd = 32.dp, bottomEnd = 32.dp, bottomStart = 8.dp
+                        )
+                    }
+                )
                 .graphicsLayer {
                     shape = RoundedCornerShape(0.dp) // Keeping it rectangular
                     clip = true // Clip to bounds

@@ -24,6 +24,18 @@ sealed class ApiResponse {
         val message: String = "",
         val statusCode: Int = 0
     ) : ApiResponse()
+
+    data class AddContacttResponse(
+        val data: addContactResponse? = null, // Replace with actual data type if different
+        val message: String = "",
+        val statusCode: Int = 0
+    ) : ApiResponse()
+
+    data class ContactDetailsResponse(
+        val data: ContactDetails? = null, // Replace with actual data type if different
+        val message: String = "",
+        val statusCode: Int = 0
+    ) : ApiResponse()
 }
 
 // Example user data class

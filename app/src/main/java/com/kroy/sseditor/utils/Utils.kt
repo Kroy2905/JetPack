@@ -29,12 +29,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.screens.CustomTelegramLayout
+import com.kroy.sseditor.viewmodels.ContactViewModel
 import kotlinx.coroutines.delay
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import java.util.Locale
+import kotlin.random.Random
 
 object Utils {
 
@@ -48,12 +55,16 @@ object Utils {
         initialTimeString: String, // Time in "hh:mm a" format, e.g., "12:48 AM"
         backgroundBitmap: Bitmap?,
         senderImage: Bitmap?,
-        userReplySticker: Bitmap?
+        userReplySticker: Bitmap?,
+        contactViewModel: ContactViewModel
     ) {
         val context = LocalContext.current
+        Log.d("time set->","utils $initialTimeString")
+
 
         LaunchedEffect(Unit) {
-            delay(5000) // Wait for 5 seconds
+            delay(500)
+            Log.d("time set->"," LE $initialTimeString")
             captureAndSaveComposableToBitmap(
                 context = context,
                 contactName = contactName,
@@ -64,6 +75,7 @@ object Utils {
                 senderImage = senderImage,
                 userReplySticker = userReplySticker
             )
+            contactViewModel.setLoading(false)
         }
 
         // Optionally, show some UI while waiting for the capture
@@ -188,6 +200,30 @@ object Utils {
         val byteArray = outputStream.toByteArray()
         return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun parseTimeString(timeString: String): LocalTime {
+        return try {
+            // Use Locale to avoid issues with AM/PM formatting in different regions
+            val formatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
+            LocalTime.parse(timeString.trim(), formatter)
+        } catch (e: DateTimeParseException) {
+            Log.d("time set->","utils entered error ")
+            // Handle parsing error by returning a default time, e.g., midnight
+            LocalTime.MIDNIGHT
+        }
+    }
+
+
+
+    // Function to generate a random time between a given range (in minutes)
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun generateRandomTime(baseTime: LocalTime, minMinutes: Int, maxMinutes: Int): LocalTime {
+        val randomMinutes = Random.nextInt(minMinutes, maxMinutes + 1)
+        return baseTime.plusMinutes(randomMinutes.toLong())
+    }
+
+
 
 
 }

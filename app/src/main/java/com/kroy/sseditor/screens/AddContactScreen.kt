@@ -36,9 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -48,17 +46,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.kroy.ssediotor.R
 import com.kroy.sseditor.models.ApiResponse
-import com.kroy.sseditor.models.Client
-import com.kroy.sseditor.models.addClientBody
+import com.kroy.sseditor.models.addContactBody
 import com.kroy.sseditor.ui.theme.CustomBoldTypography
-import com.kroy.sseditor.ui.theme.CustomTypography
 import com.kroy.sseditor.ui.theme.Dimens
 import com.kroy.sseditor.ui.theme.Primary
-import com.kroy.sseditor.viewmodels.AddClientViewModel
-import com.kroy.sseditor.viewmodels.ClientViewModel
+import com.kroy.sseditor.utils.SelectedClient
+import com.kroy.sseditor.viewmodels.ContactViewModel
 import java.io.ByteArrayOutputStream
 
 
@@ -82,19 +77,19 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
     val context = LocalContext.current
 
     // Comment out the ViewModel code for now
-    // val addContactViewModel: AddContactViewModel = hiltViewModel()
-    // val addContacts: State<ApiResponse.AddContactResponse?> = addContactViewModel.filteredAddContactResponse.collectAsState()
-    // val userId: State<Int> = addContactViewModel.userIdFlow.collectAsState(0)
-    // var hasNavigated by remember { mutableStateOf(false) }
-    // val addedContactId = addContacts.value?.data?.contactId ?: 0
+     val addContactViewModel: ContactViewModel = hiltViewModel()
+     val addContacts: State<ApiResponse.AddContacttResponse?> = addContactViewModel.filteredaddContactResponse.collectAsState()
+     val userId: State<Int> = addContactViewModel.userIdFlow.collectAsState(0)
+     var hasNavigated by remember { mutableStateOf(false) }
+     val addedContactId = addContacts.value?.data?.contactId ?: 0
 
-    // Log.d("add contact ->", "Added Contact ID: $addedContactId")
+     Log.d("add contact ->", "Added Contact ID: $addedContactId")
 
-    // if (addedContactId != 0 && !hasNavigated) {
-    //     hasNavigated = true
-    //     onContactAdded(userId.value)
-    //     addContactViewModel.resetContactState()
-    // }
+     if (addedContactId != 0 && !hasNavigated) {
+         hasNavigated = true
+         onContactAdded(userId.value)
+         addContactViewModel.resetContactState()
+     }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -143,6 +138,7 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
             textAlign = TextAlign.Center
         )
 
+        // Contact Name
         OutlinedTextField(
             value = contactName,
             onValueChange = { contactName = it },
@@ -159,7 +155,7 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Additional Text Fields for comments
+        // Comment Fields with validation
         OutlinedTextField(
             value = comment1,
             onValueChange = { comment1 = it },
@@ -183,6 +179,7 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth(0.9f)
                 .align(Alignment.CenterHorizontally),
+            enabled = comment1.isNotEmpty(), // Enable only if comment1 is not empty
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Primary,
                 unfocusedBorderColor = Primary,
@@ -199,6 +196,7 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth(0.9f)
                 .align(Alignment.CenterHorizontally),
+            enabled = comment1.isNotEmpty() && comment2.isNotEmpty(), // Enable only if comment1 and comment2 are not empty
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Primary,
                 unfocusedBorderColor = Primary,
@@ -268,23 +266,44 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Save Button
+        // Save Button with validation logic
         Button(
             onClick = {
-                if (contactName.isNotEmpty() && imageBase64.isNotEmpty()) {
-                    // Save logic here (commented out ViewModel code)
-                    // addContactViewModel.addContact(
-                    //     addContactBody(
-                    //         userId = userId.value,
-                    //         contactImage = imageBase64,
-                    //         contactName = contactName,
-                    //         comment1 = comment1,
-                    //         comment2 = comment2,
-                    //         comment3 = comment3
-                    //     )
-                    // )
-                } else {
-                    Toast.makeText(context, "Error Saving .. ", Toast.LENGTH_SHORT).show()
+                when {
+                    contactName.isEmpty() -> {
+                        Toast.makeText(context, "Contact Name is required", Toast.LENGTH_SHORT).show()
+                    }
+                    comment1.isEmpty() -> {
+                        Toast.makeText(context, "Comment 1 cannot be empty", Toast.LENGTH_SHORT).show()
+                    }
+                    comment2.isNotEmpty() && comment1.isEmpty() -> {
+                        Toast.makeText(context, "Fill Comment 1 first", Toast.LENGTH_SHORT).show()
+                    }
+                    comment3.isNotEmpty() && (comment1.isEmpty() || comment2.isEmpty()) -> {
+                        Toast.makeText(context, "Fill Comment 1 and 2 first", Toast.LENGTH_SHORT).show()
+                    }
+                    imageBase64.isEmpty() -> {
+                        Toast.makeText(context, "Contact Image is required", Toast.LENGTH_SHORT).show()
+                    }
+                    backgroundImageBase64.isEmpty() -> {
+                        Toast.makeText(context, "Screenshot Image is required", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        // Proceed with saving the contact
+                         addContactViewModel.addContact(
+                             addContactBody(
+                                 clientId = SelectedClient.clientId,
+                                 comment1 = comment1,
+                                 comment2 = comment2,
+                                 comment3 = comment3,
+                                 contactImage = imageBase64,
+                                 contactName = contactName,
+                                 dayName = SelectedClient.dayName,
+                                 uploadedImage =backgroundImageBase64
+                             ),
+                             context
+                         )
+                    }
                 }
             },
             modifier = Modifier

@@ -3,6 +3,7 @@ package com.kroy.sseditor.api
 import com.kroy.sseditor.models.ApiResponse
 import com.kroy.sseditor.models.TweetListItem
 import com.kroy.sseditor.models.addClientBody
+import com.kroy.sseditor.models.addContactBody
 import com.kroy.sseditor.models.editClientBody
 import com.kroy.sseditor.models.userloginBody
 import retrofit2.Response
@@ -39,6 +40,18 @@ interface ApiService {
     suspend fun editClient(@Query("clientId") clientId:Int,
                            @Body editClientBody: editClientBody
     ) : Response <ApiResponse.AddClientResponse>
+
+    @GET("contacts")    // API to be written here
+    suspend fun getAllContactss(@Query("clientId") clientId:Int,@Query("dayName") dayName:String
+    ) : Response <ApiResponse.AllContactResponse>
+
+    @POST("contacts")    // API to be written here
+    suspend fun addContact(@Body addContactBody: addContactBody,
+    ) : Response <ApiResponse.AddContacttResponse>
+
+    @GET("contacts/contactbyid")    // API to be written here
+    suspend fun getContactDetails(@Query("contactId") contactId:Int
+    ) : Response <ApiResponse.ContactDetailsResponse>
 
 
 

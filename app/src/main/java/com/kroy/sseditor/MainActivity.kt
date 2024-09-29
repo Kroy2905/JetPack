@@ -75,13 +75,17 @@ import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.models.Client
 import com.kroy.sseditor.models.clientItem
 import com.kroy.sseditor.screens.AddClientScreen
+import com.kroy.sseditor.screens.AddContactScreen
 import com.kroy.sseditor.screens.CategoryScreen
 import com.kroy.sseditor.screens.ClientScreen
+import com.kroy.sseditor.screens.ContactScreen
 import com.kroy.sseditor.screens.CustomTelegramLayout
 import com.kroy.sseditor.screens.DetailScreen
 import com.kroy.sseditor.screens.EditClientScreen
+import com.kroy.sseditor.screens.EditContactScreen
 import com.kroy.sseditor.screens.LoginScreen
 import com.kroy.sseditor.screens.SevenDayScreen
+import com.kroy.sseditor.screens.formatTime
 import com.kroy.sseditor.ui.theme.SSEditorTheme
 import com.kroy.sseditor.utils.Permissions
 import com.kroy.sseditor.utils.SelectedClient
@@ -139,7 +143,7 @@ class MainActivity :FragmentActivity() {
 //                        LoginScreen { userId, password ->
 //                            // Handle login action
 //                        }
-                       App2()
+                        App2()
                         //SevenDayScreen()
 //                       CaptureAndSaveComposable(
 //                           contactName ="Random Name",
@@ -199,6 +203,7 @@ class MainActivity :FragmentActivity() {
 
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun App2() {
     val navController = rememberNavController()
@@ -241,24 +246,24 @@ fun App2() {
         }
         composable(route = "addclient",
         ) {
-           AddClientScreen(onClientAdded = {
-               navController.navigate("client/$it")
-           } )
+            AddClientScreen(onClientAdded = {
+                navController.navigate("client/$it")
+            } )
         }
 
         composable(route = "editclient",
         ) {
 
-          EditClientScreen(clientItem = clientItem(
-              clientName = SelectedClient.clientName,
-              clientImage = SelectedClient.clientImage,
-              clientId = SelectedClient.clientId,
-              backgroundImage = SelectedClient.backgroundImage
+            EditClientScreen(clientItem = clientItem(
+                clientName = SelectedClient.clientName,
+                clientImage = SelectedClient.clientImage,
+                clientId = SelectedClient.clientId,
+                backgroundImage = SelectedClient.backgroundImage
 
-          )){
-              Log.d("CLient id ->","client id received after editing = $it")
-              navController.navigate("client/$it")
-          }
+            )){
+                Log.d("CLient id ->","client id received after editing = $it")
+                navController.navigate("client/$it")
+            }
         }
         composable(route = "timer/{name}/{id}",
             arguments = listOf(
@@ -269,10 +274,41 @@ fun App2() {
                     type = NavType.IntType
                 },
 
-            )
+                )
         ) {
-            SevenDayScreen()
+            SevenDayScreen(onGoClicked = {time, dayName ->
+                println("Received aday and time  $dayName at $time")
+                SelectedClient.dayName = dayName
+                SelectedClient.time = time
+                println("Received aday and time  ${SelectedClient.dayName} at ${SelectedClient.time}")
+                navController.navigate("contact")
+
+
+            })
+
+
         }
+        composable(route = "contact") {
+            ContactScreen(onAddContact = {
+                navController.navigate("addcontact")
+            },
+                onEditClick = {
+
+                }
+            )
+        }
+        composable(route = "addcontact") {
+               AddContactScreen(onContactAdded = {
+                   navController.navigate("contact")
+               })
+        }
+
+        composable(route = "editcontact") {
+          // EditContactScreen()
+        }
+
+
+
 
 
 
@@ -290,7 +326,7 @@ fun App2() {
         composable(route = "category") {
             CategoryScreen(){
                 navController.navigate("detail/$it")
-            } 
+            }
         }
 
         composable(route = "detail/{category}",
@@ -342,7 +378,7 @@ fun DerivedAndProduced(){
     Box(
         contentAlignment =  Alignment.Center,
         modifier =  Modifier.fillMaxSize(1f)
-        
+
     ){
         Text(text = message.value)
     }
@@ -387,7 +423,7 @@ fun ListViewItem(imgID:Int , name:String ,profession:String){
                     contentDescription = "person",
                     Modifier.
                     size(40.dp)
-                    )
+                )
             }
         }
         Column(
@@ -402,7 +438,7 @@ fun ListViewItem(imgID:Int , name:String ,profession:String){
                 fontWeight = FontWeight.ExtraBold,
                 maxLines = 1
 
-                )
+            )
             Text(
                 text = profession,
                 fontSize = 18.sp,
@@ -427,7 +463,7 @@ fun Row_and_Column () {
         Text(
             text = "A",
 
-        )
+            )
         Text(
             text = "B"
         )
@@ -453,20 +489,20 @@ fun Row_and_Column () {
 @Composable
 fun PreviewFunction(){
     /** Text */
-        Text(text = "Hello world",
-            fontFamily = FontFamily.Cursive,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.ExtraBold,
-            color = Color.Red,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .wrapContentHeight()
-                .border(10.dp, Color.Red)
-                .padding(30.dp)
-                .clickable {
-                    Log.d("Text click ->", "Hello!")
-                }
-        )
+    Text(text = "Hello world",
+        fontFamily = FontFamily.Cursive,
+        fontSize = 20.sp,
+        fontWeight = FontWeight.ExtraBold,
+        color = Color.Red,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .wrapContentHeight()
+            .border(10.dp, Color.Red)
+            .padding(30.dp)
+            .clickable {
+                Log.d("Text click ->", "Hello!")
+            }
+    )
     /** Image */
 //    Image(
 //        painter = painterResource(id = R.drawable.ic_launcher_foreground),
@@ -478,7 +514,7 @@ fun PreviewFunction(){
 //
 //
 //        )
-      /**Button*/
+    /**Button*/
 //    Button(onClick = {},
 //        colors = ButtonDefaults.buttonColors(
 //            containerColor = Color.Red,
@@ -531,13 +567,13 @@ fun App(){
 }
 @Composable
 fun Counter2(value:Int){
-val state = rememberUpdatedState(newValue = value)
+    val state = rememberUpdatedState(newValue = value)
     LaunchedEffect(key1 = Unit){ // whenever the key value changes , then only the block gets executed
         delay (5000) // Long running task
         Log.d("Button click","Button clicked counter increased ${state.value}")
     }
 
-        Text(text = "Value  =  ${state.value}")
+    Text(text = "Value  =  ${state.value}")
 
 }
 @Composable

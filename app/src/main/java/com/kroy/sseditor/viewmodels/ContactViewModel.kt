@@ -1,13 +1,18 @@
 package com.kroy.sseditor.viewmodels
 
+import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kroy.sseditor.models.ApiResponse
 import com.kroy.sseditor.models.addClientBody
+import com.kroy.sseditor.models.addContactBody
 import com.kroy.sseditor.repository.SSEditorRepository
 import com.kroy.sseditor.utils.DataStoreHelper
+import com.kroy.sseditor.utils.SelectedClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,15 +31,30 @@ class ContactViewModel @Inject constructor(
     val isLoggedInFlow: Flow<Boolean> = dataStoreHelper.isLoggedInFlow
     val userIdFlow: Flow<Int> = dataStoreHelper.userIdFlow
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    // Function to toggle the loading state
+    fun toggleLoading() {
+        viewModelScope.launch {
+            _isLoading.value = !_isLoading.value
+        }
+    }
+
+    // Function to explicitly set the loading state
+    fun setLoading(isLoading: Boolean) {
+        viewModelScope.launch {
+            _isLoading.value = isLoading
+        }
+    }
+
+
     // StateFlow for all clients response
 
 
     init {
         viewModelScope.launch {
-//            val userId = savedStateHandle.get<Int>("userId") ?: 0
-//            Log.d("received viewmodel->", "$userId")
-//            setUserId(userId)
-//            getAllClients(userId)
+            getAllContacts(SelectedClient.clientId,SelectedClient.dayName)
         }
     }
 
@@ -52,41 +72,60 @@ class ContactViewModel @Inject constructor(
     }
 
     // Fetch all clients and handle the response
-    val allClients: StateFlow<ApiResponse> get() = repository.allClients
+    val allContacts: StateFlow<ApiResponse> get() = repository.allContacts
 
     // Filtered response for all clients
-    private val _filteredClientResponse = MutableStateFlow<ApiResponse.AllClientResponse?>(null)
-    val filteredContactResponse: StateFlow<ApiResponse.AllClientResponse?> get() = _filteredClientResponse
-    fun getAllClients(userId: Int) {
+    private val _filteredContactResponse = MutableStateFlow<ApiResponse.AllContactResponse?>(null)
+    val filteredContactResponse: StateFlow<ApiResponse.AllContactResponse?> get() = _filteredContactResponse
+    fun getAllContacts(clientId:Int,dayName:String) {
         viewModelScope.launch {
-            Log.d("ClientViewModel", "Fetching all clients for userId: $userId")
-            repository.getAllClients(userId)
+            Log.d("ContactViewModel", "Fetching all clients for userId: $clientId")
+            repository.getAllContacts(clientId, dayName)
 
             // Assuming repository.allClients is updated after the API call
-            allClients.collect { response ->
+            allContacts.collect { response ->
                 handleClientResponse(response)
             }
         }
     }
 
 
-    // Fetch all clients and handle the response
-    private val addClients: StateFlow<ApiResponse> get() = repository.allClients
+    // Add contact and handle the response
+    private val addContact: StateFlow<ApiResponse> get() = repository.addContact
 
     // Filtered response for all clients
-    private val _filteredaddClientResponse = MutableStateFlow<ApiResponse.AddClientResponse?>(null)
-    val filteredaddClientResponse: StateFlow<ApiResponse.AddClientResponse?> get() = _filteredaddClientResponse
-    fun addClient(addClientBody: addClientBody) {
+    private val _filteredaddContactResponse = MutableStateFlow<ApiResponse.AddContacttResponse?>(null)
+    val filteredaddContactResponse: StateFlow<ApiResponse.AddContacttResponse?> get() = _filteredaddContactResponse
+    fun addContact(addContactBody: addContactBody,context:Context) {
         viewModelScope.launch {
 
-            repository.addClient(addClientBody)
+            repository.addContact(addContactBody,context)
 
             // Assuming repository.allClients is updated after the API call
-            addClients.collect { response ->
+            addContact.collect { response ->
                 handleClientResponse(response)
             }
         }
     }
+
+    // Add contact and handle the response
+    private val getContactDetails: StateFlow<ApiResponse> get() = repository.getContactDetails
+
+    // Filtered response for all clients
+    private val _filteredgetContactDetailsResponse = MutableStateFlow<ApiResponse.ContactDetailsResponse?>(null)
+    val filteredgetContactDetailsResponse: StateFlow<ApiResponse.ContactDetailsResponse?> get() = _filteredgetContactDetailsResponse
+    fun getontactDetails(contactId:Int,context:Context) {
+        viewModelScope.launch {
+
+            repository.getContactDetails(contactId,context)
+
+            // Assuming repository.allClients is updated after the API call
+            getContactDetails.collect { response ->
+                handleClientResponse(response)
+            }
+        }
+    }
+
 
 
 
@@ -94,26 +133,40 @@ class ContactViewModel @Inject constructor(
     // Handle and filter the API response
     private fun handleClientResponse(response: ApiResponse) {
         when (response) {
-            is ApiResponse.AllClientResponse -> {
+            is ApiResponse.AllContactResponse -> {
                 if (response.data!!.isNotEmpty()) {
                     // Emit the successful response
-                    _filteredClientResponse.value = response
+                    _filteredContactResponse.value = response
                 } else {
                     // Handle empty data scenario
-                    _filteredClientResponse.value = ApiResponse.AllClientResponse(
+                    _filteredContactResponse.value = ApiResponse.AllContactResponse(
                         data = emptyList(),
                         message = "No clients found",
                         statusCode = response.statusCode
                     )
                 }
             }
-            is ApiResponse.AddClientResponse -> {
+            is ApiResponse.AddContacttResponse -> {
                 if (response.data!=null) {
                     // Emit the successful response
-                    _filteredaddClientResponse.value = response
+                    _filteredaddContactResponse.value = response
                 } else {
                     // Handle empty data scenario
-                    _filteredaddClientResponse.value = ApiResponse.AddClientResponse(
+                    _filteredaddContactResponse.value = ApiResponse.AddContacttResponse(
+                        data = null,
+                        message = "No clients found",
+                        statusCode = response.statusCode
+                    )
+                }
+            }
+
+            is ApiResponse.ContactDetailsResponse -> {
+                if (response.data!=null) {
+                    // Emit the successful response
+                    _filteredgetContactDetailsResponse.value = response
+                } else {
+                    // Handle empty data scenario
+                    _filteredgetContactDetailsResponse.value = ApiResponse.ContactDetailsResponse(
                         data = null,
                         message = "No clients found",
                         statusCode = response.statusCode
@@ -122,8 +175,14 @@ class ContactViewModel @Inject constructor(
             }
             else -> {
                 // Handle other response types if necessary
-                _filteredClientResponse.value = null
+                _filteredContactResponse.value = null
             }
         }
     }
+
+    fun resetContactState() {
+        _filteredaddContactResponse.value = null
+        _filteredContactResponse.value = null
+    }
+
 }

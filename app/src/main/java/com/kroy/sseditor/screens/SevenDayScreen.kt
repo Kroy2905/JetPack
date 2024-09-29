@@ -39,12 +39,12 @@ import java.util.Calendar
 @Composable
 fun preview4(){
 
-    SevenDayScreen()
+   // SevenDayScreen()
 }
 
 
 @Composable
-fun SevenDayScreen() {
+fun SevenDayScreen(onGoClicked :(time:String,dayName:String)->Unit) {
     val selectTimeViewModel:SelectTimeViewModel = hiltViewModel()
     val clientName = selectTimeViewModel.name.collectAsState()
     val clientId = selectTimeViewModel.id.collectAsState()
@@ -87,7 +87,8 @@ fun SevenDayScreen() {
                     time = timeStates[dayIndex],
                     onTimeSelected = { newTime ->
                         timeStates[dayIndex] = newTime
-                    }
+                    },
+                    onGoClicked
                 )
             }
         }
@@ -96,7 +97,7 @@ fun SevenDayScreen() {
 
 
 @Composable
-fun DayWithTimePicker(day: String, time: String, onTimeSelected: (String) -> Unit) {
+fun DayWithTimePicker(day: String, time: String, onTimeSelected: (String) -> Unit,onGoClicked: (time: String, dayName: String) -> Unit) {
     var showTimePicker by remember { mutableStateOf(false) }
     var hour by remember { mutableStateOf(8) }
     var minute by remember { mutableStateOf(0) }
@@ -145,6 +146,9 @@ fun DayWithTimePicker(day: String, time: String, onTimeSelected: (String) -> Uni
         // Go button
         IconButton(onClick = {
             println("Selected: Day $day at ${formatTime(hour, minute)}")
+            val x = formatTime(hour, minute)
+            onGoClicked("$x",
+                "Day $day")
         }) {
             Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "Go")
         }

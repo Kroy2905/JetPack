@@ -7,6 +7,7 @@ import com.kroy.sseditor.api.ApiService
 import com.kroy.sseditor.models.ApiResponse
 import com.kroy.sseditor.models.TweetListItem
 import com.kroy.sseditor.models.addClientBody
+import com.kroy.sseditor.models.addContactBody
 import com.kroy.sseditor.models.editClientBody
 import com.kroy.sseditor.models.userloginBody
 import kotlinx.coroutines.Dispatchers
@@ -50,73 +51,175 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
     }
 
     suspend fun loginuser(userloginBody: userloginBody,context: Context){
-        Log.d("userlogin->","body = $userloginBody")
-        val response = apiService.loginUser(userloginBody)
-        Log.d("userlogin->","response = ${response.body()}")
+        try{
+            Log.d("userlogin->","body = $userloginBody")
+            val response = apiService.loginUser(userloginBody)
+            Log.d("userlogin->","response = ${response.body()}")
 
 
-        if(response.isSuccessful && response.body()!=null){
-            // get the categories
-            _userlogin.emit(response.body()!!)
+            if(response.isSuccessful && response.body()!=null){
+                // get the categories
+                _userlogin.emit(response.body()!!)
 
-        }else{
-            // Show success toast
-            withContext(Dispatchers.Main) {
-                Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+            }else{
+                // Show success toast
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                }
+
             }
-
+        }catch (e:Exception){
+            e.printStackTrace()
         }
+
+
     }
 
     private val _allClients = MutableStateFlow<ApiResponse.AllClientResponse>(ApiResponse.AllClientResponse())
     val allClients:StateFlow<ApiResponse>
         get() = _allClients
     suspend fun getAllClients(userId:Int){
-        Log.d("all users->","body = $userId")
-        val response = apiService.getAllClients(userId)
-        Log.d("all users->","response = ${response.body()}")
+        try {
+            Log.d("all users->","body = $userId")
+            val response = apiService.getAllClients(userId)
+            Log.d("all users->","response = ${response.body()}")
 
-        if(response.isSuccessful && response.body()!=null){
-            // get the categories
-            _allClients.emit(response.body()!!)
+            if(response.isSuccessful && response.body()!=null){
+                // get the categories
+                _allClients.emit(response.body()!!)
 
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
         }
+
     }
 
     private val _addClient = MutableStateFlow<ApiResponse.AddClientResponse>(ApiResponse.AddClientResponse())
     val addClients:StateFlow<ApiResponse>
         get() = _addClient
     suspend fun addClient(addClientBody: addClientBody){
-        Log.d("add users->","body = $addClientBody")
-        val response = apiService.addClient(addClientBody)
-        Log.d("add users->","response = ${response.body()}")
+        try{
+            Log.d("add users->","body = $addClientBody")
+            val response = apiService.addClient(addClientBody)
+            Log.d("add users->","response = ${response.body()}")
 
-        if(response.isSuccessful && response.body()!=null){
-            // get the categories
-            _addClient.emit(response.body()!!)
+            if(response.isSuccessful && response.body()!=null){
+                // get the categories
+                _addClient.emit(response.body()!!)
 
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
         }
+
+
     }
 
     private val _editClient = MutableStateFlow<ApiResponse.AddClientResponse>(ApiResponse.AddClientResponse())
     val editClients:StateFlow<ApiResponse>
         get() = _addClient
     suspend fun editClient(context: Context, clientId:Int, editClientBody: editClientBody){
-        Log.d("edit users->","body = $editClientBody")
-        val response = apiService.editClient(clientId = clientId,editClientBody)
-        Log.d("edit users->","response = ${response.body()}")
+        try{
+            Log.d("edit users->","body = $editClientBody")
+            val response = apiService.editClient(clientId = clientId,editClientBody)
+            Log.d("edit users->","response = ${response.body()}")
 
-        if(response.isSuccessful && response.body()!=null){
-            // get the categories
-            _editClient.emit(response.body()!!)
+            if(response.isSuccessful && response.body()!=null){
+                // get the categories
+                _editClient.emit(response.body()!!)
 
-        }else{
-            // Show success toast
-            withContext(Dispatchers.Main) {
-                Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+            }else{
+                // Show success toast
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                }
+
             }
-
+        }catch (e:Exception){
+            e.printStackTrace()
         }
+
     }
+
+
+    private val _allContacts = MutableStateFlow<ApiResponse.AllContactResponse>(ApiResponse.AllContactResponse())
+    val allContacts:StateFlow<ApiResponse>
+        get() = _allContacts
+    suspend fun getAllContacts(clientId:Int,dayName:String){
+        try{
+
+            Log.d("all contacts->","body = $clientId , $dayName")
+            val response = apiService.getAllContactss(clientId, dayName)
+            Log.d("all contacts->","response = ${response.body()}")
+
+            if(response.isSuccessful && response.body()!=null){
+                // get the categories
+                _allContacts.emit(response.body()!!)
+
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+
+
+    }
+
+
+    //Adding ocntact
+    private val _addContact = MutableStateFlow<ApiResponse.AddContacttResponse>(ApiResponse.AddContacttResponse())
+    val addContact:StateFlow<ApiResponse>
+        get() = _addContact
+    suspend fun addContact(addContactBody: addContactBody,context: Context){
+        try{
+            Log.d("add users->","body = $addContactBody")
+            val response = apiService.addContact(addContactBody)
+            Log.d("add users->","response = ${response.body()}")
+
+            if(response.isSuccessful && response.body()!=null){
+                // get the categories
+                _addContact.emit(response.body()!!)
+
+            }else{
+                // Show success toast
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+
+
+    }
+
+   //get contact details
+    private val _getContactDetails = MutableStateFlow<ApiResponse.ContactDetailsResponse>(ApiResponse.ContactDetailsResponse())
+    val getContactDetails:StateFlow<ApiResponse>
+        get() = _getContactDetails
+    suspend fun getContactDetails(contactId:Int,context: Context){
+        try{
+            Log.d("contact details->","body = $contactId")
+            val response = apiService.getContactDetails(contactId)
+            Log.d("contact details->","response = ${response.body()}")
+
+            if(response.isSuccessful && response.body()!=null){
+                // get the categories
+                _getContactDetails.emit(response.body()!!)
+
+            }else{
+                // Show success toast
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+
+    }
+
 
 }
