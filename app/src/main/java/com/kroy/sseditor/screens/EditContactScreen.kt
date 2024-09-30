@@ -46,6 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.kroy.ssediotor.R
 import com.kroy.sseditor.models.ApiResponse
 import com.kroy.sseditor.models.editContactBody
+import com.kroy.sseditor.ui.theme.CustomRegularTypography
 import com.kroy.sseditor.ui.theme.Primary
 import com.kroy.sseditor.utils.SelectedContact
 import com.kroy.sseditor.utils.Utils.base64ToBitmap
@@ -62,6 +63,8 @@ fun EditContactScreen(
 ) {
     val context = LocalContext.current
     val editContactViewModel: EditContactViewModel = hiltViewModel()
+    var hasNavigated by remember { mutableStateOf(false) } // Track if navigation has occurred
+
 
     LaunchedEffect(key1 = Unit) {
         editContactViewModel.getcontactDetails(SelectedContact.contactId, context)
@@ -72,7 +75,8 @@ fun EditContactScreen(
     val editcontact: State<ApiResponse.EditContacttResponse?> =
         editContactViewModel.filterededitContactResponse.collectAsState()
 
-    if (editcontact.value?.data != null) {
+    if (editcontact.value?.data != null  && !hasNavigated) {
+        hasNavigated = true
         onSaveClicked(SelectedContact.contactId)
         Toast.makeText(context, "Contact Updated", Toast.LENGTH_SHORT).show()
     }
@@ -149,6 +153,18 @@ fun EditContactScreen(
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+        // Display client name just below the "Edit Client" title
+        Text(
+            text = "Name : ${SelectedContact.contactName}", // Assuming clientItem has a clientName field
+            fontSize = 24.sp,
+            style = CustomRegularTypography.titleMedium,
+            fontWeight = FontWeight.Medium,
+            color = Primary,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
             textAlign = TextAlign.Center
         )
 

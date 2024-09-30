@@ -27,6 +27,24 @@ class ClientViewModel @Inject constructor(
     val userIdFlow: Flow<Int> = dataStoreHelper.userIdFlow
 
     // StateFlow for all clients response
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    // Function to toggle the loading state
+    fun toggleLoading() {
+        viewModelScope.launch {
+            _isLoading.value = !_isLoading.value
+        }
+    }
+
+    // Function to explicitly set the loading state
+    fun setLoading(isLoading: Boolean) {
+        viewModelScope.launch {
+            _isLoading.value = isLoading
+        }
+    }
+
+
 
 
     init {
@@ -35,6 +53,7 @@ class ClientViewModel @Inject constructor(
             Log.d("received viewmodel->", "$userId")
             setUserId(userId)
             getAllClients(userId)
+            setLoading(true)
         }
     }
 
@@ -98,6 +117,7 @@ class ClientViewModel @Inject constructor(
                 if (response.data!!.isNotEmpty()) {
                     // Emit the successful response
                     _filteredClientResponse.value = response
+                    setLoading(false)
                 } else {
                     // Handle empty data scenario
                     _filteredClientResponse.value = ApiResponse.AllClientResponse(

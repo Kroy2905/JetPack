@@ -184,7 +184,7 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
         if (isLoading.value) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
-                color = Primary
+                color = Color.Gray
             )
         }
 

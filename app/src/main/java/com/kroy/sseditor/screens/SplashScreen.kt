@@ -44,11 +44,8 @@ fun SplashScreen() {
                 contentDescription = null,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .size(200.dp)
+                    .size(250.dp,150.dp)
                     .align(Alignment.CenterHorizontally)
-
-
-
             )
         }
     }

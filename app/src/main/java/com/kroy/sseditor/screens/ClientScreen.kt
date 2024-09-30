@@ -1,8 +1,6 @@
 package com.kroy.sseditor.screens
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Base64
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,6 +35,8 @@ import com.kroy.sseditor.viewmodels.ClientViewModel
 fun ClientScreen(onAddClient: () -> Unit, onClientClick: (clientItem) -> Unit,onEditClick: (clientItem) -> Unit) {
     val clientViewModel: ClientViewModel = hiltViewModel()
     val allClients: State<ApiResponse.AllClientResponse?> = clientViewModel.filteredClientResponse.collectAsState()
+    val isLoading: State<Boolean> = clientViewModel.isLoading.collectAsState()
+
 
     Box(
         modifier = Modifier
@@ -57,7 +57,17 @@ fun ClientScreen(onAddClient: () -> Unit, onClientClick: (clientItem) -> Unit,on
                 textAlign = TextAlign.Center
             )
 
+
             ClientList(clients = allClients.value?.data ?: emptyList(), onClick = onClientClick,onEditClick)
+        }
+        // Show CircularProgressIndicator if loading is true
+        if (isLoading.value) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(80.dp)
+                    .align(Alignment.Center),
+                color = Color.White
+            )
         }
             // Explicitly using Modifier.align here
             FloatingActionButton(
@@ -85,6 +95,7 @@ fun ClientList(clients: List<clientItem>, onClick: (clientItem) -> Unit,onEditCl
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(0.2.dp)
     ) {
+
         items(clients) { client ->
             ClientItem(client = client, onClick,onEditClick)
         }
