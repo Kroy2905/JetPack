@@ -2,6 +2,7 @@ package com.kroy.sseditor.viewmodels
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +12,7 @@ import com.kroy.sseditor.models.editContactBody
 import com.kroy.sseditor.repository.SSEditorRepository
 import com.kroy.sseditor.utils.DataStoreHelper
 import com.kroy.sseditor.utils.SelectedClient
+import com.kroy.sseditor.utils.SelectedContact
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +21,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ContactViewModel @Inject constructor(
+class EditContactViewModel @Inject constructor(
     private val dataStoreHelper: DataStoreHelper,
     private val repository: SSEditorRepository,
     private val savedStateHandle: SavedStateHandle
@@ -50,11 +52,12 @@ class ContactViewModel @Inject constructor(
     // StateFlow for all clients response
 
 
-    init {
-        viewModelScope.launch {
-            getAllContacts(SelectedClient.clientId,SelectedClient.dayName)
-        }
-    }
+//    init {
+//
+//        viewModelScope.launch {
+//            getcontactDetails(SelectedContact.contactId, context =a )
+//        }
+//    }
 
     // Functions to update user state
     private fun setIsLoggedIn(isLoggedIn: Boolean) {

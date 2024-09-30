@@ -9,6 +9,7 @@ import com.kroy.sseditor.models.TweetListItem
 import com.kroy.sseditor.models.addClientBody
 import com.kroy.sseditor.models.addContactBody
 import com.kroy.sseditor.models.editClientBody
+import com.kroy.sseditor.models.editContactBody
 import com.kroy.sseditor.models.userloginBody
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -207,6 +208,36 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
             if(response.isSuccessful && response.body()!=null){
                 // get the categories
                 _getContactDetails.emit(response.body()!!)
+
+            }else{
+                // Show success toast
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+
+    }
+
+    //edit contact details
+    private val _editContactDetails = MutableStateFlow<ApiResponse.EditContacttResponse>(ApiResponse.EditContacttResponse())
+    val editContactDetails:StateFlow<ApiResponse>
+        get() = _editContactDetails
+    suspend fun editContactDetails(contactId:Int,editContactBody: editContactBody,context: Context){
+        try{
+            Log.d(" edit contact details->","body = contactID $contactId , $editContactBody")
+            val response = apiService.editContact(
+                contactId = contactId,
+                editContactBody = editContactBody
+            )
+            Log.d(" edit contact details->","response = ${response.body()}")
+
+            if(response.isSuccessful && response.body()!=null){
+                // get the categories
+                _editContactDetails.emit(response.body()!!)
 
             }else{
                 // Show success toast

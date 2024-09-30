@@ -5,6 +5,7 @@ import com.kroy.sseditor.models.TweetListItem
 import com.kroy.sseditor.models.addClientBody
 import com.kroy.sseditor.models.addContactBody
 import com.kroy.sseditor.models.editClientBody
+import com.kroy.sseditor.models.editContactBody
 import com.kroy.sseditor.models.userloginBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -52,6 +53,11 @@ interface ApiService {
     @GET("contacts/contactbyid")    // API to be written here
     suspend fun getContactDetails(@Query("contactId") contactId:Int
     ) : Response <ApiResponse.ContactDetailsResponse>
+
+    @PUT("contacts/updatecontact")    // API to be written here
+    suspend fun editContact(@Query("contactId") contactId:Int,
+                           @Body editContactBody: editContactBody
+    ) : Response <ApiResponse.EditContacttResponse>
 
 
 

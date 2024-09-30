@@ -66,7 +66,7 @@ fun LoginScreen(
 
         // Update flags to prevent future submissions
         hasSubmitted = true
-      //  userViewModel.setIsLoggedIn(true)
+        userViewModel.setIsLoggedIn(true)
         userViewModel.setUserName(userId)
     }
 

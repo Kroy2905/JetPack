@@ -38,6 +38,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -65,6 +67,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -89,8 +92,10 @@ import com.kroy.sseditor.screens.formatTime
 import com.kroy.sseditor.ui.theme.SSEditorTheme
 import com.kroy.sseditor.utils.Permissions
 import com.kroy.sseditor.utils.SelectedClient
+import com.kroy.sseditor.utils.SelectedContact
 import com.kroy.sseditor.utils.Utils
 import com.kroy.sseditor.utils.Utils.CaptureAndSaveComposable
+import com.kroy.sseditor.viewmodels.UserViewModel
 
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -206,113 +211,122 @@ class MainActivity :FragmentActivity() {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun App2() {
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "login") {
 
-        composable(route = "login") {  // login screen
-            LoginScreen(){
-                Log.d("passing id->","$it")
-                navController.navigate("client/$it")
+    val userViewModel: UserViewModel = hiltViewModel()
+    val isLoggedIn: State<Boolean> = userViewModel.isLoggedInFlow.collectAsState(false)
+    val userId: State<Int> = userViewModel.userNameFlow.collectAsState(0)
+
+    val navController = rememberNavController()
+
+    // To prevent premature navigation, wait until the login status is finalized
+    LaunchedEffect(isLoggedIn.value) {
+        delay(1000)
+        if (isLoggedIn.value) {
+            // Navigate directly to client screen if already logged in
+            navController.navigate("client/${userId.value}") {
+                popUpTo(0) // Clear the backstack so that login isn't navigable after this
+            }
+        } else {
+            // Navigate to login screen if not logged in
+            navController.navigate("login") {
+                popUpTo(0) // Clear the backstack so that client screen isn't navigable
             }
         }
-        composable(route = "client/{userId}",  // client screen
-            arguments = listOf(
-                navArgument(name = "userId") {
-                    type = NavType.IntType
+    }
+
+    NavHost(navController = navController, startDestination = "login") {
+        composable(route = "login") {  // login screen
+            LoginScreen() { loggedInUserId ->
+                Log.d("passing id->", "$loggedInUserId")
+                // After login, navigate to the client screen
+                navController.navigate("client/$loggedInUserId") {
+                    popUpTo("login") { inclusive = true }  // Clear login screen from backstack
                 }
-            )) {
-            ClientScreen( onAddClient = {
-                // go to add client
-                navController.navigate("addclient")
-            }, onClientClick = { clientItem ->
-                SelectedClient.clientId = clientItem.clientId
-                SelectedClient.clientImage = clientItem.clientImage
-                SelectedClient.clientName = clientItem.clientName
-                SelectedClient.backgroundImage = clientItem.backgroundImage
+            }
+        }
 
-                // go to days screen
-                navController.navigate("timer/${clientItem.clientName}/${clientItem.clientId}")
+        composable(
+            route = "client/{userId}",
+            arguments = listOf(navArgument(name = "userId") { type = NavType.IntType })
+        ) {
+            ClientScreen(
+                onAddClient = {
+                    navController.navigate("addclient")
+                },
+                onClientClick = { clientItem ->
+                    SelectedClient.clientId = clientItem.clientId
+                    SelectedClient.clientImage = clientItem.clientImage
+                    SelectedClient.clientName = clientItem.clientName
+                    SelectedClient.backgroundImage = clientItem.backgroundImage
 
-
-            },
-                onEditClick = {clientItem ->
+                    navController.navigate("timer/${clientItem.clientName}/${clientItem.clientId}")
+                },
+                onEditClick = { clientItem ->
                     SelectedClient.clientId = clientItem.clientId
                     SelectedClient.clientImage = clientItem.clientImage
                     SelectedClient.clientName = clientItem.clientName
                     SelectedClient.backgroundImage = clientItem.backgroundImage
 
                     navController.navigate("editclient")
-                })
+                }
+            )
         }
-        composable(route = "addclient",
-        ) {
+
+        composable(route = "addclient") {
             AddClientScreen(onClientAdded = {
                 navController.navigate("client/$it")
-            } )
+            })
         }
 
-        composable(route = "editclient",
-        ) {
-
+        composable(route = "editclient") {
             EditClientScreen(clientItem = clientItem(
                 clientName = SelectedClient.clientName,
                 clientImage = SelectedClient.clientImage,
                 clientId = SelectedClient.clientId,
                 backgroundImage = SelectedClient.backgroundImage
-
-            )){
-                Log.d("CLient id ->","client id received after editing = $it")
+            )) {
+                Log.d("Client id ->", "client id received after editing = $it")
                 navController.navigate("client/$it")
             }
         }
+
         composable(route = "timer/{name}/{id}",
             arguments = listOf(
-                navArgument(name = "name") {
-                    type = NavType.StringType
-                },
-                navArgument(name = "id") {
-                    type = NavType.IntType
-                },
-
-                )
+                navArgument(name = "name") { type = NavType.StringType },
+                navArgument(name = "id") { type = NavType.IntType },
+            )
         ) {
-            SevenDayScreen(onGoClicked = {time, dayName ->
-                println("Received aday and time  $dayName at $time")
+            SevenDayScreen(onGoClicked = { time, dayName ->
+                println("Received day and time $dayName at $time")
                 SelectedClient.dayName = dayName
                 SelectedClient.time = time
-                println("Received aday and time  ${SelectedClient.dayName} at ${SelectedClient.time}")
+                println("Updated SelectedClient: ${SelectedClient.dayName} at ${SelectedClient.time}")
                 navController.navigate("contact")
-
-
             })
-
-
         }
+
         composable(route = "contact") {
             ContactScreen(onAddContact = {
                 navController.navigate("addcontact")
             },
-                onEditClick = {
-
-                }
-            )
+                onEditClick = { contactItem ->
+                    SelectedContact.contactId = contactItem.contactId
+                    SelectedContact.contactName = contactItem.contactName
+                    navController.navigate("editcontact")
+                })
         }
+
         composable(route = "addcontact") {
-               AddContactScreen(onContactAdded = {
-                   navController.navigate("contact")
-               })
+            AddContactScreen(onContactAdded = {
+                navController.navigate("contact")
+            })
         }
 
         composable(route = "editcontact") {
-          // EditContactScreen()
+            EditContactScreen(onSaveClicked = {
+                navController.navigate("contact")
+            })
         }
-
-
-
-
-
-
-
 
 
 

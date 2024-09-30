@@ -22,6 +22,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,10 +42,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.kroy.ssediotor.R
+import com.kroy.sseditor.models.ApiResponse
+import com.kroy.sseditor.models.editContactBody
 import com.kroy.sseditor.ui.theme.Primary
+import com.kroy.sseditor.utils.SelectedContact
 import com.kroy.sseditor.utils.Utils.base64ToBitmap
 import com.kroy.sseditor.utils.Utils.drawableToBase64
+import com.kroy.sseditor.viewmodels.EditContactViewModel
 
 import java.io.ByteArrayOutputStream
 import java.io.PipedReader
@@ -50,23 +58,54 @@ import java.io.PipedReader
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditContactScreen(
-    defaultClientImageBase64: String,
-    defaultBackgroundImageBase64: String,
-    comment1: String = "",
-    comment2: String = "",
-    comment3: String = ""
+    onSaveClicked: (Int) -> Unit
 ) {
+    val context = LocalContext.current
+    val editContactViewModel: EditContactViewModel = hiltViewModel()
+
+    LaunchedEffect(key1 = Unit) {
+        editContactViewModel.getcontactDetails(SelectedContact.contactId, context)
+    }
+
+    val contactDetails: State<ApiResponse.ContactDetailsResponse?> =
+        editContactViewModel.filteredgetContactDetailsResponse.collectAsState()
+    val editcontact: State<ApiResponse.EditContacttResponse?> =
+        editContactViewModel.filterededitContactResponse.collectAsState()
+
+    if (editcontact.value?.data != null) {
+        onSaveClicked(SelectedContact.contactId)
+        Toast.makeText(context, "Contact Updated", Toast.LENGTH_SHORT).show()
+    }
+
+    var detailsfetched by remember { mutableStateOf(false) }
+
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var selectedBackgroundUri by remember { mutableStateOf<Uri?>(null) }
-    var imageBase64 by remember { mutableStateOf(defaultClientImageBase64) }
-    var backgroundImageBase64 by remember { mutableStateOf(defaultBackgroundImageBase64) }
-    var comment1State by remember { mutableStateOf(comment1) }
-    var comment2State by remember { mutableStateOf(comment2) }
-    var comment3State by remember { mutableStateOf(comment3) }
-    val context = LocalContext.current
+    var imageBase64 by remember { mutableStateOf("") }
+    var backgroundImageBase64 by remember { mutableStateOf("") }
+    var comment1State by remember { mutableStateOf("") }
+    var comment2State by remember { mutableStateOf("") }
+    var comment3State by remember { mutableStateOf("") }
 
-    val clientImageBitmap = remember { base64ToBitmap(defaultClientImageBase64) }
-    val backgroundImageBitmap = remember { base64ToBitmap(defaultBackgroundImageBase64) }
+    // Load default empty bitmaps to prevent null pointer exceptions
+    val defaultBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.default_pic)
+    var clientImageBitmap by remember { mutableStateOf(defaultBitmap) }
+    var backgroundImageBitmap by remember { mutableStateOf(defaultBitmap) }
+
+    if (contactDetails.value?.data != null && !detailsfetched) {
+        // Access the contact details data
+        comment1State = contactDetails.value?.data!!.comment1
+        comment2State = contactDetails.value?.data!!.comment2
+        comment3State = contactDetails.value?.data!!.comment3
+        imageBase64 = contactDetails.value?.data!!.contactImage
+        backgroundImageBase64 = contactDetails.value?.data!!.uploadedImage
+
+        // Decode images from base64 to bitmap if available, else use default
+        clientImageBitmap = base64ToBitmap(imageBase64) ?: defaultBitmap
+        backgroundImageBitmap = base64ToBitmap(backgroundImageBase64) ?: defaultBitmap
+
+        detailsfetched = true // Ensure this is only done once
+    }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -113,6 +152,7 @@ fun EditContactScreen(
             textAlign = TextAlign.Center
         )
 
+        // Image Picker for Contact Image
         Button(
             onClick = { imagePickerLauncher.launch("image/*") },
             modifier = Modifier
@@ -132,7 +172,7 @@ fun EditContactScreen(
         Image(
             bitmap = selectedImageUri?.let {
                 BitmapFactory.decodeStream(context.contentResolver.openInputStream(it)).asImageBitmap()
-            } ?: clientImageBitmap?.asImageBitmap()!!,
+            } ?: clientImageBitmap.asImageBitmap(),
             contentDescription = "Contact Image",
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -144,6 +184,7 @@ fun EditContactScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Image Picker for Background Image
         Button(
             onClick = { backgroundPickerLauncher.launch("image/*") },
             modifier = Modifier
@@ -163,7 +204,7 @@ fun EditContactScreen(
         Image(
             bitmap = selectedBackgroundUri?.let {
                 BitmapFactory.decodeStream(context.contentResolver.openInputStream(it)).asImageBitmap()
-            } ?: backgroundImageBitmap?.asImageBitmap()!!,
+            } ?: backgroundImageBitmap.asImageBitmap(),
             contentDescription = "Background Image",
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -178,6 +219,7 @@ fun EditContactScreen(
             value = comment1State,
             onValueChange = { comment1State = it },
             label = { Text("Comment 1") },
+
             modifier = Modifier.fillMaxWidth(0.9f),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Primary,
@@ -192,6 +234,7 @@ fun EditContactScreen(
             value = comment2State,
             onValueChange = { comment2State = it },
             label = { Text("Comment 2") },
+            enabled = comment1State.isNotEmpty(),
             modifier = Modifier.fillMaxWidth(0.9f),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Primary,
@@ -206,6 +249,7 @@ fun EditContactScreen(
             value = comment3State,
             onValueChange = { comment3State = it },
             label = { Text("Comment 3") },
+            enabled = comment1State.isNotEmpty() && comment2State.isNotEmpty(),
             modifier = Modifier.fillMaxWidth(0.9f),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Primary,
@@ -216,12 +260,24 @@ fun EditContactScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Save button with validation
         Button(
             onClick = {
-                if (imageBase64.isNotEmpty()) {
-                    Toast.makeText(context, "Contact Updated", Toast.LENGTH_SHORT).show()
+                if (comment1State.isNotBlank()  && imageBase64.isNotEmpty() && backgroundImageBase64.isNotEmpty()) {
+                    editContactViewModel.editContact(
+                        contactId = SelectedContact.contactId,
+                        editContactBody = editContactBody(
+                            contactName = SelectedContact.contactName,
+                            contactImage = imageBase64,
+                            comment1 = comment1State,
+                            comment2 = comment2State,
+                            comment3 = comment3State,
+                            uploadedImageString = backgroundImageBase64
+                        ),
+                        context
+                    )
                 } else {
-                    Toast.makeText(context, "Error Updating .. ", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
                 }
             },
             modifier = Modifier
@@ -239,15 +295,13 @@ fun EditContactScreen(
     }
 }
 
+
 @Preview
 @Composable
 fun PreviewEditContactScreen() {
     val context = LocalContext.current
     EditContactScreen(
-        defaultClientImageBase64 = drawableToBase64(context, R.drawable.f),
-        defaultBackgroundImageBase64 = drawableToBase64(context, R.drawable.d),
-        comment1 = "Initial Comment 1",
-        comment2 = "Initial Comment 2",
-        comment3 = "Initial Comment 3"
-    )
+    ){
+
+    }
 }
