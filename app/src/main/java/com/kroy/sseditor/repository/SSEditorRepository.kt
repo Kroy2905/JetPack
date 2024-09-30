@@ -65,7 +65,7 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
             }else{
                 // Show success toast
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context,response.body()?.message, Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -99,7 +99,7 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
     private val _addClient = MutableStateFlow<ApiResponse.AddClientResponse>(ApiResponse.AddClientResponse())
     val addClients:StateFlow<ApiResponse>
         get() = _addClient
-    suspend fun addClient(addClientBody: addClientBody){
+    suspend fun addClient(addClientBody: addClientBody,context: Context){
         try{
             Log.d("add users->","body = $addClientBody")
             val response = apiService.addClient(addClientBody)
@@ -109,6 +109,11 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
                 // get the categories
                 _addClient.emit(response.body()!!)
 
+            }else {
+                // Show success toast
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                }
             }
         }catch (e:Exception){
             e.printStackTrace()
@@ -133,7 +138,7 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
             }else{
                 // Show success toast
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, response.body()?.message, Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -173,18 +178,21 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
         get() = _addContact
     suspend fun addContact(addContactBody: addContactBody,context: Context){
         try{
-            Log.d("add users->","body = $addContactBody")
+           // Log.d("add users->","body = $addContactBody")
             val response = apiService.addContact(addContactBody)
             Log.d("add users->","response = ${response.body()}")
 
             if(response.isSuccessful && response.body()!=null){
+                Log.d("add users->","entered  successful")
                 // get the categories
                 _addContact.emit(response.body()!!)
 
             }else{
                 // Show success toast
+                Log.d("add users->","entered not successful")
+
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context,  response.body()?.message, Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -210,9 +218,8 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
                 _getContactDetails.emit(response.body()!!)
 
             }else{
-                // Show success toast
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, response.body()?.message, Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -242,7 +249,7 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
             }else{
                 // Show success toast
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, response.body()?.message, Toast.LENGTH_SHORT).show()
                 }
 
             }

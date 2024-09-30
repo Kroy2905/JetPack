@@ -224,6 +224,12 @@ object Utils {
         return baseTime.plusMinutes(randomMinutes.toLong())
     }
 
+    fun convertLettersToUppercase(input: String): String {
+        return input.map {
+            if (it.isLetter()) it.uppercaseChar() else it
+        }.joinToString("")
+    }
+
 
 
 

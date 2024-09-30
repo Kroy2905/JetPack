@@ -227,7 +227,7 @@ fun AddClientScreen(onClientAdded: (Int) -> Unit) {
                             clientImage = imageBase64,
                             clientName = clientName,
                             backgroundImage = backgroundImageBase64 // Add background image to the request
-                        )
+                        ), context = context
                     )
                 } else {
                     Toast.makeText(context, "Error Saving .. ", Toast.LENGTH_SHORT).show()

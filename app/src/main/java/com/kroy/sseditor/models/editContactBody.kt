@@ -7,5 +7,5 @@ data class editContactBody(
     val comment1:String = "",
     val comment2:String = "",
     val comment3:String = "",
-    val uploadedImageString: String = "",
+    val uploadedImage: String = "",
 )

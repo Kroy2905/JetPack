@@ -218,7 +218,7 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
                 contentColor = Color.White
             )
         ) {
-            Text("Select Contact Image", Modifier.padding(8.dp), fontSize = Dimens.ButtonText)
+            Text("Upload Profile Photo", Modifier.padding(8.dp), fontSize = Dimens.ButtonText)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -249,7 +249,7 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
                 contentColor = Color.White
             )
         ) {
-            Text("Select Background Image", Modifier.padding(8.dp), fontSize = Dimens.ButtonText)
+            Text("Upload Image", Modifier.padding(8.dp), fontSize = Dimens.ButtonText)
         }
 
         // Show selected background image or default image
@@ -273,15 +273,15 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
                     contactName.isEmpty() -> {
                         Toast.makeText(context, "Contact Name is required", Toast.LENGTH_SHORT).show()
                     }
-                    comment1.isEmpty() -> {
-                        Toast.makeText(context, "Comment 1 cannot be empty", Toast.LENGTH_SHORT).show()
-                    }
-                    comment2.isNotEmpty() && comment1.isEmpty() -> {
-                        Toast.makeText(context, "Fill Comment 1 first", Toast.LENGTH_SHORT).show()
-                    }
-                    comment3.isNotEmpty() && (comment1.isEmpty() || comment2.isEmpty()) -> {
-                        Toast.makeText(context, "Fill Comment 1 and 2 first", Toast.LENGTH_SHORT).show()
-                    }
+//                    comment1.isEmpty() -> {
+//                        Toast.makeText(context, "Comment 1 cannot be empty", Toast.LENGTH_SHORT).show()
+//                    }
+//                    comment2.isNotEmpty() && comment1.isEmpty() -> {
+//                        Toast.makeText(context, "Fill Comment 1 first", Toast.LENGTH_SHORT).show()
+//                    }
+//                    comment3.isNotEmpty() && (comment1.isEmpty() || comment2.isEmpty()) -> {
+//                        Toast.makeText(context, "Fill Comment 1 and 2 first", Toast.LENGTH_SHORT).show()
+//                    }
                     imageBase64.isEmpty() -> {
                         Toast.makeText(context, "Contact Image is required", Toast.LENGTH_SHORT).show()
                     }

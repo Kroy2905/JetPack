@@ -180,7 +180,7 @@ fun EditContactScreen(
                 contentColor = Color.White
             )
         ) {
-            Text("Select Contact Image", Modifier.padding(8.dp), fontSize = 16.sp)
+            Text("Upload Profile Photo", Modifier.padding(8.dp), fontSize = 16.sp)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -212,7 +212,7 @@ fun EditContactScreen(
                 contentColor = Color.White
             )
         ) {
-            Text("Select Background Image", Modifier.padding(8.dp), fontSize = 16.sp)
+            Text("Upload Image", Modifier.padding(8.dp), fontSize = 16.sp)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -279,7 +279,7 @@ fun EditContactScreen(
         // Save button with validation
         Button(
             onClick = {
-                if (comment1State.isNotBlank()  && imageBase64.isNotEmpty() && backgroundImageBase64.isNotEmpty()) {
+                if ( imageBase64.isNotEmpty() && backgroundImageBase64.isNotEmpty()) {
                     editContactViewModel.editContact(
                         contactId = SelectedContact.contactId,
                         editContactBody = editContactBody(
@@ -288,7 +288,7 @@ fun EditContactScreen(
                             comment1 = comment1State,
                             comment2 = comment2State,
                             comment3 = comment3State,
-                            uploadedImageString = backgroundImageBase64
+                            uploadedImage= backgroundImageBase64
                         ),
                         context
                     )

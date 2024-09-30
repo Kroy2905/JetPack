@@ -71,6 +71,7 @@ import com.kroy.sseditor.ui.theme.CustomRegularTypography
 import com.kroy.sseditor.ui.theme.CustomTypography
 import com.kroy.sseditor.ui.theme.Telegram
 import com.kroy.sseditor.utils.BubbleShape
+import com.kroy.sseditor.utils.Utils.convertLettersToUppercase
 import com.kroy.sseditor.utils.Utils.generateRandomTime
 import com.kroy.sseditor.utils.Utils.getBitmapFromResource
 import com.kroy.sseditor.utils.Utils.parseTimeString
@@ -217,65 +218,71 @@ fun ChatBubble(
     isLastMessage: Boolean = false
 ) {
     val textLayoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
-
-    Box(
-        modifier = Modifier
-            .padding(start = 5.dp, bottom = 3.dp, end = 15.dp)
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color.Black.copy(alpha = 0.72f),
-                        Color.Black.copy(alpha = 0.7f)
+        Row(modifier = Modifier
+            .fillMaxWidth(.88f)){
+            Box(
+                modifier = Modifier
+                    .padding(start = 5.dp, bottom = 3.dp, end = 15.dp)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Black.copy(alpha = 0.72f),
+                                Color.Black.copy(alpha = 0.7f)
+                            )
+                        ),
+                        shape = when {
+                            (textLayoutResult.value?.lineCount ?: 1) > 1 -> {
+                                RoundedCornerShape(
+                                    topStart = 8.dp, topEnd = 16.dp, bottomEnd = 16.dp, bottomStart = 8.dp
+                                )
+                            }
+                            isLastMessage -> {
+                                BubbleShape(tailSize = 10.dp, isSender = isSender)
+                            }
+                            else -> {
+                                RoundedCornerShape(
+                                    topStart = 8.dp, topEnd = 20.dp, bottomEnd = 20.dp, bottomStart = 8.dp
+                                )
+                            }
+                        }
                     )
-                ),
-                shape = when {
-                    (textLayoutResult.value?.lineCount ?: 1) > 1 -> {
-                        RoundedCornerShape(
-                            topStart = 8.dp, topEnd = 16.dp, bottomEnd = 16.dp, bottomStart = 8.dp
-                        )
-                    }
-                    isLastMessage -> {
-                        BubbleShape(tailSize = 10.dp, isSender = isSender)
-                    }
-                    else -> {
-                        RoundedCornerShape(
-                            topStart = 8.dp, topEnd = 20.dp, bottomEnd = 20.dp, bottomStart = 8.dp
-                        )
-                    }
+                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                    .wrapContentSize() // The box will only take as much space as needed
+            ) {
+                Row(
+                    modifier = Modifier.wrapContentWidth(),
+                    verticalAlignment = Alignment.Bottom // Align the message and timestamp vertically
+                ) {
+                    // Text message
+                    Text(
+                        text = message,
+                        style = CustomRegularTypography.titleMedium,
+                        fontWeight = FontWeight.W400,
+                        color = Color.White, // Keep your original text color
+                        fontSize = 18.sp,
+                        maxLines = Int.MAX_VALUE, // Allow multi-line messages
+                        overflow = TextOverflow.Ellipsis,
+                        onTextLayout = { textLayoutResult.value = it },
+                        modifier = Modifier.weight(1f, fill = false) // Allow message to take only necessary space
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp)) // Add space between message and timestamp
+
+                    // Timestamp
+                    Text(
+                        text = convertLettersToUppercase(time) ,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Gray,
+                        fontSize = 12.sp,
+                        modifier = Modifier
+                            .padding(end=2.dp)
+                            .align(Alignment.Bottom) // Align timestamp to bottom right
+                    )
                 }
-            )
-            .padding(horizontal = 10.dp, vertical = 6.dp)
-            .wrapContentSize() // The box will only take as much space as needed
-    ) {
-        Row(
-            modifier = Modifier.wrapContentWidth(),
-            verticalAlignment = Alignment.Bottom // Align the message and timestamp vertically
-        ) {
-            // Text message
-            Text(
-                text = message,
-                style = CustomRegularTypography.titleMedium,
-                fontWeight = FontWeight.W400,
-                color = Color.White, // Keep your original text color
-                fontSize = 18.sp,
-                maxLines = Int.MAX_VALUE, // Allow multi-line messages
-                overflow = TextOverflow.Ellipsis,
-                onTextLayout = { textLayoutResult.value = it },
-                modifier = Modifier.weight(1f, fill = false) // Allow message to take only necessary space
-            )
-
-            Spacer(modifier = Modifier.width(8.dp)) // Add space between message and timestamp
-
-            // Timestamp
-            Text(
-                text = time,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.Gray,
-                fontSize = 12.sp,
-                modifier = Modifier.align(Alignment.Bottom) // Align timestamp to bottom right
-            )
+            }
         }
-    }
+
+
 }
 
 @Composable
@@ -550,10 +557,10 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                         modifier = Modifier.padding(start = 10.dp)
                     )
                     Text(
-                        text = "last recently seen",
+                        text = "last seen recently",
                         color = Color(0xFFD1E3FF),
                         fontSize = 14.sp,
-                        modifier = Modifier.padding(top = 2.dp,start = 10.dp),
+                        modifier = Modifier.padding(top = 2.dp,start = 12.dp),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -602,7 +609,7 @@ fun ReceiverImageMessage(time: String,senderImage: Bitmap?) {
 
             // Time text
             Text(
-                text = time,
+                text = convertLettersToUppercase(time) ,
                 color = Color.White,
                 fontSize = 12.sp,
                 modifier = Modifier
@@ -678,7 +685,7 @@ fun ReceiverStickerMessage(time: String,userReplySticker: Bitmap?) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = time,
+                    text = convertLettersToUppercase(time) ,
                     color = Color.White,
                     fontSize = 12.sp,
                 )

@@ -282,7 +282,10 @@ fun App2(dataStoreHelper: DataStoreHelper) {
 
         composable(route = "addclient") {
             AddClientScreen(onClientAdded = {
-                navController.navigate("client/$it")
+                navController.navigate("client/$it") {
+                    popUpTo("addclient") { inclusive = true }
+                }
+
             })
         }
 
@@ -294,8 +297,12 @@ fun App2(dataStoreHelper: DataStoreHelper) {
                 backgroundImage = SelectedClient.backgroundImage
             )) {
                 Log.d("Client id ->", "client id received after editing = $it")
-                navController.navigate("client/$it")
+                // Navigate back to client screen and remove 'editclient' from backstack
+                navController.navigate("client/$it") {
+                    popUpTo("editclient") { inclusive = true }
+                }
             }
+
         }
 
         composable(route = "timer/{name}/{id}",
@@ -326,15 +333,28 @@ fun App2(dataStoreHelper: DataStoreHelper) {
 
         composable(route = "addcontact") {
             AddContactScreen(onContactAdded = {
-                navController.navigate("contact")
+                navController.navigate("contact") {
+                    popUpTo("addcontact") { inclusive = true }
+                }
             })
         }
 
         composable(route = "editcontact") {
             EditContactScreen(onSaveClicked = {
-                navController.navigate("contact")
+                navController.navigate("contact") {
+                    popUpTo("editcontact") { inclusive = true }
+                }
             })
         }
+
+
+
+
+
+
+
+
+
 
 
 

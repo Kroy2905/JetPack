@@ -1,5 +1,6 @@
 package com.kroy.sseditor.viewmodels
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -95,10 +96,10 @@ class ClientViewModel @Inject constructor(
     // Filtered response for all clients
     private val _filteredaddClientResponse = MutableStateFlow<ApiResponse.AddClientResponse?>(null)
     val filteredaddClientResponse: StateFlow<ApiResponse.AddClientResponse?> get() = _filteredaddClientResponse
-    fun addClient(addClientBody: addClientBody) {
+    fun addClient(addClientBody: addClientBody,context: Context) {
         viewModelScope.launch {
 
-            repository.addClient(addClientBody)
+            repository.addClient(addClientBody,context)
 
             // Assuming repository.allClients is updated after the API call
             addClients.collect { response ->
@@ -114,7 +115,7 @@ class ClientViewModel @Inject constructor(
     private fun handleClientResponse(response: ApiResponse) {
         when (response) {
             is ApiResponse.AllClientResponse -> {
-                if (response.data!!.isNotEmpty()) {
+                if (response.data != null) {
                     // Emit the successful response
                     _filteredClientResponse.value = response
                     setLoading(false)
