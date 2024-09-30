@@ -95,10 +95,11 @@ fun CustomTelegramLayout(
     val initialTime = remember {
         parseTimeString(initialTimeString)
     }
+    val randomInitialTime = remember { generateRandomTime(initialTime, 5, 20) }
     Log.d("time set->","parse $initialTimeString")
 
     // Generate a random time between 20 to 30 minutes from the initial time
-    val randomStickerTime = remember { generateRandomTime(initialTime, 20, 30) }
+    val randomStickerTime = remember { generateRandomTime(randomInitialTime, 20, 30) }
 
     Box(
         modifier = Modifier
@@ -145,7 +146,8 @@ fun CustomTelegramLayout(
                 items(messages) { message ->
                     ChatBubble(
                         message = message.message,
-                        time = message.timestamp,
+                       // time = message.timestamp,
+                        time = randomInitialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
                         isSender = message.isSender
                     )
                     Spacer(modifier = Modifier.height(3.dp)) // Space between message and time
@@ -155,7 +157,7 @@ fun CustomTelegramLayout(
                 item {
                     Spacer(modifier = Modifier.height(5.dp))
                     ReceiverImageMessage(
-                        time = initialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
+                        time = randomInitialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
                         senderImage = senderImage
                     )
 
