@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 
 import androidx.compose.ui.Alignment
@@ -47,6 +48,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -78,7 +80,33 @@ import java.time.format.DateTimeParseException
 import java.util.Locale
 import kotlin.random.Random
 
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview
+@Composable
+fun previewTelegram(){
+    val context = LocalContext.current
+    val sampleMessages = listOf(
+        ChatMessage("Hello 3400000000000000 0udfehdufc euwdhcnu", "12:50 AM", isSender = true),
+        ChatMessage("Hi uwdihnuidn iewjfewiof  there mmmuh+!", "12:50 AM", isSender = true),
+        ChatMessage("How?", "12:50 AM", isSender = true)
+    )
 
+    // Replace with actual Bitmap objects for testing
+    val contactPic: Bitmap? = getBitmapFromResource(context,R.drawable.f)
+    val backgroundBitmap: Bitmap? = getBitmapFromResource(context,R.drawable.telegram_bg)
+    val senderImage: Bitmap? = getBitmapFromResource(context,R.drawable.b)
+    val userReplySticker: Bitmap? = getBitmapFromResource(context,R.drawable.d)
+
+    CustomTelegramLayout(
+        contactName ="Random Name",
+        contactPic = contactPic,
+        messages = sampleMessages,
+        initialTimeString = "12:48 AM",
+        backgroundBitmap = backgroundBitmap,
+        senderImage = senderImage,
+        userReplySticker = userReplySticker
+    )
+}
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CustomTelegramLayout(
@@ -95,7 +123,7 @@ fun CustomTelegramLayout(
     val initialTime = remember {
         parseTimeString(initialTimeString)
     }
-    val randomInitialTime = remember { generateRandomTime(initialTime, 5, 20) }
+    val randomInitialTime = remember { generateRandomTime(initialTime, -15, 15) }
     Log.d("time set->","parse $initialTimeString")
 
     // Generate a random time between 20 to 30 minutes from the initial time
@@ -143,7 +171,7 @@ fun CustomTelegramLayout(
 
                 }
                 // Render dynamic Chat Messages
-                items(messages) { message ->
+                items(messages.reversed()) { message ->
                     ChatBubble(
                         message = message.message,
                        // time = message.timestamp,
@@ -186,75 +214,69 @@ fun ChatBubble(
     message: String,
     time: String,
     isSender: Boolean,
-    isLastMessage: Boolean = false // Flag to determine if this is the last bubble
+    isLastMessage: Boolean = false
 ) {
-    Row(
+    val textLayoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
+
+    Box(
         modifier = Modifier
-
-
-            .fillMaxWidth(.9f)
-            .heightIn(30.dp, 60.dp)
-            .padding(start = 5.dp, bottom = 3.dp, end = 10.dp),
-        horizontalArrangement = if (isSender) Arrangement.Start else Arrangement.End
-    ) {
-        Row(
-            modifier = Modifier
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Black.copy(alpha = 0.72f),
-                            Color.Black.copy(alpha = 0.7f)
-                        )
-                    ),
-                    shape = if (isLastMessage) {
-                        BubbleShape(
-                            tailSize = 10.dp,
-                            isSender = isSender
-                        ) // Use custom shape for last message
-                    } else {
+            .padding(start = 5.dp, bottom = 3.dp, end = 15.dp)
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Black.copy(alpha = 0.72f),
+                        Color.Black.copy(alpha = 0.7f)
+                    )
+                ),
+                shape = when {
+                    (textLayoutResult.value?.lineCount ?: 1) > 1 -> {
                         RoundedCornerShape(
-                            topStart = 8.dp, topEnd = 32.dp, bottomEnd = 32.dp, bottomStart = 8.dp
+                            topStart = 8.dp, topEnd = 16.dp, bottomEnd = 16.dp, bottomStart = 8.dp
                         )
                     }
-                )
-                .graphicsLayer {
-                    shape = RoundedCornerShape(0.dp) // Keeping it rectangular
-                    clip = true // Clip to bounds
+                    isLastMessage -> {
+                        BubbleShape(tailSize = 10.dp, isSender = isSender)
+                    }
+                    else -> {
+                        RoundedCornerShape(
+                            topStart = 8.dp, topEnd = 20.dp, bottomEnd = 20.dp, bottomStart = 8.dp
+                        )
+                    }
                 }
-                .wrapContentSize()
-                .padding(start = 6.dp, top = 5.dp, end = 12.dp, bottom = 5.dp)
-                .wrapContentWidth(Alignment.Start) // Allow bubble to wrap content
-
+            )
+            .padding(horizontal = 10.dp, vertical = 6.dp)
+            .wrapContentSize() // The box will only take as much space as needed
+    ) {
+        Row(
+            modifier = Modifier.wrapContentWidth(),
+            verticalAlignment = Alignment.Bottom // Align the message and timestamp vertically
         ) {
-            // Row to display message and time on the same line
+            // Text message
+            Text(
+                text = message,
+                style = CustomRegularTypography.titleMedium,
+                fontWeight = FontWeight.W400,
+                color = Color.White, // Keep your original text color
+                fontSize = 18.sp,
+                maxLines = Int.MAX_VALUE, // Allow multi-line messages
+                overflow = TextOverflow.Ellipsis,
+                onTextLayout = { textLayoutResult.value = it },
+                modifier = Modifier.weight(1f, fill = false) // Allow message to take only necessary space
+            )
 
-                Text(
-                    text = message,
-                    style = CustomRegularTypography.titleMedium,
-                    fontWeight = FontWeight.W400,
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    maxLines = 3, // Limit lines if necessary
-                    overflow = TextOverflow.Ellipsis // Handle overflow gracefully
-                )
-            Spacer(modifier = Modifier.width(6.dp))
+            Spacer(modifier = Modifier.width(8.dp)) // Add space between message and timestamp
 
+            // Timestamp
             Text(
                 text = time,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.Gray,
                 fontSize = 12.sp,
-                modifier = Modifier
-                    .align(Alignment.Bottom) // Align time to the bottom of the row
+                modifier = Modifier.align(Alignment.Bottom) // Align timestamp to bottom right
             )
         }
-
-
-
-
     }
 }
-
 
 @Composable
 fun ChatBoxInput() {
@@ -674,3 +696,5 @@ fun ReceiverStickerMessage(time: String,userReplySticker: Bitmap?) {
         }
     }
 }
+
+
