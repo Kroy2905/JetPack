@@ -88,8 +88,10 @@ import com.kroy.sseditor.screens.EditClientScreen
 import com.kroy.sseditor.screens.EditContactScreen
 import com.kroy.sseditor.screens.LoginScreen
 import com.kroy.sseditor.screens.SevenDayScreen
+import com.kroy.sseditor.screens.SplashScreen
 import com.kroy.sseditor.screens.formatTime
 import com.kroy.sseditor.ui.theme.SSEditorTheme
+import com.kroy.sseditor.utils.DataStoreHelper
 import com.kroy.sseditor.utils.Permissions
 import com.kroy.sseditor.utils.SelectedClient
 import com.kroy.sseditor.utils.SelectedContact
@@ -103,9 +105,12 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity :FragmentActivity() {
+    @Inject
+    lateinit var dataStoreHelper: DataStoreHelper
 
     @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalMaterial3Api::class)
@@ -148,7 +153,7 @@ class MainActivity :FragmentActivity() {
 //                        LoginScreen { userId, password ->
 //                            // Handle login action
 //                        }
-                        App2()
+                        App2(dataStoreHelper)
                         //SevenDayScreen()
 //                       CaptureAndSaveComposable(
 //                           contactName ="Random Name",
@@ -210,20 +215,20 @@ class MainActivity :FragmentActivity() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun App2() {
+fun App2(dataStoreHelper: DataStoreHelper) {
 
-    val userViewModel: UserViewModel = hiltViewModel()
-    val isLoggedIn: State<Boolean> = userViewModel.isLoggedInFlow.collectAsState(false)
-    val userId: State<Int> = userViewModel.userNameFlow.collectAsState(0)
+    val isLoggedIn by dataStoreHelper.isLoggedInFlow.collectAsState(initial = false)
+    val userId by dataStoreHelper.userIdFlow.collectAsState(initial = 0)
+    Log.d(" Mainactivity->","${isLoggedIn} , ${userId}")
 
     val navController = rememberNavController()
 
     // To prevent premature navigation, wait until the login status is finalized
-    LaunchedEffect(isLoggedIn.value) {
+    LaunchedEffect(isLoggedIn) {
         delay(1000)
-        if (isLoggedIn.value) {
+        if (isLoggedIn) {
             // Navigate directly to client screen if already logged in
-            navController.navigate("client/${userId.value}") {
+            navController.navigate("client/${userId}") {
                 popUpTo(0) // Clear the backstack so that login isn't navigable after this
             }
         } else {
@@ -234,7 +239,10 @@ fun App2() {
         }
     }
 
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "splash") {
+        composable(route = "splash") {  // login screen
+           SplashScreen()
+        }
         composable(route = "login") {  // login screen
             LoginScreen() { loggedInUserId ->
                 Log.d("passing id->", "$loggedInUserId")
