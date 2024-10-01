@@ -197,7 +197,7 @@ object Utils {
     fun drawableToBase64(context: Context, drawableResId: Int): String {
         val bitmap = BitmapFactory.decodeResource(context.resources, drawableResId)
         val outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
         val byteArray = outputStream.toByteArray()
         return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
