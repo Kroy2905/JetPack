@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,6 +35,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -43,6 +46,7 @@ import androidx.compose.ui.graphics.RenderEffect
 import androidx.compose.ui.graphics.Shader
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
@@ -89,7 +93,7 @@ fun previewTelegram(){
     val sampleMessages = listOf(
         ChatMessage("Hello 3400000000000000 0udfehdufc euwdhcnu", "12:50 AM", isSender = true),
         ChatMessage("Hi uwdihnuidn iewjfewiof  there mmmuh+!", "12:50 AM", isSender = true),
-        ChatMessage("How?", "12:50 AM", isSender = true)
+        ChatMessage("How 435943594305943 08898sdijfhdsjfdsjfkjds  jsdkfjdskjflkdsjflkds j kdsjflkdsjflkjdssdlkfjdsf?", "12:50 AM", isSender = true)
     )
 
     // Replace with actual Bitmap objects for testing
@@ -181,7 +185,8 @@ fun CustomTelegramLayout(
                             message = message.message,
                             // time = message.timestamp,
                             time = randomInitialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
-                            isSender = message.isSender
+                            isSender = message.isSender,
+                            isLastMessage = true
                         )
                         // Space between message and time
 
@@ -245,83 +250,111 @@ fun ChatBubble(
     message: String,
     time: String,
     isSender: Boolean,
-    isLastMessage: Boolean = false
+    isLastMessage: Boolean = true
 ) {
     val textLayoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
-        Row(modifier = Modifier
-            .fillMaxWidth(.88f)){
+    Row(modifier = Modifier.fillMaxWidth(.88f)) {
+        if (isLastMessage) {
             Box(
                 modifier = Modifier
-                    .padding(start = 5.dp, bottom = 3.dp, end = 15.dp)
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Black.copy(alpha = 0.72f),
-                                Color.Black.copy(alpha = 0.7f)
-                            )
-                        ),
-                        shape = when {
-                            (textLayoutResult.value?.lineCount ?: 1) > 1 -> {
-                                RoundedCornerShape(
-                                    topStart = 8.dp,
-                                    topEnd = 16.dp,
-                                    bottomEnd = 16.dp,
-                                    bottomStart = 8.dp
-                                )
-                            }
 
-                            isLastMessage -> {
-                                BubbleShape(tailSize = 10.dp, isSender = isSender)
-                            }
-
-                            else -> {
-                                RoundedCornerShape(
-                                    topStart = 8.dp,
-                                    topEnd = 20.dp,
-                                    bottomEnd = 20.dp,
-                                    bottomStart = 8.dp
-                                )
-                            }
-                        }
-                    )
-                    .padding(horizontal = 10.dp, vertical = 4.dp)
-                    .wrapContentSize() // The box will only take as much space as needed
+                    .align(Alignment.Bottom) // Align the triangle to the bottom
             ) {
-                Row(
-                    modifier = Modifier.wrapContentWidth(),
-                    verticalAlignment = Alignment.Bottom // Align the message and timestamp vertically
-                ) {
-                    // Text message
-                    Text(
-                        text = message,
-                        style = CustomRegularTypography.titleMedium,
-                        fontWeight = FontWeight.W400,
-                        color = Color.White, // Keep your original text color
-                        fontSize = 18.sp,
-                        maxLines = Int.MAX_VALUE, // Allow multi-line messages
-                        overflow = TextOverflow.Ellipsis,
-                        onTextLayout = { textLayoutResult.value = it },
-                        modifier = Modifier.weight(1f, fill = false) // Allow message to take only necessary space
-                    )
+                TriangleShape(color = Color.Black.copy(alpha = 0.55f)) // Use the same color as the chat bubble
+            }
+        }
+        Box(
+            modifier = Modifier
+                .padding(start = 0.dp, bottom = 3.dp, end = 15.dp)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.72f),
+                            Color.Black.copy(alpha = 0.7f)
+                        )
+                    ),
+                    shape = when {
+                        isLastMessage -> RoundedCornerShape(
+                            topStart = 8.dp,
+                            topEnd = 16.dp,
+                            bottomEnd = 16.dp,
+                            bottomStart = 8.dp
+                        )
+                        else -> BubbleShape(tailSize = 10.dp)
+                    }
+                )
+                .padding(horizontal = 10.dp, vertical = 4.dp)
+                .wrapContentSize()
+        ) {
+            Row(
+                modifier = Modifier.wrapContentWidth(),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                // Text message
+                Text(
+                    text = message,
+                    style = CustomRegularTypography.titleMedium,
+                    fontWeight = FontWeight.W400,
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    maxLines = Int.MAX_VALUE,
+                    overflow = TextOverflow.Ellipsis,
+                    onTextLayout = { textLayoutResult.value = it },
+                    modifier = Modifier.weight(1f, fill = false)
+                )
 
-                    Spacer(modifier = Modifier.width(8.dp)) // Add space between message and timestamp
+                Spacer(modifier = Modifier.width(8.dp))
 
-                    // Timestamp
-                    Text(
-                        text = convertLettersToUppercase(time) ,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.Gray,
-                        fontSize = 12.sp,
-                        modifier = Modifier
-                            .padding(end = 2.dp)
-                            .align(Alignment.Bottom) // Align timestamp to bottom right
-                    )
-                }
+                // Timestamp
+                Text(
+                    text = convertLettersToUppercase(time),
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.Gray,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .padding(end = 2.dp)
+                        .align(Alignment.Bottom)
+                )
             }
         }
 
+        // Display triangle shape if it's the last message
 
+    }
 }
+
+
+
+@Composable
+fun TriangleShape(color: Color) {
+    Canvas(modifier = Modifier
+        .padding(bottom = 2.dp)
+        .rotate(270f) // Rotate the triangle
+        .size(10.dp)) {
+        val path = Path().apply {
+            // Start from the bottom left
+            moveTo(-2f, size.height * 0.5f)
+
+            // Draw a straight line to the bottom right
+            lineTo(size.width * 1.2f, size.height * 1.2f)
+
+            // Create a quadratic Bezier curve for the side that becomes the top after rotation
+            quadraticBezierTo(
+                size.width / 1f, size.height * 0.2f,  // Control point for the curve
+                size.width / 2f, size.height * 2.4f  // End point of the curve
+            )
+
+            // Close the path
+            close()
+        }
+
+        // Draw the triangle with the curved side
+        drawPath(path = path, color = color)
+    }
+}
+
+
+
 
 @Composable
 fun ChatBoxInput() {
@@ -469,45 +502,48 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                 .width(25.dp))
 
             // Telegram Logo and Title in Rounded Box
-            Box(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .weight(1f)
-                    .background(Telegram, shape = RoundedCornerShape(14.dp))
-                    .padding(horizontal = 10.dp, vertical = 4.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .width(90.dp)
-
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_telegram_logo),
-                        contentDescription = "Telegram Logo",
-                        tint = Color.White,
-                        modifier = Modifier
-                            .padding(bottom = 2.dp)
-
-                            .rotate(-50f)
-                            .size(15.dp)
-                    )
-                    Text(
-                        text = "TELEGRAM",
-                        color = Color.White,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(start = 4.dp,top = 2.dp)
-                    )
-                }
-            }
+//            Box(
+//                modifier = Modifier
+//                    .wrapContentSize()
+//                    .weight(1f)
+//                    .background(Telegram, shape = RoundedCornerShape(14.dp))
+//                    .padding(horizontal = 10.dp, vertical = 4.dp),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    horizontalArrangement = Arrangement.Center,
+//                    modifier = Modifier
+//                        .width(90.dp)
+//
+//                ) {
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.ic_telegram_logo),
+//                        contentDescription = "Telegram Logo",
+//                        tint = Color.White,
+//                        modifier = Modifier
+//                            .padding(bottom = 2.dp)
+//
+//                            .rotate(-50f)
+//                            .size(15.dp)
+//                    )
+//                    Text(
+//                        text = "TELEGRAM",
+//                        color = Color.White,
+//                        fontSize = 13.sp,
+//                        fontWeight = FontWeight.Bold,
+//                        modifier = Modifier.padding(start = 4.dp,top = 2.dp)
+//                    )
+//                }
+//            }
 
             // Status Icons
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(end = 20.dp,)
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 20.dp,)
             ) {
                 Icon(painterResource(id = R.drawable.ic_signal), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(20.dp))
                 Spacer(modifier = Modifier.width(5.dp))

@@ -20,7 +20,7 @@ class NetworkModule {
     fun providesRetrofit():Retrofit{
         return Retrofit.Builder()
            // .baseUrl("https://api.jsonbin.io")
-            .baseUrl("http://192.168.0.104:5000/api/")
+            .baseUrl("http://3.111.187.37:5000/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

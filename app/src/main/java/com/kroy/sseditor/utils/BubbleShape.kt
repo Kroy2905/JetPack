@@ -1,62 +1,76 @@
 package com.kroy.sseditor.utils
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+
+import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.translate
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.graphics.Shape
 
-class BubbleShape(private val tailSize: Dp = 12.dp, private val cornerRadius: Dp = 16.dp, private val isSender: Boolean) : Shape {
-    override fun createOutline(
-        size: androidx.compose.ui.geometry.Size,
-        layoutDirection: androidx.compose.ui.unit.LayoutDirection,
-        density: androidx.compose.ui.unit.Density
-    ): androidx.compose.ui.graphics.Outline {
-        val path = Path().apply {
-            val tailSizePx = with(density) { tailSize.toPx() }
-            val cornerRadiusPx = with(density) { cornerRadius.toPx() }
 
-            if (isSender) {
-                // Sender's tail
-                moveTo(tailSizePx, cornerRadiusPx) // Move to the starting point
-                lineTo(size.width - cornerRadiusPx, 0f) // Top edge
-                lineTo(size.width, cornerRadiusPx) // Top right corner
-                lineTo(size.width, size.height - cornerRadiusPx) // Right edge
-                lineTo(size.width - cornerRadiusPx, size.height) // Bottom right corner
-                lineTo(size.width - tailSizePx, size.height) // Bottom edge
-                lineTo(size.width - tailSizePx, size.height - tailSizePx) // Tail pointer bottom
-                lineTo(size.width, size.height / 2) // Point of the tail
-                lineTo(size.width - tailSizePx, tailSizePx) // Right side of tail pointer
-                lineTo(tailSizePx, tailSizePx) // Left side of tail pointer
-                lineTo(tailSizePx, cornerRadiusPx) // Finish the shape
-            } else {
-                // Receiver's tail
-                moveTo(cornerRadiusPx, 0f) // Top left corner
-                lineTo(size.width - tailSizePx, 0f) // Top edge
-                lineTo(size.width, cornerRadiusPx) // Top right corner
-                lineTo(size.width, size.height - cornerRadiusPx) // Right edge
-                lineTo(size.width - cornerRadiusPx, size.height) // Bottom right corner
-                lineTo(tailSizePx, size.height) // Bottom edge
-                lineTo(tailSizePx, size.height - tailSizePx) // Tail pointer bottom
-                lineTo(0f, size.height / 2) // Point of the tail
-                lineTo(tailSizePx, tailSizePx) // Left side of tail pointer
-                lineTo(cornerRadiusPx, tailSizePx) // Left side of the top left corner
-            }
-            close()
+
+@Composable
+fun BubbleShape(tailSize: Dp): GenericShape {
+    val density = LocalDensity.current
+
+    return GenericShape { size, _ ->
+        with(density) {
+            val tailHeight = tailSize.toPx() // Converts Dp to Px using density
+            val cornerRadius = 9.dp.toPx() // Adjust this for rounder corners
+            val bubbleWidth = size.width
+            val bubbleHeight = size.height
+
+            // Define the path for the bubble with a rounded tail on the bottom left
+            addPath(
+                Path().apply {
+                    // Start at the top-left corner
+                    moveTo(cornerRadius, 0f)
+
+                    // Top-left corner (rounded)
+                    arcTo(
+                        rect = Rect(0f, 0f, cornerRadius , cornerRadius ),
+                        startAngleDegrees = 180f,
+                        sweepAngleDegrees = 90f,
+                        forceMoveTo = false
+                    )
+
+                    // Top-right corner
+                    lineTo(bubbleWidth - cornerRadius, 0f)
+                    arcTo(
+                        rect = Rect(bubbleWidth - cornerRadius , 0f, bubbleWidth, cornerRadius),
+                        startAngleDegrees = 270f,
+                        sweepAngleDegrees = 90f,
+                        forceMoveTo = false
+                    )
+
+                    // Bottom-right corner
+                    lineTo(bubbleWidth, bubbleHeight - cornerRadius)
+                    arcTo(
+                        rect = Rect(bubbleWidth - cornerRadius , bubbleHeight - cornerRadius , bubbleWidth, bubbleHeight),
+                        startAngleDegrees = 0f,
+                        sweepAngleDegrees = 90f,
+                        forceMoveTo = false
+                    )
+
+                    // Bottom-left corner with the tail
+                    lineTo(cornerRadius, bubbleHeight)
+
+                    // Draw the tail
+                    lineTo(tailHeight, bubbleHeight - tailHeight) // Create the tail at the bottom left
+
+                    // Continue the bottom-left corner (rounded) after the tail
+                    lineTo(cornerRadius, bubbleHeight - cornerRadius)
+                    arcTo(
+                        rect = Rect(0f, bubbleHeight - cornerRadius , cornerRadius , bubbleHeight),
+                        startAngleDegrees = 90f,
+                        sweepAngleDegrees = 90f,
+                        forceMoveTo = false
+                    )
+                }
+            )
         }
-        return androidx.compose.ui.graphics.Outline.Generic(path)
     }
 }
