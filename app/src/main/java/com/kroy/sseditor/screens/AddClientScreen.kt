@@ -102,7 +102,7 @@ fun AddClientScreen(onClientAdded: (Int) -> Unit) {
             val inputStream = context.contentResolver.openInputStream(it)
             val originalBitmap = BitmapFactory.decodeStream(inputStream)
             val outputStream = ByteArrayOutputStream()
-            originalBitmap?.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+            originalBitmap?.compress(Bitmap.CompressFormat.PNG, 30, outputStream)
             val compressedBytes = outputStream.toByteArray()
             imageBase64 = Base64.encodeToString(compressedBytes, Base64.DEFAULT)
         }
@@ -117,7 +117,7 @@ fun AddClientScreen(onClientAdded: (Int) -> Unit) {
             val inputStream = context.contentResolver.openInputStream(it)
             val originalBitmap = BitmapFactory.decodeStream(inputStream)
             val outputStream = ByteArrayOutputStream()
-            originalBitmap?.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+            originalBitmap?.compress(Bitmap.CompressFormat.PNG, 30, outputStream)
             val compressedBytes = outputStream.toByteArray()
             backgroundImageBase64 = Base64.encodeToString(compressedBytes, Base64.DEFAULT)
         }

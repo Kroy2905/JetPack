@@ -154,48 +154,78 @@ fun CustomTelegramLayout(
                 contactPic = contactPic
             )
 
-            // LazyColumn that fills available space and aligns to the ChatBoxInput
-            LazyColumn(
-                reverseLayout = true,
-                modifier = Modifier
-                    .weight(1f) // This makes the LazyColumn take up the available space
-                    .padding(horizontal = 8.dp) // Only horizontal padding to keep alignment with ChatBoxInput
-            ) {
 
-                // Render Receiver's Sticker Message with random time
-                item {
+            Box(modifier = Modifier.weight(1f)) {
+                LazyColumn(
+                    modifier = Modifier
+                        //.weight(1f) // This makes the LazyColumn take up the available space
+                        .padding(horizontal = 8.dp) // Only horizontal padding to keep alignment with ChatBoxInput
+                ) {
 
-                    ReceiverStickerMessage(
-                        time = randomStickerTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
-                        userReplySticker= userReplySticker
-                    )
+                    // Render Receiver's Screenshot Message
+                    item {
+                        Spacer(modifier = Modifier.height(5.dp))
+                        ReceiverImageMessage(
+                            time = randomInitialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
+                            senderImage = senderImage
+                        )
+
+                    }
+
+
+
+                    // Render dynamic Chat Messages
+                    items(messages) { message ->
+                        Spacer(modifier = Modifier.height(6.dp))
+                        ChatBubble(
+                            message = message.message,
+                            // time = message.timestamp,
+                            time = randomInitialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
+                            isSender = message.isSender
+                        )
+                        // Space between message and time
+
+                    }
+
+                    // Render Receiver's Sticker Message with random time
+                    item {
+
+                        ReceiverStickerMessage(
+                            time = randomStickerTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
+                            userReplySticker= userReplySticker
+                        )
+
+                    }
+
+
+
+
 
                 }
-                // Render dynamic Chat Messages
-                items(messages.reversed()) { message ->
-                    ChatBubble(
-                        message = message.message,
-                       // time = message.timestamp,
-                        time = randomInitialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
-                        isSender = message.isSender
-                    )
-                    Spacer(modifier = Modifier.height(3.dp)) // Space between message and time
 
-                }
-                // Render Receiver's Screenshot Message
-                item {
-                    Spacer(modifier = Modifier.height(5.dp))
-                    ReceiverImageMessage(
-                        time = randomInitialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
-                        senderImage = senderImage
-                    )
-
-                }
-
-
+                Text(
+                    text = "Today",
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 8.dp) // Adjust the top padding for gap
+                        .background(Color(0x65000000), RoundedCornerShape(10.dp))
+                        .padding(horizontal = 10.dp, vertical = 3.dp)
+                )
 
 
             }
+
+
+
+
+
+
+
+
+
+            // LazyColumn that fills available space and aligns to the ChatBoxInput
 
             // Chat Input Box aligned with the bottom of the screen
             ChatBoxInput(
@@ -233,20 +263,28 @@ fun ChatBubble(
                         shape = when {
                             (textLayoutResult.value?.lineCount ?: 1) > 1 -> {
                                 RoundedCornerShape(
-                                    topStart = 8.dp, topEnd = 16.dp, bottomEnd = 16.dp, bottomStart = 8.dp
+                                    topStart = 8.dp,
+                                    topEnd = 16.dp,
+                                    bottomEnd = 16.dp,
+                                    bottomStart = 8.dp
                                 )
                             }
+
                             isLastMessage -> {
                                 BubbleShape(tailSize = 10.dp, isSender = isSender)
                             }
+
                             else -> {
                                 RoundedCornerShape(
-                                    topStart = 8.dp, topEnd = 20.dp, bottomEnd = 20.dp, bottomStart = 8.dp
+                                    topStart = 8.dp,
+                                    topEnd = 20.dp,
+                                    bottomEnd = 20.dp,
+                                    bottomStart = 8.dp
                                 )
                             }
                         }
                     )
-                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                    .padding(horizontal = 10.dp, vertical = 4.dp)
                     .wrapContentSize() // The box will only take as much space as needed
             ) {
                 Row(
@@ -275,7 +313,7 @@ fun ChatBubble(
                         color = Color.Gray,
                         fontSize = 12.sp,
                         modifier = Modifier
-                            .padding(end=2.dp)
+                            .padding(end = 2.dp)
                             .align(Alignment.Bottom) // Align timestamp to bottom right
                     )
                 }
@@ -665,14 +703,14 @@ fun ReceiverStickerMessage(time: String,userReplySticker: Bitmap?) {
     ) {
         Box(
             modifier = Modifier
-                .width(150.dp)
+                .widthIn(150.dp, 200.dp)
                 .heightIn(min = 100.dp, max = 210.dp)
                 .padding(2.dp)
         ) {
             Image(
                 bitmap = userReplySticker!!.asImageBitmap(), // Set your actual sticker image
                 contentDescription = "Sure Shot Sticker",
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.wrapContentSize(),
                 contentScale = ContentScale.FillBounds
             )
 
