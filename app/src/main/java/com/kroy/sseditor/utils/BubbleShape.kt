@@ -1,6 +1,5 @@
 package com.kroy.sseditor.utils
 
-
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Rect
@@ -9,8 +8,6 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-
-
 
 @Composable
 fun BubbleShape(tailSize: Dp): GenericShape {

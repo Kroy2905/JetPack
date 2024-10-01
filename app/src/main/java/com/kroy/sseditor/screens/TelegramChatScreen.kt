@@ -14,6 +14,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -91,9 +92,9 @@ import kotlin.random.Random
 fun previewTelegram(){
     val context = LocalContext.current
     val sampleMessages = listOf(
-        ChatMessage("Hello 3400000000000000 0udfehdufc euwdhcnu", "12:50 AM", isSender = true),
-        ChatMessage("Hi uwdihnuidn iewjfewiof  there mmmuh+!", "12:50 AM", isSender = true),
-        ChatMessage("How 435943594305943 08898sdijfhdsjfdsjfkjds  jsdkfjdskjflkdsjflkds j kdsjflkdsjflkjdssdlkfjdsf?", "12:50 AM", isSender = true)
+        ChatMessage("Hello 3400 00000000 0000 0 dfehdufc euwdhcnu", "12:50 AM", isSender = true),
+        ChatMessage("Hi uwdimmuh+!", "12:50 AM", isSender = true),
+        ChatMessage("How 435943594", "12:50 AM", isSender = true)
     )
 
     // Replace with actual Bitmap objects for testing
@@ -115,8 +116,8 @@ fun previewTelegram(){
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CustomTelegramLayout(
-    contactName:String,
-    contactPic:Bitmap?,
+    contactName: String,
+    contactPic: Bitmap?,
     messages: List<ChatMessage>,
     initialTimeString: String, // Time in "hh:mm a" format, e.g., "12:48 AM"
     backgroundBitmap: Bitmap?,
@@ -124,12 +125,12 @@ fun CustomTelegramLayout(
     userReplySticker: Bitmap?
 ) {
     // Parse the initial time string to LocalTime
-    Log.d("time set->","TES $initialTimeString")
+    Log.d("time set->", "TES $initialTimeString")
     val initialTime = remember {
         parseTimeString(initialTimeString)
     }
     val randomInitialTime = remember { generateRandomTime(initialTime, -15, 15) }
-    Log.d("time set->","parse $initialTimeString")
+    Log.d("time set->", "parse $initialTimeString")
 
     // Generate a random time between 20 to 30 minutes from the initial time
     val randomStickerTime = remember { generateRandomTime(randomInitialTime, 20, 30) }
@@ -158,56 +159,45 @@ fun CustomTelegramLayout(
                 contactPic = contactPic
             )
 
-
             Box(modifier = Modifier.weight(1f)) {
                 LazyColumn(
                     modifier = Modifier
-                        //.weight(1f) // This makes the LazyColumn take up the available space
                         .padding(horizontal = 8.dp) // Only horizontal padding to keep alignment with ChatBoxInput
                 ) {
-
                     // Render Receiver's Screenshot Message
                     item {
-                        Spacer(modifier = Modifier.height(5.dp))
+                        Spacer(modifier = Modifier.height(3.dp))
                         ReceiverImageMessage(
                             time = randomInitialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
                             senderImage = senderImage
                         )
-
                     }
 
-
-
                     // Render dynamic Chat Messages
-                    items(messages) { message ->
-                        Spacer(modifier = Modifier.height(6.dp))
+                    itemsIndexed(messages) { index, message ->
+
+
+                        // Check if this is the last message in the list
+                        val isLastMessage = index == messages.size - 1
+
                         ChatBubble(
                             message = message.message,
-                            // time = message.timestamp,
                             time = randomInitialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
                             isSender = message.isSender,
-                            isLastMessage = true
+                            isLastMessage = isLastMessage // Only true for the last message
                         )
-                        // Space between message and time
-
                     }
 
                     // Render Receiver's Sticker Message with random time
                     item {
-
                         ReceiverStickerMessage(
                             time = randomStickerTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
-                            userReplySticker= userReplySticker
+                            userReplySticker = userReplySticker
                         )
-
                     }
-
-
-
-
-
                 }
 
+                // "Today" text at the top
                 Text(
                     text = "Today",
                     color = Color.White,
@@ -218,28 +208,16 @@ fun CustomTelegramLayout(
                         .background(Color(0x65000000), RoundedCornerShape(10.dp))
                         .padding(horizontal = 10.dp, vertical = 3.dp)
                 )
-
-
             }
-
-
-
-
-
-
-
-
-
-            // LazyColumn that fills available space and aligns to the ChatBoxInput
 
             // Chat Input Box aligned with the bottom of the screen
             ChatBoxInput(
-                 // Match padding to LazyColumn for alignment
+                // Match padding to LazyColumn for alignment
             )
         }
+    }
+}
 
-    }
-    }
 
 
 // Function to parse the time string ("hh:mm a" format) into LocalTime
@@ -250,78 +228,85 @@ fun ChatBubble(
     message: String,
     time: String,
     isSender: Boolean,
-    isLastMessage: Boolean = true
+    isLastMessage: Boolean
 ) {
     val textLayoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
-    Row(modifier = Modifier.fillMaxWidth(.88f)) {
-        if (isLastMessage) {
-            Box(
-                modifier = Modifier
 
-                    .align(Alignment.Bottom) // Align the triangle to the bottom
-            ) {
-                TriangleShape(color = Color.Black.copy(alpha = 0.55f)) // Use the same color as the chat bubble
-            }
-        }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(.88f)
+            .padding(bottom = if (isLastMessage) 6.dp else 2.dp) // Adjust padding for the last message
+    ) {
         Box(
             modifier = Modifier
-                .padding(start = 0.dp, bottom = 3.dp, end = 15.dp)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Black.copy(alpha = 0.72f),
-                            Color.Black.copy(alpha = 0.7f)
-                        )
-                    ),
-                    shape = when {
-                        isLastMessage -> RoundedCornerShape(
+                .padding(start = 10.dp, end = 0.dp) // Adjust start padding
+        ) {
+            // Main chat bubble
+            Box(
+                modifier = Modifier
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Black.copy(alpha = 0.72f),
+                                Color.Black.copy(alpha = 0.7f)
+                            )
+                        ),
+                        shape = RoundedCornerShape(
                             topStart = 8.dp,
                             topEnd = 16.dp,
                             bottomEnd = 16.dp,
-                            bottomStart = 8.dp
+                            bottomStart = if (isLastMessage) 8.dp else 8.dp // Remove bottomStart corner if last message
                         )
-                        else -> BubbleShape(tailSize = 10.dp)
-                    }
-                )
-                .padding(horizontal = 10.dp, vertical = 4.dp)
-                .wrapContentSize()
-        ) {
-            Row(
-                modifier = Modifier.wrapContentWidth(),
-                verticalAlignment = Alignment.Bottom
+                    )
+                    .padding(horizontal = 10.dp, vertical = 8.dp)
+                    .wrapContentSize()
             ) {
-                // Text message
-                Text(
-                    text = message,
-                    style = CustomRegularTypography.titleMedium,
-                    fontWeight = FontWeight.W400,
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    maxLines = Int.MAX_VALUE,
-                    overflow = TextOverflow.Ellipsis,
-                    onTextLayout = { textLayoutResult.value = it },
-                    modifier = Modifier.weight(1f, fill = false)
-                )
+                Row(
+                    modifier = Modifier.wrapContentWidth(),
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    // Message text
+                    Text(
+                        text = message,
+                        style = CustomRegularTypography.titleMedium,
+                        fontWeight = FontWeight.W400,
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        maxLines = Int.MAX_VALUE,
+                        overflow = TextOverflow.Ellipsis,
+                        onTextLayout = { textLayoutResult.value = it },
+                        modifier = Modifier.weight(1f, fill = false)
+                    )
 
-                Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
 
-                // Timestamp
-                Text(
-                    text = convertLettersToUppercase(time),
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Gray,
-                    fontSize = 12.sp,
+                    // Timestamp
+                    Text(
+                        text = convertLettersToUppercase(time),
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Gray,
+                        fontSize = 12.sp,
+                        modifier = Modifier
+                            .padding(end = 2.dp)
+                            .align(Alignment.Bottom)
+                    )
+                }
+            }
+
+            // Show triangle only if this is the last message
+            if (isLastMessage) {
+                Box(
                     modifier = Modifier
-                        .padding(end = 2.dp)
-                        .align(Alignment.Bottom)
-                )
+                        .align(Alignment.BottomStart) // Position the triangle at the bottom start
+                        .offset(x = (-10).dp, y = 0.dp) // Slightly adjust for triangle size
+                ) {
+                    TriangleShape(color = Color.Black.copy(alpha = 0.58f)) // Triangle at the bottom start for last message
+                }
             }
         }
-
-        // Display triangle shape if it's the last message
-
     }
 }
+
 
 
 
@@ -333,14 +318,14 @@ fun TriangleShape(color: Color) {
         .size(10.dp)) {
         val path = Path().apply {
             // Start from the bottom left
-            moveTo(-2f, size.height * 0.5f)
+            moveTo(-10f, size.height * 0.2f)
 
             // Draw a straight line to the bottom right
-            lineTo(size.width * 1.2f, size.height * 1.2f)
+            lineTo(size.width * 1.4f, size.height * 1.3f)
 
             // Create a quadratic Bezier curve for the side that becomes the top after rotation
             quadraticBezierTo(
-                size.width / 1f, size.height * 0.2f,  // Control point for the curve
+                size.width / 2f, size.height * 0.2f,  // Control point for the curve
                 size.width / 2f, size.height * 2.4f  // End point of the curve
             )
 
@@ -545,17 +530,17 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                     .fillMaxWidth()
                     .padding(end = 20.dp,)
             ) {
-                Icon(painterResource(id = R.drawable.ic_signal), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(20.dp))
+                Icon(painterResource(id = R.drawable.ic_signal2), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(20.dp))
                 Spacer(modifier = Modifier.width(5.dp))
                 Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier.size(20.dp))
                 Spacer(modifier = Modifier.width(5.dp))
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_battery),
+                    painter = painterResource(id = R.drawable.battery1),
                     contentDescription = "Battery",
                     tint = Color.White,
                     modifier = Modifier
                         .size(25.dp)
-                        .rotate(90f)
+                        .rotate(0f)
                 )
             }
         }
@@ -599,10 +584,10 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                                 .padding(start = 8.dp, end = 8.dp, bottom = 1.dp, top = 2.dp)
                         ) {
                             Text(
-                                text = "${Random.nextInt(600, 900 + 1)}", // Example message count
+                                text = "${Random.nextInt(1000, 2000 + 1)}", // Example message count
                                 color = Color.White,
                                 fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold
+                                style = CustomRegularTypography.titleMedium
                             )
                         }
                     }
@@ -669,15 +654,18 @@ fun ReceiverImageMessage(time: String,senderImage: Bitmap?) {
             modifier = Modifier
                 .width(230.dp)
                 .heightIn(min = 200.dp, max = 350.dp)
-                .padding(2.dp)
+                .padding(start = 10.dp, bottom = 3.dp)
+
                 .clip(RoundedCornerShape(16.dp)) // Rounded corners
-                .background(Color.Gray) // Optional background color
+
         ) {
             // Main image
             Image(
                 bitmap = senderImage!!.asImageBitmap(), // Set your actual screenshot resource
                 contentDescription = "Chart Screenshot",
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize(),
+
                 contentScale = ContentScale.FillBounds // Use Crop to maintain aspect ratio
             )
 
