@@ -62,8 +62,8 @@ import kotlin.random.Random
 fun previewTelegram(){
     val context = LocalContext.current
     val sampleMessages = listOf(
-        ChatMessage("11111111111 12321312 2131 213  321213", "12:50 AM", isSender = true),
-        ChatMessage("Hello how are you ", "12:50 AM", isSender = true),
+        ChatMessage("11111111111 12321312 2131 213  321213 ram shyam ", "12:50 AM", isSender = true),
+        ChatMessage("Hello you are a wonderful person , we can do a lot of stuff ", "12:50 AM", isSender = true),
         ChatMessage("How 435943594", "12:50 AM", isSender = true)
     )
 
@@ -206,7 +206,7 @@ fun ChatBubble(
 
     Row(
         modifier = Modifier
-            .fillMaxWidth(0.86f) // The Row still fills the available width
+            .fillMaxWidth(0.8f) // The Row still fills the available width
             .padding(bottom = if (isLastMessage) 6.dp else 2.dp) // Adjust padding for the last message
     ) {
         Box(
