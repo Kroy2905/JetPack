@@ -220,8 +220,8 @@ fun ChatBubble(
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
-                                Color.Black.copy(alpha = 0.72f),
-                                Color.Black.copy(alpha = 0.7f)
+                                Color.Black.copy(alpha = 0.95f),
+                                Color.Black.copy(alpha = 1.1f)
                             )
                         ),
                         shape = RoundedCornerShape(
@@ -258,7 +258,7 @@ fun ChatBubble(
                             style = CustomRegularTypography.titleMedium,
                             fontWeight = FontWeight.W400,
                             color = Color.White,
-                            fontSize = 15.sp,
+                            fontSize = 17.sp,
                             maxLines = Int.MAX_VALUE,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.wrapContentWidth()
@@ -289,7 +289,7 @@ fun ChatBubble(
                         style = CustomRegularTypography.titleMedium,
                         fontWeight = FontWeight.W400,
                         color = Color.White,
-                        fontSize = 15.sp,
+                        fontSize = 17.sp,
                         maxLines = Int.MAX_VALUE,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.wrapContentWidth() // Box adjusts based on content
@@ -365,8 +365,8 @@ fun ChatBoxInput() {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color.Black.copy(alpha = 0.87f),
-                        Color.Black.copy(alpha = 0.87f)
+                        Color.Black.copy(alpha = 0.95f),
+                        Color.Black.copy(alpha = 1.1f)
                     )
                 )
             )
@@ -475,7 +475,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
             .fillMaxWidth()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color.Black.copy(alpha = 0.9f), Color.Black.copy(alpha = 0.9f))
+                    colors = listOf(Color.Black.copy(alpha = 0.95f), Color.Black.copy(alpha = 1.1f))
                 )
             )
             .graphicsLayer {
@@ -595,7 +595,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
 
                     // Pending Messages Box
                     Box(modifier = Modifier
-                        .padding(top = 6.dp)){
+                        .padding(top = 5.dp)){
                         Box(
                             modifier = Modifier
                                 .wrapContentSize()
@@ -605,7 +605,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                             Text(
                                 text = "${Random.nextInt(1000, 2000 + 1)}", // Example message count
                                 color = Color.White,
-                                fontSize = 10.sp,
+                                fontSize = 11.sp,
                                 style = CustomRegularTypography.titleMedium
                             )
                         }
@@ -671,8 +671,8 @@ fun ReceiverImageMessage(time: String,senderImage: Bitmap?) {
     ) {
         Box(
             modifier = Modifier
-                .widthIn(100.dp, 230.dp)
-                .heightIn(min = 150.dp, max = 320.dp)
+                .widthIn(200.dp, 230.dp)
+                .heightIn(min = 200.dp, max = 350.dp)
                 .padding(start = 1.dp, bottom = 3.dp)
                 .clip(RoundedCornerShape(16.dp)) // Clip to rounded corners
                 .border(

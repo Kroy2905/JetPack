@@ -63,7 +63,7 @@ object Utils {
 
 
         LaunchedEffect(Unit) {
-            delay(500)
+
             Log.d("time set->"," LE $initialTimeString")
             captureAndSaveComposableToBitmap(
                 context = context,
