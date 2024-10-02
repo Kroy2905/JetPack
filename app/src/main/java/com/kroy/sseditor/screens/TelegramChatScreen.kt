@@ -1,8 +1,6 @@
 package com.kroy.sseditor.screens
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -10,80 +8,51 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.*
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.RenderEffect
-import androidx.compose.ui.graphics.Shader
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import com.kroy.ssediotor.R
 import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.ui.theme.BottomIconTint
-import com.kroy.sseditor.ui.theme.CustomBoldFontFamily
 import com.kroy.sseditor.ui.theme.CustomBoldTypography
-import com.kroy.sseditor.ui.theme.CustomFontFamily
-import com.kroy.sseditor.ui.theme.CustomMediumTypography
 import com.kroy.sseditor.ui.theme.CustomRegularTypography
-import com.kroy.sseditor.ui.theme.CustomTypography
 import com.kroy.sseditor.ui.theme.Telegram
-import com.kroy.sseditor.utils.BubbleShape
 import com.kroy.sseditor.utils.Utils.convertLettersToUppercase
 import com.kroy.sseditor.utils.Utils.generateRandomTime
 import com.kroy.sseditor.utils.Utils.getBitmapFromResource
 import com.kroy.sseditor.utils.Utils.parseTimeString
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
-import java.util.Locale
 import kotlin.random.Random
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -201,10 +170,10 @@ fun CustomTelegramLayout(
                 Text(
                     text = "Today",
                     color = Color.White,
-                    fontSize = 16.sp,
+                    fontSize = 13.sp,
                     modifier = Modifier
                         .align(Alignment.TopCenter)
-                        .padding(top = 8.dp) // Adjust the top padding for gap
+                        .padding(top = 6.dp) // Adjust the top padding for gap
                         .background(Color(0x65000000), RoundedCornerShape(10.dp))
                         .padding(horizontal = 10.dp, vertical = 3.dp)
                 )
@@ -239,7 +208,7 @@ fun ChatBubble(
     ) {
         Box(
             modifier = Modifier
-                .padding(start = 10.dp, end = 0.dp) // Adjust start padding
+                .padding(start = 2.dp) // Adjust start padding
         ) {
             // Main chat bubble
             Box(
@@ -263,34 +232,34 @@ fun ChatBubble(
             ) {
                 Row(
                     modifier = Modifier.wrapContentWidth(),
-                    verticalAlignment = Alignment.Bottom
-                ) {
+        verticalAlignment = Alignment.Bottom
+    ) {
                     // Message text
-                    Text(
-                        text = message,
-                        style = CustomRegularTypography.titleMedium,
-                        fontWeight = FontWeight.W400,
-                        color = Color.White,
-                        fontSize = 18.sp,
-                        maxLines = Int.MAX_VALUE,
-                        overflow = TextOverflow.Ellipsis,
-                        onTextLayout = { textLayoutResult.value = it },
+        Text(
+            text = message,
+            style = CustomRegularTypography.titleMedium,
+            fontWeight = FontWeight.W400,
+            color = Color.White,
+                        fontSize = 16.sp,
+            maxLines = Int.MAX_VALUE,
+            overflow = TextOverflow.Ellipsis,
+            onTextLayout = { textLayoutResult.value = it },
                         modifier = Modifier.weight(1f, fill = false)
-                    )
+        )
 
                     Spacer(modifier = Modifier.width(8.dp))
 
                     // Timestamp
-                    Text(
-                        text = convertLettersToUppercase(time),
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.Gray,
+        Text(
+            text = convertLettersToUppercase(time),
+            fontWeight = FontWeight.SemiBold,
+            color = Color.Gray,
                         fontSize = 12.sp,
-                        modifier = Modifier
-                            .padding(end = 2.dp)
+            modifier = Modifier
+                .padding(end = 2.dp)
                             .align(Alignment.Bottom)
-                    )
-                }
+        )
+    }
             }
 
             // Show triangle only if this is the last message
@@ -348,7 +317,7 @@ fun ChatBoxInput() {
             .fillMaxWidth()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color.Black.copy(alpha = 0.7f), Color.Black.copy(alpha = 0.85f))
+                    colors = listOf(Color.Black.copy(alpha = 0.87f), Color.Black.copy(alpha = 0.87f))
                 )
             )
             .graphicsLayer {
@@ -367,18 +336,18 @@ fun ChatBoxInput() {
         ) {
             // Attachment file icon at the start
 
-                Icon(
-                    painter = painterResource(id = com.kroy.ssediotor.R.drawable.ic_attach_file), // Replace with your actual resource
-                    contentDescription = "Attach",
-                    modifier = Modifier
+            Icon(
+                painter = painterResource(id = com.kroy.ssediotor.R.drawable.ic_attach_file), // Replace with your actual resource
+                contentDescription = "Attach",
+                modifier = Modifier
 
-                        .padding(end = 10.dp, start = 10.dp)
-                        .size(23.dp)
-                    ,
+                    .padding(end = 10.dp, start = 10.dp)
+                    .size(23.dp)
+                ,
 
 
-                   tint = BottomIconTint
-                )
+                tint = BottomIconTint
+            )
 
 
             // Box containing "Message" text and the attach sticker icon
@@ -402,29 +371,29 @@ fun ChatBoxInput() {
 
                 // Attach sticker icon aligned to the right inside the box
 
-                    Icon(
-                        painter = painterResource(id = com.kroy.ssediotor.R.drawable.ic_sticker), // Replace with your sticker icon
-                        contentDescription = "Attach Sticker",
-                        tint = BottomIconTint,
-                        modifier = Modifier
-                            .padding(end = 10.dp)
-                            .align(Alignment.CenterEnd)
+                Icon(
+                    painter = painterResource(id = com.kroy.ssediotor.R.drawable.ic_sticker), // Replace with your sticker icon
+                    contentDescription = "Attach Sticker",
+                    tint = BottomIconTint,
+                    modifier = Modifier
+                        .padding(end = 10.dp)
+                        .align(Alignment.CenterEnd)
 
-                    )
+                )
 
             }
 
 
-                Icon(
-                    painter = painterResource(id = com.kroy.ssediotor.R.drawable.ic_mic), // Replace with your mic icon
-                    contentDescription = "Mic",
-                    tint = BottomIconTint,
-                    modifier = Modifier
+            Icon(
+                painter = painterResource(id = com.kroy.ssediotor.R.drawable.ic_mic), // Replace with your mic icon
+                contentDescription = "Mic",
+                tint = BottomIconTint,
+                modifier = Modifier
 
 
-                        .padding(end = 10.dp, start = 10.dp)
-                        .size(23.dp)
-                )
+                    .padding(end = 10.dp, start = 10.dp)
+                    .size(23.dp)
+            )
 
             // White line below the UI with top padding
 
@@ -456,7 +425,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
             .fillMaxWidth()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color.Black.copy(alpha = 0.8f), Color.Black.copy(alpha = 0.85f))
+                    colors = listOf(Color.Black.copy(alpha = 0.9f), Color.Black.copy(alpha = 0.9f))
                 )
             )
             .graphicsLayer {
@@ -478,7 +447,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
             Text(
                 text = time,
                 color = Color.White,
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 style = CustomBoldTypography.titleMedium,
                 fontWeight = FontWeight.W700,
                 modifier = Modifier.padding(start = 25.dp)
@@ -544,7 +513,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                 )
             }
         }
-     //2nd line of status bar
+        //2nd line of status bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -552,7 +521,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                 .padding(end = 15.dp)
                 .wrapContentHeight(),
 
-        ){
+            ){
 
             Box(
                 modifier = Modifier
@@ -561,13 +530,13 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                     .height(60.dp)
             ) {
 
-                    // Back Button
+                // Back Button
                 Row(modifier = Modifier
-                    .padding(top=16.dp)) {
+                    .padding(top=18.dp)) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_back),
                         modifier = Modifier
-                            .size(30.dp)
+                            .size(27.dp)
                         ,
                         contentDescription = "Back",
                         tint = Telegram // Ensure Telegram color is defined
@@ -576,17 +545,17 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
 
                     // Pending Messages Box
                     Box(modifier = Modifier
-                        .padding(top = 4.dp)){
+                        .padding(top = 6.dp)){
                         Box(
                             modifier = Modifier
                                 .wrapContentSize()
                                 .background(Telegram, shape = RoundedCornerShape(12.dp))
-                                .padding(start = 8.dp, end = 8.dp, bottom = 1.dp, top = 2.dp)
+                                .padding(start = 8.dp, end = 8.dp, bottom = 2.dp, top = 2.dp)
                         ) {
                             Text(
                                 text = "${Random.nextInt(1000, 2000 + 1)}", // Example message count
                                 color = Color.White,
-                                fontSize = 12.sp,
+                                fontSize = 10.sp,
                                 style = CustomRegularTypography.titleMedium
                             )
                         }
@@ -652,11 +621,15 @@ fun ReceiverImageMessage(time: String,senderImage: Bitmap?) {
     ) {
         Box(
             modifier = Modifier
-                .width(230.dp)
-                .heightIn(min = 200.dp, max = 350.dp)
-                .padding(start = 10.dp, bottom = 3.dp)
-
-                .clip(RoundedCornerShape(16.dp)) // Rounded corners
+                .widthIn(100.dp, 230.dp)
+                .heightIn(min = 150.dp, max = 320.dp)
+                .padding(start = 1.dp, bottom = 3.dp)
+                .clip(RoundedCornerShape(16.dp)) // Clip to rounded corners
+                .border(
+                    width = (0.6f).dp,
+                    color = Color.Black,
+                    shape = RoundedCornerShape(16.dp) // Apply same rounded shape to border
+                ) // Border with rounded corners
 
         ) {
             // Main image
