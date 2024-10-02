@@ -535,7 +535,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                 Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier.size(20.dp))
                 Spacer(modifier = Modifier.width(5.dp))
                 Icon(
-                    painter = painterResource(id = R.drawable.battery1),
+                    painter = painterResource(id = R.drawable.battery4),
                     contentDescription = "Battery",
                     tint = Color.White,
                     modifier = Modifier
