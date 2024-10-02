@@ -3,6 +3,7 @@ package com.kroy.sseditor.screens
 import android.graphics.Bitmap
 import android.os.Build
 import android.util.Log
+import android.widget.Space
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -61,8 +62,8 @@ import kotlin.random.Random
 fun previewTelegram(){
     val context = LocalContext.current
     val sampleMessages = listOf(
-        ChatMessage("Hello 3400 00000000 0000 0 dfehdufc euwdhcnu", "12:50 AM", isSender = true),
-        ChatMessage("Hi uwdimmuh+!", "12:50 AM", isSender = true),
+        ChatMessage("11111111111 12321312 2131 213  321213", "12:50 AM", isSender = true),
+        ChatMessage("Hello how are you ", "12:50 AM", isSender = true),
         ChatMessage("How 435943594", "12:50 AM", isSender = true)
     )
 
@@ -199,15 +200,18 @@ fun ChatBubble(
     isSender: Boolean,
     isLastMessage: Boolean
 ) {
-    val textLayoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
+    // Combine message and timer strings
+    val formattedTime = convertLettersToUppercase(time)
+    val combinedText = "$message  $formattedTime"
 
     Row(
         modifier = Modifier
-            .fillMaxWidth(.88f)
+            .fillMaxWidth(0.86f) // The Row still fills the available width
             .padding(bottom = if (isLastMessage) 6.dp else 2.dp) // Adjust padding for the last message
     ) {
         Box(
             modifier = Modifier
+                .wrapContentWidth()
                 .padding(start = 2.dp) // Adjust start padding
         ) {
             // Main chat bubble
@@ -224,42 +228,73 @@ fun ChatBubble(
                             topStart = 8.dp,
                             topEnd = 16.dp,
                             bottomEnd = 16.dp,
-                            bottomStart = if (isLastMessage) 8.dp else 8.dp // Remove bottomStart corner if last message
+                            bottomStart = if (isLastMessage) 8.dp else 8.dp // Adjust based on message position
                         )
                     )
                     .padding(horizontal = 10.dp, vertical = 8.dp)
-                    .wrapContentSize()
+                    .wrapContentWidth() // The box wraps around its content
             ) {
-                Row(
-                    modifier = Modifier.wrapContentWidth(),
-        verticalAlignment = Alignment.Bottom
-    ) {
-                    // Message text
-        Text(
-            text = message,
-            style = CustomRegularTypography.titleMedium,
-            fontWeight = FontWeight.W400,
-            color = Color.White,
-                        fontSize = 16.sp,
-            maxLines = Int.MAX_VALUE,
-            overflow = TextOverflow.Ellipsis,
-            onTextLayout = { textLayoutResult.value = it },
-                        modifier = Modifier.weight(1f, fill = false)
-        )
+                // Determine the total length
+                val messageLength = message.length
+                val timeLength = formattedTime.length
+                val spaceLength = 2 // Length of the space between message and timer
+                val combinedLength = messageLength + timeLength + spaceLength
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                // If the combined length exceeds 25 characters, adjust layout
+                if (combinedLength > 45) {
+                    val allowedMessageLength =  (timeLength + spaceLength)
+                    val displayMessage = if (allowedMessageLength < messageLength) {
+                       // message.take(allowedMessageLength) // Take only part of the message
+                        message
+                    } else {
+                        message // If it fits, display the whole message
+                    }
 
-                    // Timestamp
-        Text(
-            text = convertLettersToUppercase(time),
-            fontWeight = FontWeight.SemiBold,
-            color = Color.Gray,
-                        fontSize = 12.sp,
-            modifier = Modifier
-                .padding(end = 2.dp)
-                            .align(Alignment.Bottom)
-        )
-    }
+                    // Display the message and timer in a Column
+                    Column {
+                        // Display the trimmed message
+                        Text(
+                            text = displayMessage,
+                            style = CustomRegularTypography.titleMedium,
+                            fontWeight = FontWeight.W400,
+                            color = Color.White,
+                            fontSize = 15.sp,
+                            maxLines = Int.MAX_VALUE,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.wrapContentWidth()
+                        )
+
+                        // Timer text aligned at the end of the box
+                        Text(
+                            text = formattedTime,
+                            style = CustomRegularTypography.titleMedium,
+                            fontWeight = FontWeight.W400,
+                            fontSize = 12.sp,
+                            color = Color.Gray,
+                            modifier = Modifier
+                                .align(Alignment.End) // Align timer at the end of the box
+                                .padding(top = 2.dp) // Optional: add padding above the timer
+                        )
+                    }
+                } else {
+                    // If the combined length is less than or equal to 25 characters
+                    Text(
+                        text = buildAnnotatedString {
+                            append(message)
+                            append("   ") // Add space between message and time
+                            withStyle(style = SpanStyle(fontSize = 12.sp, color = Color.Gray)) {
+                                append(formattedTime)
+                            }
+                        },
+                        style = CustomRegularTypography.titleMedium,
+                        fontWeight = FontWeight.W400,
+                        color = Color.White,
+                        fontSize = 15.sp,
+                        maxLines = Int.MAX_VALUE,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.wrapContentWidth() // Box adjusts based on content
+                    )
+                }
             }
 
             // Show triangle only if this is the last message
@@ -267,7 +302,7 @@ fun ChatBubble(
                 Box(
                     modifier = Modifier
                         .align(Alignment.BottomStart) // Position the triangle at the bottom start
-                        .offset(x = (-10).dp, y = 0.dp) // Slightly adjust for triangle size
+                        .offset(x = (-10).dp) // Slight offset for triangle size
                 ) {
                     TriangleShape(color = Color.Black.copy(alpha = 0.58f)) // Triangle at the bottom start for last message
                 }
@@ -275,6 +310,18 @@ fun ChatBubble(
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -317,7 +364,10 @@ fun ChatBoxInput() {
             .fillMaxWidth()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color.Black.copy(alpha = 0.87f), Color.Black.copy(alpha = 0.87f))
+                    colors = listOf(
+                        Color.Black.copy(alpha = 0.87f),
+                        Color.Black.copy(alpha = 0.87f)
+                    )
                 )
             )
             .graphicsLayer {
