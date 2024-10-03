@@ -175,7 +175,7 @@ fun CustomTelegramLayout(
                 Text(
                     text = "Today",
                     color = Color.White,
-                    fontSize = 14.sp,
+                    fontSize = 12.sp,
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .padding(top = 6.dp) // Adjust the top padding for gap
@@ -700,7 +700,7 @@ fun ReceiverImageMessage(time: String,senderImage: Bitmap?) {
             Text(
                 text = convertLettersToUppercase(time) ,
                 color = Color.White,
-                fontSize = 12.sp,
+                fontSize = 10.sp,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(4.dp)
@@ -776,7 +776,7 @@ fun ReceiverStickerMessage(time: String,userReplySticker: Bitmap?) {
                 Text(
                     text = convertLettersToUppercase(time) ,
                     color = Color.White,
-                    fontSize = 12.sp,
+                    fontSize = 10.sp,
                 )
 
                 // Single tick icon
@@ -786,7 +786,7 @@ fun ReceiverStickerMessage(time: String,userReplySticker: Bitmap?) {
                     tint = Color.White,
                     modifier = Modifier
                         .padding(start = 4.dp)
-                        .size(12.dp) // Adjust size as needed
+                        .size(10.dp) // Adjust size as needed
                 )
             }
         }
