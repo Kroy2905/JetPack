@@ -175,12 +175,12 @@ fun CustomTelegramLayout(
                 Text(
                     text = "Today",
                     color = Color.White,
-                    fontSize = 12.sp,
+                    fontSize = 14.sp,
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .padding(top = 6.dp) // Adjust the top padding for gap
                         .background(Color(0x65000000), RoundedCornerShape(10.dp))
-                        .padding(horizontal = 10.dp, vertical = 3.dp)
+                        .padding(horizontal = 5.dp, vertical = 3.dp)
                 )
             }
 
@@ -308,7 +308,7 @@ fun ChatBubble(
                         .align(Alignment.BottomStart) // Position the triangle at the bottom start
                         .offset(x = (-10).dp) // Slight offset for triangle size
                 ) {
-                    TriangleShape(color = Color.Black.copy(alpha = 0.58f)) // Triangle at the bottom start for last message
+                    TriangleShape(color = Color.Black.copy(alpha = 0.85f)) // Triangle at the bottom start for last message
                 }
             }
         }
@@ -501,7 +501,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
             Text(
                 text = time,
                 color = Color.White,
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 style = CustomBoldTypography.titleMedium,
                 fontWeight = FontWeight.W700,
                 modifier = Modifier.padding(start = 25.dp)
@@ -599,17 +599,17 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
 
                     // Pending Messages Box
                     Box(modifier = Modifier
-                        .padding(top = 3.dp)){
+                        .padding(top = 2.dp)){
                         Box(
                             modifier = Modifier
                                 .wrapContentSize()
                                 .background(Telegram, shape = RoundedCornerShape(12.dp))
-                                .padding(start = 6.dp, end = 6.dp, bottom = 2.dp, top = 2.dp)
+                                .padding(start = 2.dp, end = 2.dp, bottom = 1.dp, top = 1.dp)
                         ) {
                             Text(
                                 text = "${Random.nextInt(1000, 2000 + 1)}", // Example message count
                                 color = Color.White,
-                                fontSize = 9.sp,
+                                fontSize = 11.sp,
                                 style = CustomRegularTypography.titleMedium
                             )
                         }
