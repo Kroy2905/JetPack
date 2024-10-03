@@ -369,8 +369,8 @@ fun ChatBoxInput() {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color.Black.copy(alpha = 0.9f),
-                        Color.Black.copy(alpha = 0.92f)
+                        Color.Black.copy(alpha = 0.85f),
+                        Color.Black.copy(alpha = 0.85f)
                     )
                 )
             )
