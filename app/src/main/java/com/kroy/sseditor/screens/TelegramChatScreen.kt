@@ -57,24 +57,27 @@ import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 @RequiresApi(Build.VERSION_CODES.O)
-@Preview
+@Preview(
+    showBackground = true,
+    device = "spec:width=1440px,height=3200px,dpi=560" // This simulates a 6.7-inch screen with 1440x3200 resolution and 560 dpi
+)
 @Composable
-fun previewTelegram(){
+fun previewTelegram() {
     val context = LocalContext.current
     val sampleMessages = listOf(
-        ChatMessage("11111111111 12321312 2131 213  321213 ram shyam ", "12:50 AM", isSender = true),
-        ChatMessage("Hello you are a wonderful person , we can do a lot of stuff ", "12:50 AM", isSender = true),
-        ChatMessage("How 435943594", "12:50 AM", isSender = true)
+        ChatMessage("Rathore sir you are the best", "12:50 AM", isSender = true),
+        ChatMessage("Saare trades win gaye", "12:50 AM", isSender = true),
+//        ChatMessage("How 435943594", "12:50 AM", isSender = true)
     )
 
     // Replace with actual Bitmap objects for testing
-    val contactPic: Bitmap? = getBitmapFromResource(context,R.drawable.f)
-    val backgroundBitmap: Bitmap? = getBitmapFromResource(context,R.drawable.telegram_bg)
-    val senderImage: Bitmap? = getBitmapFromResource(context,R.drawable.b)
-    val userReplySticker: Bitmap? = getBitmapFromResource(context,R.drawable.d)
+    val contactPic: Bitmap? = getBitmapFromResource(context, R.drawable.f)
+    val backgroundBitmap: Bitmap? = getBitmapFromResource(context, R.drawable.telegram_bg)
+    val senderImage: Bitmap? = getBitmapFromResource(context, R.drawable.b)
+    val userReplySticker: Bitmap? = getBitmapFromResource(context, R.drawable.d)
 
     CustomTelegramLayout(
-        contactName ="Random Name",
+        contactName = "Random Name",
         contactPic = contactPic,
         messages = sampleMessages,
         initialTimeString = "12:48 AM",
@@ -83,6 +86,7 @@ fun previewTelegram(){
         userReplySticker = userReplySticker
     )
 }
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CustomTelegramLayout(
@@ -115,7 +119,7 @@ fun CustomTelegramLayout(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .blur(10.dp, 10.dp)
+                .blur(20.dp, 20.dp)
                 .fillMaxSize()
         )
 
@@ -171,7 +175,7 @@ fun CustomTelegramLayout(
                 Text(
                     text = "Today",
                     color = Color.White,
-                    fontSize = 13.sp,
+                    fontSize = 12.sp,
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .padding(top = 6.dp) // Adjust the top padding for gap
@@ -220,8 +224,8 @@ fun ChatBubble(
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
-                                Color.Black.copy(alpha = 0.95f),
-                                Color.Black.copy(alpha = 1.1f)
+                                Color.Black.copy(alpha = 0.85f),
+                                Color.Black.copy(alpha =0.9f)
                             )
                         ),
                         shape = RoundedCornerShape(
@@ -241,7 +245,7 @@ fun ChatBubble(
                 val combinedLength = messageLength + timeLength + spaceLength
 
                 // If the combined length exceeds 25 characters, adjust layout
-                if (combinedLength > 45) {
+                if (combinedLength > 33) {
                     val allowedMessageLength =  (timeLength + spaceLength)
                     val displayMessage = if (allowedMessageLength < messageLength) {
                        // message.take(allowedMessageLength) // Take only part of the message
@@ -258,7 +262,7 @@ fun ChatBubble(
                             style = CustomRegularTypography.titleMedium,
                             fontWeight = FontWeight.W400,
                             color = Color.White,
-                            fontSize = 17.sp,
+                            fontSize = 15.sp,
                             maxLines = Int.MAX_VALUE,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.wrapContentWidth()
@@ -269,7 +273,7 @@ fun ChatBubble(
                             text = formattedTime,
                             style = CustomRegularTypography.titleMedium,
                             fontWeight = FontWeight.W400,
-                            fontSize = 12.sp,
+                            fontSize = 10.sp,
                             color = Color.Gray,
                             modifier = Modifier
                                 .align(Alignment.End) // Align timer at the end of the box
@@ -282,14 +286,14 @@ fun ChatBubble(
                         text = buildAnnotatedString {
                             append(message)
                             append("   ") // Add space between message and time
-                            withStyle(style = SpanStyle(fontSize = 12.sp, color = Color.Gray)) {
+                            withStyle(style = SpanStyle(fontSize = 10.sp, color = Color.Gray)) {
                                 append(formattedTime)
                             }
                         },
                         style = CustomRegularTypography.titleMedium,
                         fontWeight = FontWeight.W400,
                         color = Color.White,
-                        fontSize = 17.sp,
+                        fontSize = 15.sp,
                         maxLines = Int.MAX_VALUE,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.wrapContentWidth() // Box adjusts based on content
@@ -365,8 +369,8 @@ fun ChatBoxInput() {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color.Black.copy(alpha = 0.95f),
-                        Color.Black.copy(alpha = 1.1f)
+                        Color.Black.copy(alpha = 0.9f),
+                        Color.Black.copy(alpha = 0.92f)
                     )
                 )
             )
@@ -475,7 +479,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
             .fillMaxWidth()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color.Black.copy(alpha = 0.95f), Color.Black.copy(alpha = 1.1f))
+                    colors = listOf(Color.Black.copy(alpha = 0.85f), Color.Black.copy(alpha = 0.85f))
                 )
             )
             .graphicsLayer {
@@ -490,14 +494,14 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                 .fillMaxWidth()
 
                 .padding(8.dp)
-                .height(30.dp),
+                .height(15.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Time
             Text(
                 text = time,
                 color = Color.White,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 style = CustomBoldTypography.titleMedium,
                 fontWeight = FontWeight.W700,
                 modifier = Modifier.padding(start = 25.dp)
@@ -549,16 +553,16 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                     .fillMaxWidth()
                     .padding(end = 20.dp,)
             ) {
-                Icon(painterResource(id = R.drawable.ic_signal2), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(20.dp))
+                Icon(painterResource(id = R.drawable.ic_signal2), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(5.dp))
-                Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier.size(20.dp))
+                Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(5.dp))
                 Icon(
                     painter = painterResource(id = R.drawable.battery4),
                     contentDescription = "Battery",
                     tint = Color.White,
                     modifier = Modifier
-                        .size(25.dp)
+                        .size(20.dp)
                         .rotate(0f)
                 )
             }
@@ -577,7 +581,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                 modifier = Modifier
                     .fillMaxWidth()
 
-                    .height(60.dp)
+                    .height(50.dp)
             ) {
 
                 // Back Button
@@ -586,7 +590,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_back),
                         modifier = Modifier
-                            .size(27.dp)
+                            .size(20.dp)
                         ,
                         contentDescription = "Back",
                         tint = Telegram // Ensure Telegram color is defined
@@ -595,17 +599,17 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
 
                     // Pending Messages Box
                     Box(modifier = Modifier
-                        .padding(top = 5.dp)){
+                        .padding(top = 3.dp)){
                         Box(
                             modifier = Modifier
                                 .wrapContentSize()
                                 .background(Telegram, shape = RoundedCornerShape(12.dp))
-                                .padding(start = 8.dp, end = 8.dp, bottom = 2.dp, top = 2.dp)
+                                .padding(start = 6.dp, end = 6.dp, bottom = 2.dp, top = 2.dp)
                         ) {
                             Text(
                                 text = "${Random.nextInt(1000, 2000 + 1)}", // Example message count
                                 color = Color.White,
-                                fontSize = 11.sp,
+                                fontSize = 9.sp,
                                 style = CustomRegularTypography.titleMedium
                             )
                         }
@@ -614,7 +618,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                 }
                 // Spacer to create space between the Row and Column
                 Spacer(modifier = Modifier
-                    .height(16.dp)
+                    .height(10.dp)
                     .align(Alignment.Center)
                     .width(5.dp)) // Adjust the height as needed
 
@@ -629,7 +633,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                     Text(
                         text = contactName,
                         color = Color.White,
-                        fontSize = 18.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(start = 10.dp)
@@ -637,8 +641,8 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                     Text(
                         text = "last seen recently",
                         color = Color(0xFFD1E3FF),
-                        fontSize = 14.sp,
-                        modifier = Modifier.padding(top = 2.dp,start = 12.dp),
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(start = 10.dp),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -671,8 +675,8 @@ fun ReceiverImageMessage(time: String,senderImage: Bitmap?) {
     ) {
         Box(
             modifier = Modifier
-                .widthIn(200.dp, 230.dp)
-                .heightIn(min = 200.dp, max = 350.dp)
+                .widthIn(150.dp, 200.dp)
+                .heightIn(min = 200.dp, max = 300.dp)
                 .padding(start = 1.dp, bottom = 3.dp)
                 .clip(RoundedCornerShape(16.dp)) // Clip to rounded corners
                 .border(
@@ -751,7 +755,7 @@ fun ReceiverStickerMessage(time: String,userReplySticker: Bitmap?) {
         Box(
             modifier = Modifier
                 .widthIn(150.dp, 200.dp)
-                .heightIn(min = 100.dp, max = 210.dp)
+                .heightIn(min = 150.dp, max = 200.dp)
                 .padding(2.dp)
         ) {
             Image(
