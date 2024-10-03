@@ -47,6 +47,7 @@ import com.kroy.ssediotor.R
 import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.ui.theme.BottomIconTint
 import com.kroy.sseditor.ui.theme.CustomBoldTypography
+import com.kroy.sseditor.ui.theme.CustomMediumTypography
 import com.kroy.sseditor.ui.theme.CustomRegularTypography
 import com.kroy.sseditor.ui.theme.Telegram
 import com.kroy.sseditor.utils.Utils.convertLettersToUppercase
@@ -224,8 +225,8 @@ fun ChatBubble(
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
-                                Color.Black.copy(alpha = 0.85f),
-                                Color.Black.copy(alpha =0.9f)
+                                Color.Black.copy(alpha = 0.75f),
+                                Color.Black.copy(alpha =0.85f)
                             )
                         ),
                         shape = RoundedCornerShape(
@@ -259,10 +260,10 @@ fun ChatBubble(
                         // Display the trimmed message
                         Text(
                             text = displayMessage,
-                            style = CustomRegularTypography.titleMedium,
+                            style = CustomMediumTypography.titleMedium,
                             fontWeight = FontWeight.W400,
                             color = Color.White,
-                            fontSize = 15.sp,
+                            fontSize = 14.sp,
                             maxLines = Int.MAX_VALUE,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.wrapContentWidth()
@@ -290,7 +291,7 @@ fun ChatBubble(
                                 append(formattedTime)
                             }
                         },
-                        style = CustomRegularTypography.titleMedium,
+                        style = CustomMediumTypography.titleMedium,
                         fontWeight = FontWeight.W400,
                         color = Color.White,
                         fontSize = 15.sp,
@@ -369,7 +370,7 @@ fun ChatBoxInput() {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color.Black.copy(alpha = 0.85f),
+                        Color.Black.copy(alpha = 0.75f),
                         Color.Black.copy(alpha = 0.85f)
                     )
                 )
@@ -479,7 +480,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
             .fillMaxWidth()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color.Black.copy(alpha = 0.85f), Color.Black.copy(alpha = 0.85f))
+                    colors = listOf(Color.Black.copy(alpha = 0.75f), Color.Black.copy(alpha = 0.85f))
                 )
             )
             .graphicsLayer {
@@ -633,7 +634,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                     Text(
                         text = contactName,
                         color = Color.White,
-                        fontSize = 14.sp,
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(start = 10.dp)
@@ -641,7 +642,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                     Text(
                         text = "last seen recently",
                         color = Color(0xFFD1E3FF),
-                        fontSize = 12.sp,
+                        fontSize = 11.sp,
                         modifier = Modifier.padding(start = 10.dp),
                         textAlign = TextAlign.Center
                     )
