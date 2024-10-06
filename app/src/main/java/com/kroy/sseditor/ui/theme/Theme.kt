@@ -46,7 +46,7 @@ private val LightColorScheme = lightColorScheme(
 
 // Load your custom font
 val CustomFontFamily = FontFamily(
-    Font(R.font.rubit_wght,FontWeight.Normal),
+    Font(R.font.rubit_wght),
 
     // Replace with your custom font file,
 
@@ -78,7 +78,7 @@ val CustomTypography = Typography(
 )
 
 val CustomBoldFontFamily = FontFamily(
-    Font(R.font.rubik_bold,FontWeight.Normal),
+    Font(R.font.rubik_bold),
 
     // Replace with your custom font file,
 
@@ -110,7 +110,7 @@ val CustomBoldTypography = Typography(
 )
 
 val CustomMediumFontFamily = FontFamily(
-    Font(R.font.rubin_medium,FontWeight.Normal),
+    Font(R.font.rubin_medium),
 
     // Replace with your custom font file,
 
@@ -119,12 +119,12 @@ val CustomMediumFontFamily = FontFamily(
 val CustomMediumTypography = Typography(
     titleLarge = androidx.compose.ui.text.TextStyle(
         fontFamily = CustomMediumFontFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Thin,
         fontSize = 30.sp
     ),
     titleMedium = androidx.compose.ui.text.TextStyle(
         fontFamily = CustomMediumFontFamily,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.Thin,
         fontSize = 24.sp
     ),
     bodyLarge = androidx.compose.ui.text.TextStyle(
@@ -142,7 +142,7 @@ val CustomMediumTypography = Typography(
 )
 
 val CustomRegularFontFamily = FontFamily(
-    Font(R.font.rubik_regular,FontWeight.Normal),
+    Font(R.font.rubik_regular),
 
     // Replace with your custom font file,
 
@@ -156,7 +156,7 @@ val CustomRegularTypography = Typography(
     ),
     titleMedium = androidx.compose.ui.text.TextStyle(
         fontFamily = CustomRegularFontFamily,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.Normal,
         fontSize = 24.sp
     ),
     bodyLarge = androidx.compose.ui.text.TextStyle(
@@ -172,6 +172,44 @@ val CustomRegularTypography = Typography(
 
 
 )
+
+val CustomSemiBoldFontFamily = FontFamily(
+    Font(R.font.rubik_semibold),
+
+    // Replace with your custom font file,
+
+)
+val CustomRobotoMediumFontFamily = FontFamily(
+    Font(R.font.roboto_medium),
+
+    // Replace with your custom font file,
+
+)
+
+//val CustomRegularTypography = Typography(
+//    titleLarge = androidx.compose.ui.text.TextStyle(
+//        fontFamily = CustomRegularFontFamily,
+//        fontWeight = FontWeight.Normal,
+//        fontSize = 30.sp
+//    ),
+//    titleMedium = androidx.compose.ui.text.TextStyle(
+//        fontFamily = CustomRegularFontFamily,
+//        fontWeight = FontWeight.Normal,
+//        fontSize = 24.sp
+//    ),
+//    bodyLarge = androidx.compose.ui.text.TextStyle(
+//        fontFamily = CustomRegularFontFamily,
+//        fontWeight = FontWeight.Bold,
+//        fontSize = 16.sp
+//    ),
+//    bodyMedium = androidx.compose.ui.text.TextStyle(
+//        fontFamily = CustomRegularFontFamily,
+//        fontWeight = FontWeight.Normal,
+//        fontSize = 16.sp
+//    ) ,  // Add a bold body text style
+//
+//
+//)
 
 @Composable
 fun SSEditorTheme(

@@ -47,13 +47,20 @@ import com.kroy.ssediotor.R
 import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.ui.theme.BottomIconTint
 import com.kroy.sseditor.ui.theme.CustomBoldTypography
+import com.kroy.sseditor.ui.theme.CustomFontFamily
+import com.kroy.sseditor.ui.theme.CustomMediumFontFamily
 import com.kroy.sseditor.ui.theme.CustomMediumTypography
+import com.kroy.sseditor.ui.theme.CustomRegularFontFamily
 import com.kroy.sseditor.ui.theme.CustomRegularTypography
+import com.kroy.sseditor.ui.theme.CustomRobotoMediumFontFamily
+import com.kroy.sseditor.ui.theme.CustomSemiBoldFontFamily
 import com.kroy.sseditor.ui.theme.Telegram
+import com.kroy.sseditor.ui.theme.UnreadMessages
 import com.kroy.sseditor.utils.Utils.convertLettersToUppercase
 import com.kroy.sseditor.utils.Utils.generateRandomTime
 import com.kroy.sseditor.utils.Utils.getBitmapFromResource
 import com.kroy.sseditor.utils.Utils.parseTimeString
+import com.kroy.sseditor.utils.Utils.removeLeadingZero
 import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
@@ -66,7 +73,7 @@ import kotlin.random.Random
 fun previewTelegram() {
     val context = LocalContext.current
     val sampleMessages = listOf(
-        ChatMessage("Rathore sir you are the best", "12:50 AM", isSender = true),
+        ChatMessage("Rathore sir you are th32423 32432432 ", "12:50 AM", isSender = true),
         ChatMessage("Saare trades win gaye", "12:50 AM", isSender = true),
 //        ChatMessage("How 435943594", "12:50 AM", isSender = true)
     )
@@ -177,13 +184,14 @@ fun CustomTelegramLayout(
                 // "Today" text at the top
                 Text(
                     text = "Today",
+                    style = CustomMediumTypography.titleMedium,
                     color = Color.White,
-                    fontSize = 12.sp,
+                    fontSize = 11.sp,
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .padding(top = 6.dp) // Adjust the top padding for gap
                         .background(Color(0x65000000), RoundedCornerShape(10.dp))
-                        .padding(horizontal = 5.dp, vertical = 3.dp)
+                        .padding(horizontal = 5.dp, vertical = (2.7f).dp)
                 )
             }
 
@@ -227,8 +235,8 @@ fun ChatBubble(
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
-                                Color.Black.copy(alpha = 0.75f),
-                                Color.Black.copy(alpha =0.85f)
+                                Color.Black.copy(alpha = 0.7f),
+                                Color.Black.copy(alpha =0.8f)
                             )
                         ),
                         shape = RoundedCornerShape(
@@ -238,7 +246,7 @@ fun ChatBubble(
                             bottomStart = if (isLastMessage) 8.dp else 8.dp // Adjust based on message position
                         )
                     )
-                    .padding(horizontal = 10.dp, vertical = 8.dp)
+                    .padding(horizontal = 10.dp, vertical = 6.dp)
                     .wrapContentWidth() // The box wraps around its content
             ) {
                 // Determine the total length
@@ -248,7 +256,7 @@ fun ChatBubble(
                 val combinedLength = messageLength + timeLength + spaceLength
 
                 // If the combined length exceeds 25 characters, adjust layout
-                if (combinedLength > 33) {
+                if (combinedLength > 40) {
                     val allowedMessageLength =  (timeLength + spaceLength)
                     val displayMessage = if (allowedMessageLength < messageLength) {
                        // message.take(allowedMessageLength) // Take only part of the message
@@ -262,10 +270,13 @@ fun ChatBubble(
                         // Display the trimmed message
                         Text(
                             text = displayMessage,
-                            style = CustomMediumTypography.titleMedium,
-                            fontWeight = FontWeight.W400,
+                            fontFamily = CustomRobotoMediumFontFamily,
+                            fontWeight = FontWeight.Thin,
+
                             color = Color.White,
-                            fontSize = 14.sp,
+                            fontSize = 15.sp,
+                            letterSpacing =
+                            -0.5.sp,
                             maxLines = Int.MAX_VALUE,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.wrapContentWidth()
@@ -274,9 +285,9 @@ fun ChatBubble(
                         // Timer text aligned at the end of the box
                         Text(
                             text = formattedTime,
-                            style = CustomRegularTypography.titleMedium,
-                            fontWeight = FontWeight.W400,
-                            fontSize = 10.sp,
+                            fontFamily = CustomRobotoMediumFontFamily,
+                            fontWeight = FontWeight.Thin,
+                            fontSize = (9.2f).sp,
                             color = Color.Gray,
                             modifier = Modifier
                                 .align(Alignment.End) // Align timer at the end of the box
@@ -288,19 +299,26 @@ fun ChatBubble(
                     Text(
                         text = buildAnnotatedString {
                             append(message)
-                            append("   ") // Add space between message and time
-                            withStyle(style = SpanStyle(fontSize = 10.sp, color = Color.Gray)) {
+                            append(" ") // Add space between message and time
+                            withStyle(style = SpanStyle(fontSize = (9.2f).sp, color = Color.Gray)) {
+                                // Add a Spacer here
+                                append(" ") // A space can act as a placeholder for the top padding
                                 append(formattedTime)
                             }
                         },
-                        style = CustomMediumTypography.titleMedium,
-                        fontWeight = FontWeight.W400,
+                        fontFamily = CustomRobotoMediumFontFamily,
+                        fontWeight = FontWeight.Thin,
+
                         color = Color.White,
                         fontSize = 15.sp,
                         maxLines = Int.MAX_VALUE,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.wrapContentWidth() // Box adjusts based on content
                     )
+
+// Add a Spacer to provide top padding for the time
+                    Spacer(modifier = Modifier.height(18.dp)) // Adjust the height as needed
+
                 }
             }
 
@@ -399,7 +417,7 @@ fun ChatBoxInput() {
                 modifier = Modifier
 
                     .padding(end = 10.dp, start = 10.dp)
-                    .size(23.dp)
+                    .size(22.dp)
                 ,
 
 
@@ -413,12 +431,15 @@ fun ChatBoxInput() {
                     .weight(1f)
                     .background(Color(0xFF060606), RoundedCornerShape(20.dp))
                     .heightIn(min = 20.dp) // Set a minimum height to make the box thinner
-                    .padding(vertical = 6.dp), // Reduce the padding to make the box thinner
+                    .padding(vertical = (5.5).dp), // Reduce the padding to make the box thinner
                 contentAlignment = Alignment.CenterStart
             ) {
                 // "Message" placeholder text
                 Text(
                     text = "Message",
+                    fontFamily = CustomRobotoMediumFontFamily,
+                    fontWeight = FontWeight.Thin,
+
                     fontSize = 16.sp,
                     color = Color.Gray,
                     modifier = Modifier
@@ -449,7 +470,7 @@ fun ChatBoxInput() {
 
 
                     .padding(end = 10.dp, start = 10.dp)
-                    .size(23.dp)
+                    .size(22.dp)
             )
 
             // White line below the UI with top padding
@@ -497,15 +518,16 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                 .fillMaxWidth()
 
                 .padding(8.dp)
-                .height(15.dp),
+                .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Time
             Text(
-                text = time,
+                text = removeLeadingZero(time) ,
                 color = Color.White,
-                fontSize = 12.sp,
-                style = CustomBoldTypography.titleMedium,
+                fontSize = 15.sp,
+                letterSpacing = 1.sp,
+                style = CustomMediumTypography.titleMedium,
                 fontWeight = FontWeight.W700,
                 modifier = Modifier.padding(start = 25.dp)
             )
@@ -556,9 +578,9 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                     .fillMaxWidth()
                     .padding(end = 20.dp,)
             ) {
-                Icon(painterResource(id = R.drawable.ic_signal2), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(16.dp))
+                Icon(painterResource(id = R.drawable.ic_signal2), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(5.dp))
-                Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier.size(16.dp))
+                Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier.size(20.dp))
                 Spacer(modifier = Modifier.width(5.dp))
                 Icon(
                     painter = painterResource(id = R.drawable.battery4),
@@ -584,7 +606,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                 modifier = Modifier
                     .fillMaxWidth()
 
-                    .height(50.dp)
+                    .height(49.dp)
             ) {
 
                 // Back Button
@@ -593,28 +615,32 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_back),
                         modifier = Modifier
-                            .size(20.dp)
+                            .size(24.dp)
                         ,
                         contentDescription = "Back",
-                        tint = Telegram // Ensure Telegram color is defined
+                        tint = UnreadMessages // Ensure Telegram color is defined
                     )
 
 
                     // Pending Messages Box
                     Box(modifier = Modifier
-                        .padding(top = 2.dp)){
+                        .padding(top = 1.dp)){
                         Box(
                             modifier = Modifier
                                 .wrapContentSize()
-                                .background(Telegram, shape = RoundedCornerShape(12.dp))
-                                .padding(start = 2.dp, end = 2.dp, bottom = 1.dp, top = 1.dp)
                         ) {
                             Text(
-                                text = "${Random.nextInt(1000, 2000 + 1)}", // Example message count
+                                text = "${Random.nextInt(1250, 1320 + 1)}" ,
+                                fontFamily = CustomRobotoMediumFontFamily,
+                                fontWeight = FontWeight.Thin,
+                                fontSize = (12f).sp,
                                 color = Color.White,
-                                fontSize = 11.sp,
-                                style = CustomRegularTypography.titleMedium
+                                modifier = Modifier
+                                    .align(Alignment.BottomEnd)
+                                    .background(UnreadMessages, RoundedCornerShape(10.dp))
+                                    .padding(horizontal = 4.dp, vertical = 2.dp)
                             )
+
                         }
                     }
 
@@ -631,31 +657,39 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
 
                 Column(
                     modifier = Modifier.align(Alignment.Center),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center // Use Center to avoid space between items
                 ) {
                     Text(
                         text = contactName,
                         color = Color.White,
-                        fontSize = 15.sp,
+                        fontSize = 16.sp,
+                        fontFamily = CustomRobotoMediumFontFamily,
                         fontWeight = FontWeight.Bold,
+                        letterSpacing = -(0.2f).sp,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(start = 10.dp)
+                        modifier = Modifier.padding(start = 10.dp, top = 8.dp)
                     )
                     Text(
                         text = "last seen recently",
-                        color = Color(0xFFD1E3FF),
+                        color = Color(0xFFAAACAF),
+                        fontFamily = CustomRobotoMediumFontFamily,
+                        fontWeight = FontWeight.Thin,
                         fontSize = 11.sp,
-                        modifier = Modifier.padding(start = 10.dp),
+                        letterSpacing = 0.3.sp,
+                        modifier = Modifier.padding(start = 10.dp, bottom = 5.dp), // No top padding here
                         textAlign = TextAlign.Center
                     )
                 }
+
 
                 // Profile Picture Positioning
                 Image(
                     bitmap = contactPic!!.asImageBitmap(),
                     contentDescription = "Profile",
                     modifier = Modifier
-                        .size(40.dp)
+                        .padding(top = 5.dp)
+                        .size(33.dp)
                         .background(Color(0xFF40BAF7), CircleShape)
                         .clip(CircleShape) // Clip the image to a circular shape
                         .align(Alignment.CenterEnd),
@@ -702,8 +736,10 @@ fun ReceiverImageMessage(time: String,senderImage: Bitmap?) {
             // Time text
             Text(
                 text = convertLettersToUppercase(time) ,
+                fontFamily = CustomRobotoMediumFontFamily,
+                fontWeight = FontWeight.Thin,
+                fontSize = (9.2f).sp,
                 color = Color.White,
-                fontSize = 10.sp,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(4.dp)
@@ -778,8 +814,11 @@ fun ReceiverStickerMessage(time: String,userReplySticker: Bitmap?) {
             ) {
                 Text(
                     text = convertLettersToUppercase(time) ,
+                    fontFamily = CustomRobotoMediumFontFamily,
+                    fontWeight = FontWeight.Thin,
+                    fontSize = (9.2f).sp,
                     color = Color.White,
-                    fontSize = 10.sp,
+
                 )
 
                 // Single tick icon

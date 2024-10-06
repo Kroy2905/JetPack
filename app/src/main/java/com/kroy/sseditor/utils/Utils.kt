@@ -214,6 +214,20 @@ object Utils {
             LocalTime.MIDNIGHT
         }
     }
+    fun removeLeadingZero(time: String): String {
+        // Split the input string by ":"
+        val parts = time.split(":")
+        if (parts.size != 2) {
+            throw IllegalArgumentException("Invalid time format. Expected format: HH:mm")
+        }
+
+        // Remove leading zero from the hour part
+        val hour = parts[0].toInt().toString() // This converts the hour to an integer and back to a string, removing leading zero
+        val minute = parts[1] // Keep the minute part unchanged
+
+        // Return the formatted time
+        return "$hour:$minute"
+    }
 
 
 
