@@ -517,7 +517,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
             modifier = Modifier
                 .fillMaxWidth()
 
-                .padding(8.dp)
+                .padding(0.dp)
                 .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -529,7 +529,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                 letterSpacing = 1.sp,
                 style = CustomMediumTypography.titleMedium,
                 fontWeight = FontWeight.W700,
-                modifier = Modifier.padding(start = 25.dp)
+                modifier = Modifier.padding(start = 25.dp,top = 7.dp)
             )
             Spacer(modifier = Modifier
                 .width(25.dp))
@@ -576,17 +576,24 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 20.dp,)
+                    .padding(end = 33.dp,)
             ) {
-                Icon(painterResource(id = R.drawable.ic_signal2), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(18.dp))
-                Spacer(modifier = Modifier.width(5.dp))
-                Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier.size(20.dp))
+                Icon(painterResource(id = R.drawable.ic_signal2), contentDescription = "Signal", tint = Color.White, modifier = Modifier
+                    .padding(top=9.dp)
+                    .size(17.dp))
+                Spacer(modifier = Modifier
+
+                    .width(5.dp))
+                Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier
+                    .padding(top=9.dp)
+                    .size(17.dp))
                 Spacer(modifier = Modifier.width(5.dp))
                 Icon(
                     painter = painterResource(id = R.drawable.battery4),
                     contentDescription = "Battery",
                     tint = Color.White,
                     modifier = Modifier
+                        .padding(top=9.dp)
                         .size(20.dp)
                         .rotate(0f)
                 )
@@ -606,7 +613,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                 modifier = Modifier
                     .fillMaxWidth()
 
-                    .height(49.dp)
+                   .wrapContentHeight()
             ) {
 
                 // Back Button
