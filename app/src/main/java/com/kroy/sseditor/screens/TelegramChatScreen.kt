@@ -77,6 +77,8 @@ fun previewTelegram() {
     val senderImage: Bitmap? = getBitmapFromResource(context, R.drawable.b)
     val userReplySticker: Bitmap? = getBitmapFromResource(context, R.drawable.d)
 
+
+
     CustomTelegramLayout(
         contactName = "Random Name",
         contactPic = contactPic,
