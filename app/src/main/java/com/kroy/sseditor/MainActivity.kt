@@ -164,11 +164,11 @@ class MainActivity :FragmentActivity() {
                         // Replace with actual Bitmap objects for testing
                         val contactPic: Bitmap? = Utils.getBitmapFromResource(context, R.drawable.f)
                         val backgroundBitmap: Bitmap? =
-                            Utils.getBitmapFromResource(context, R.drawable.telegram_bg)
+                            Utils.getBitmapFromResource(context, R.drawable.dummg_bg)
                         val senderImage: Bitmap? =
-                            Utils.getBitmapFromResource(context, R.drawable.b)
+                            Utils.getBitmapFromResource(context, R.drawable.dummy1)
                         val userReplySticker: Bitmap? =
-                            Utils.getBitmapFromResource(context, R.drawable.d)
+                            Utils.getBitmapFromResource(context, R.drawable.dummy_sticker)
 
                         CustomTelegramLayout(
                             contactName = "Shehnaaz Kureshi",

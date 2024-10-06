@@ -56,6 +56,7 @@ import com.kroy.sseditor.ui.theme.CustomRobotoMediumFontFamily
 import com.kroy.sseditor.ui.theme.CustomSemiBoldFontFamily
 import com.kroy.sseditor.ui.theme.Telegram
 import com.kroy.sseditor.ui.theme.UnreadMessages
+import com.kroy.sseditor.utils.Utils
 import com.kroy.sseditor.utils.Utils.convertLettersToUppercase
 import com.kroy.sseditor.utils.Utils.generateRandomTime
 import com.kroy.sseditor.utils.Utils.getBitmapFromResource
@@ -79,10 +80,13 @@ fun previewTelegram() {
     )
 
     // Replace with actual Bitmap objects for testing
-    val contactPic: Bitmap? = getBitmapFromResource(context, R.drawable.f)
-    val backgroundBitmap: Bitmap? = getBitmapFromResource(context, R.drawable.telegram_bg)
-    val senderImage: Bitmap? = getBitmapFromResource(context, R.drawable.b)
-    val userReplySticker: Bitmap? = getBitmapFromResource(context, R.drawable.d)
+    val contactPic: Bitmap? = Utils.getBitmapFromResource(context, R.drawable.f)
+    val backgroundBitmap: Bitmap? =
+        Utils.getBitmapFromResource(context, R.drawable.dummg_bg)
+    val senderImage: Bitmap? =
+        Utils.getBitmapFromResource(context, R.drawable.dummy1)
+    val userReplySticker: Bitmap? =
+        Utils.getBitmapFromResource(context, R.drawable.dummy_sticker)
 
 
 
@@ -503,7 +507,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
             .fillMaxWidth()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color.Black.copy(alpha = 0.75f), Color.Black.copy(alpha = 0.85f))
+                    colors = listOf(Color.Black.copy(alpha = 0.75f),Color.Gray.copy(alpha = 0.75f), Color.Gray.copy(alpha = 1.85f))
                 )
             )
             .graphicsLayer {
@@ -800,8 +804,8 @@ fun ReceiverStickerMessage(time: String,userReplySticker: Bitmap?) {
     ) {
         Box(
             modifier = Modifier
-                .widthIn(150.dp, 200.dp)
-                .heightIn(min = 150.dp, max = 200.dp)
+                .widthIn(100.dp, 180.dp)
+                .heightIn(min = 120.dp, max = 180.dp)
                 .padding(2.dp)
         ) {
             Image(
@@ -815,7 +819,7 @@ fun ReceiverStickerMessage(time: String,userReplySticker: Bitmap?) {
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(4.dp)
-                    .background(Color(0x45000000), RoundedCornerShape(10.dp))
+                    .background(Color(0x55000000), RoundedCornerShape(10.dp))
                     .padding(horizontal = 6.dp, vertical = 2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
