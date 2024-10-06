@@ -507,7 +507,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
             .fillMaxWidth()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color.Black.copy(alpha = 0.75f),Color.Gray.copy(alpha = 0.75f), Color.Gray.copy(alpha = 1.85f))
+                    colors = listOf(Color.Black.copy(alpha = 0.75f),Color.Black.copy(alpha = 0.85f))
                 )
             )
             .graphicsLayer {

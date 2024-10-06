@@ -153,33 +153,33 @@ class MainActivity :FragmentActivity() {
 //                        LoginScreen { userId, password ->
 //                            // Handle login action
 //                        }
-                        val context = LocalContext.current
-
-                        val sampleMessages = listOf(
-                            ChatMessage("Rathore 32432 44442324  sir you are the best", "12:50 AM", isSender = true),
-                            ChatMessage("Saare trades win gaye", "12:50 AM", isSender = true),
-//        ChatMessage("How 435943594", "12:50 AM", isSender = true)
-                        )
-
-                        // Replace with actual Bitmap objects for testing
-                        val contactPic: Bitmap? = Utils.getBitmapFromResource(context, R.drawable.f)
-                        val backgroundBitmap: Bitmap? =
-                            Utils.getBitmapFromResource(context, R.drawable.dummg_bg)
-                        val senderImage: Bitmap? =
-                            Utils.getBitmapFromResource(context, R.drawable.dummy1)
-                        val userReplySticker: Bitmap? =
-                            Utils.getBitmapFromResource(context, R.drawable.dummy_sticker)
-
-                        CustomTelegramLayout(
-                            contactName = "Shehnaaz Kureshi",
-                            contactPic = contactPic,
-                            messages = sampleMessages,
-                            initialTimeString = "12:48 AM",
-                            backgroundBitmap = backgroundBitmap,
-                            senderImage = senderImage,
-                            userReplySticker = userReplySticker
-                        )
-                      //  App2(dataStoreHelper)
+//                        val context = LocalContext.current
+//
+//                        val sampleMessages = listOf(
+//                            ChatMessage("Rathore 32432 44442324  sir you are the best", "12:50 AM", isSender = true),
+//                            ChatMessage("Saare trades win gaye", "12:50 AM", isSender = true),
+////        ChatMessage("How 435943594", "12:50 AM", isSender = true)
+//                        )
+//
+//                        // Replace with actual Bitmap objects for testing
+//                        val contactPic: Bitmap? = Utils.getBitmapFromResource(context, R.drawable.f)
+//                        val backgroundBitmap: Bitmap? =
+//                            Utils.getBitmapFromResource(context, R.drawable.dummg_bg)
+//                        val senderImage: Bitmap? =
+//                            Utils.getBitmapFromResource(context, R.drawable.dummy1)
+//                        val userReplySticker: Bitmap? =
+//                            Utils.getBitmapFromResource(context, R.drawable.dummy_sticker)
+//
+//                        CustomTelegramLayout(
+//                            contactName = "Shehnaaz Kureshi",
+//                            contactPic = contactPic,
+//                            messages = sampleMessages,
+//                            initialTimeString = "12:48 AM",
+//                            backgroundBitmap = backgroundBitmap,
+//                            senderImage = senderImage,
+//                            userReplySticker = userReplySticker
+//                        )
+                        App2(dataStoreHelper)
                         //SevenDayScreen()
 //                       CaptureAndSaveComposable(
 //                           contactName ="Random Name",
