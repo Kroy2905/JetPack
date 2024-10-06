@@ -737,7 +737,7 @@ fun ReceiverImageMessage(time: String,senderImage: Bitmap?) {
                 modifier = Modifier
                     .fillMaxSize(),
 
-                contentScale = ContentScale.FillBounds // Use Crop to maintain aspect ratio
+                contentScale = ContentScale.Crop // Use Crop to maintain aspect ratio
             )
 
             // Time text
