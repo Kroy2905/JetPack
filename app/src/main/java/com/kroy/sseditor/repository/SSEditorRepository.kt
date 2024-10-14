@@ -178,12 +178,12 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
         get() = _addContact
     suspend fun addContact(addContactBody: addContactBody,context: Context){
         try{
-           // Log.d("add users->","body = $addContactBody")
+            Log.d("add contact->","body = ${addContactBody.contactName}")
             val response = apiService.addContact(addContactBody)
-            Log.d("add users->","response = ${response.body()}")
+            Log.d("add contact->","response = $response")
 
             if(response.isSuccessful && response.body()!=null){
-                Log.d("add users->","entered  successful")
+                Log.d("add contact->","entered  successful")
                 // get the categories
                 _addContact.emit(response.body()!!)
 

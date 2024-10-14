@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,21 +34,29 @@ fun SplashScreen() {
             .fillMaxSize()
             .background(Primary)
     ) {
-
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Center)
-
+                .padding(16.dp) // Add some padding to avoid edge alignment
         ) {
             Image(
                 painterResource(id = R.drawable.logo2),
                 contentDescription = null,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .size(250.dp,150.dp)
+                    .size(250.dp, 150.dp)
                     .align(Alignment.CenterHorizontally)
+            )
+
+            // Display the version name
+            Text(
+                text = "Version: v6",
+                style = MaterialTheme.typography.titleMedium,
+                color = Color.White,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 16.dp)
             )
         }
     }
