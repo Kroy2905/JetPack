@@ -91,23 +91,7 @@ class EditContactViewModel @Inject constructor(
     }
 
 
-    // Add contact and handle the response
-    private val addContact: StateFlow<ApiResponse> get() = repository.addContact
 
-    // Filtered response for all clients
-    private val _filteredaddContactResponse = MutableStateFlow<ApiResponse.AddContacttResponse?>(null)
-    val filteredaddContactResponse: StateFlow<ApiResponse.AddContacttResponse?> get() = _filteredaddContactResponse
-    fun addContact(addContactBody: addContactBody,context:Context) {
-        viewModelScope.launch {
-
-            repository.addContact(addContactBody,context)
-
-            // Assuming repository.allClients is updated after the API call
-            addContact.collect { response ->
-                handleClientResponse(response)
-            }
-        }
-    }
 
     private val editContact: StateFlow<ApiResponse> get() = repository.editContactDetails
 
@@ -164,24 +148,12 @@ class EditContactViewModel @Inject constructor(
                     // Handle empty data scenario
                     _filteredContactResponse.value = ApiResponse.AllContactResponse(
                         data = emptyList(),
-                        message = "No clients found",
+                        message =response.message,
                         statusCode = response.statusCode
                     )
                 }
             }
-            is ApiResponse.AddContacttResponse -> {
-                if (response.data!=null) {
-                    // Emit the successful response
-                    _filteredaddContactResponse.value = response
-                } else {
-                    // Handle empty data scenario
-                    _filteredaddContactResponse.value = ApiResponse.AddContacttResponse(
-                        data = null,
-                        message = "No clients found",
-                        statusCode = response.statusCode
-                    )
-                }
-            }
+
 
             is ApiResponse.ContactDetailsResponse -> {
                 if (response.data!=null) {
@@ -191,7 +163,7 @@ class EditContactViewModel @Inject constructor(
                     // Handle empty data scenario
                     _filteredgetContactDetailsResponse.value = ApiResponse.ContactDetailsResponse(
                         data = null,
-                        message = "No clients found",
+                        message = response.message,
                         statusCode = response.statusCode
                     )
                 }
@@ -205,7 +177,7 @@ class EditContactViewModel @Inject constructor(
                     // Handle empty data scenario
                     _filterededitContactResponse.value = ApiResponse.EditContacttResponse(
                         data = null,
-                        message = "No clients found",
+                        message = response.message,
                         statusCode = response.statusCode
                     )
                 }

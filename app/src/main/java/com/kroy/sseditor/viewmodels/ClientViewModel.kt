@@ -123,7 +123,7 @@ class ClientViewModel @Inject constructor(
                     // Handle empty data scenario
                     _filteredClientResponse.value = ApiResponse.AllClientResponse(
                         data = emptyList(),
-                        message = "No clients found",
+                        message = response.message,
                         statusCode = response.statusCode
                     )
                 }
@@ -136,7 +136,7 @@ class ClientViewModel @Inject constructor(
                     // Handle empty data scenario
                     _filteredaddClientResponse.value = ApiResponse.AddClientResponse(
                         data = null,
-                        message = "No clients found",
+                        message = response.message,
                         statusCode = response.statusCode
                     )
                 }

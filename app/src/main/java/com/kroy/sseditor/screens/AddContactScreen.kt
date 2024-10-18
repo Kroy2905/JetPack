@@ -83,13 +83,20 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
      var hasNavigated by remember { mutableStateOf(false) }
      val addedContactId = addContacts.value?.data?.contactId ?: 0
 
-     Log.d("add contact ->", "Added Contact ID: $addedContactId")
-
-     if (addedContactId != 0 && !hasNavigated) {
+     if (addedContactId != 0 && !hasNavigated) { // contact added condition
          hasNavigated = true
          onContactAdded(userId.value)
          addContactViewModel.resetContactState()
      }
+
+    if (addedContactId == 0 && !hasNavigated && addContacts.value?.message!=null)  { // not able to add condition
+        hasNavigated = true
+        onContactAdded(userId.value)
+        addContactViewModel.resetContactState()
+        Toast.makeText(LocalContext.current, "${addContacts.value?.message}", Toast.LENGTH_SHORT).show()
+    }
+
+
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()

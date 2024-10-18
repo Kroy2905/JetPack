@@ -80,6 +80,12 @@ fun EditContactScreen(
         onSaveClicked(SelectedContact.contactId)
         Toast.makeText(context, "Contact Updated", Toast.LENGTH_SHORT).show()
     }
+    if (editcontact.value?.data == null  && !hasNavigated && editcontact?.value?.message!=null) {
+        hasNavigated = true
+        onSaveClicked(SelectedContact.contactId)
+        Toast.makeText(context, editcontact?.value?.message, Toast.LENGTH_SHORT).show()
+    }
+
 
     var detailsfetched by remember { mutableStateOf(false) }
 

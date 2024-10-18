@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -51,6 +52,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.FragmentActivity
@@ -77,6 +79,7 @@ import com.kroy.sseditor.screens.LoginScreen
 import com.kroy.sseditor.screens.SevenDayScreen
 import com.kroy.sseditor.screens.SplashScreen
 import com.kroy.sseditor.screens.formatTime
+import com.kroy.sseditor.ui.theme.Primary
 import com.kroy.sseditor.ui.theme.SSEditorTheme
 import com.kroy.sseditor.utils.DataStoreHelper
 import com.kroy.sseditor.utils.Permissions
@@ -105,19 +108,12 @@ class MainActivity :FragmentActivity() {
         super.onCreate(savedInstanceState)
 
 
-
-        // Set the status bar color
-        val window = this.window
-        window.statusBarColor = Color.Black.toArgb() // Change this color to whatever you want
         Permissions().checkAndRequestPermissions(this,this)
 
 
 
 
-        // Ensure that status bar icons are light
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        val insetsController = WindowInsetsControllerCompat(window, window.decorView)
-        insetsController.isAppearanceLightStatusBars = false // Set to true if you want dark icons
+
         val sampleMessages = listOf(
             ChatMessage("Hello dsfdsfs  dsfdsf  sdfsfdssfafaafasdasdsadadas!", "12:50 AM", isSender = true),
             ChatMessage("Hi there jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj!", "12:51 AM", isSender = true),

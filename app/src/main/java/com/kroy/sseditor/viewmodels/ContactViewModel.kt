@@ -178,7 +178,7 @@ class ContactViewModel @Inject constructor(
                     // Handle empty data scenario
                     _filteredaddContactResponse.value = ApiResponse.AddContacttResponse(
                         data = null,
-                        message = "No clients found",
+                        message = response.message,
                         statusCode = response.statusCode
                     )
                 }
@@ -192,7 +192,7 @@ class ContactViewModel @Inject constructor(
                     // Handle empty data scenario
                     _filteredgetContactDetailsResponse.value = ApiResponse.ContactDetailsResponse(
                         data = null,
-                        message = "No clients found",
+                        message = response.message,
                         statusCode = response.statusCode
                     )
                 }
@@ -206,7 +206,7 @@ class ContactViewModel @Inject constructor(
                     // Handle empty data scenario
                     _filterededitContactResponse.value = ApiResponse.EditContacttResponse(
                         data = null,
-                        message = "No clients found",
+                        message = response.message,
                         statusCode = response.statusCode
                     )
                 }

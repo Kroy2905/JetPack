@@ -92,6 +92,12 @@ fun AddClientScreen(onClientAdded: (Int) -> Unit) {
         onClientAdded(userId.value) // Trigger navigation or further actions
         addClientViewModel.resetClientState()
     }
+    if (addedClientId == 0 && !hasNavigated && addClients.value?.message!=null)  { // not able to add condition
+        hasNavigated = true
+        onClientAdded(userId.value)
+
+        Toast.makeText(LocalContext.current, "${addClients.value?.message}", Toast.LENGTH_SHORT).show()
+    }
 
     // Activity Result API for client image picking
     val imagePickerLauncher = rememberLauncherForActivityResult(

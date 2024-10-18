@@ -183,13 +183,13 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
             Log.d("add contact->","response = $response")
 
             if(response.isSuccessful && response.body()!=null){
-                Log.d("add contact->","entered  successful")
+                Log.d("add contact->","entered  successful = ${response.body()} ")
                 // get the categories
                 _addContact.emit(response.body()!!)
 
             }else{
                 // Show success toast
-                Log.d("add users->","entered not successful")
+                Log.d("add contact->","entered not successful")
 
                 withContext(Dispatchers.Main) {
                     Toast.makeText(context,  response.body()?.message, Toast.LENGTH_SHORT).show()

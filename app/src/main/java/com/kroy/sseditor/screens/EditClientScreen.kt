@@ -45,6 +45,7 @@ import com.kroy.sseditor.models.clientItem
 import com.kroy.sseditor.models.editClientBody
 import com.kroy.sseditor.ui.theme.CustomRegularTypography
 import com.kroy.sseditor.ui.theme.Primary
+import com.kroy.sseditor.utils.SelectedContact
 import com.kroy.sseditor.utils.Utils.base64ToBitmap
 import com.kroy.sseditor.utils.Utils.drawableToBase64
 import com.kroy.sseditor.viewmodels.EditClientViewModel
@@ -77,6 +78,13 @@ fun EditClientScreen(
         onClientEdited(userId.value)
         editClientViewModel.resetClientState()
     }
+
+    if (editClients.value?.data == null  && !hasNavigated && editClients?.value?.message!=null) {
+        hasNavigated = true
+        onClientEdited(userId.value)
+        Toast.makeText(context, editClients?.value?.message, Toast.LENGTH_SHORT).show()
+    }
+
 
     // Helper function to convert Base64 string to Bitmap
     val clientImageBitmap = remember { base64ToBitmap(clientItem.clientImage) }

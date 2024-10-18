@@ -1,6 +1,5 @@
 package com.kroy.sseditor.screens
 
-import android.window.SplashScreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,13 +14,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kroy.ssediotor.BuildConfig
 import com.kroy.ssediotor.R
 import com.kroy.sseditor.ui.theme.Primary
 
@@ -51,7 +49,7 @@ fun SplashScreen() {
 
             // Display the version name
             Text(
-                text = "Version: v6",
+                text = "Version: ${BuildConfig.VERSION_NAME}",
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.White,
                 modifier = Modifier
