@@ -2,6 +2,7 @@ package com.kroy.sseditor.viewmodels
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,6 +25,9 @@ class ContactViewModel @Inject constructor(
     private val repository: SSEditorRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    var scrollIndex = mutableStateOf(0)
+    var scrollOffset = mutableStateOf(0)
 
     // Expose the DataStore data as Flow
     val isLoggedInFlow: Flow<Boolean> = dataStoreHelper.isLoggedInFlow

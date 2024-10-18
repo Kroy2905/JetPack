@@ -18,7 +18,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -30,9 +32,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,6 +59,7 @@ import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.models.ContactItem
 import com.kroy.sseditor.ui.theme.CustomTypography
 import com.kroy.sseditor.ui.theme.Primary
+import com.kroy.sseditor.utils.ContactScrollPositionManager
 import com.kroy.sseditor.utils.SelectedClient
 import com.kroy.sseditor.utils.Utils.CaptureAndSaveComposable
 import com.kroy.sseditor.utils.Utils.base64ToBitmap
@@ -95,6 +104,26 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
 
     val allContacts: State<ApiResponse.AllContactResponse?> = contactViewModel.filteredContactResponse.collectAsState()
     val contactDetails: State<ApiResponse.ContactDetailsResponse?> = contactViewModel.filteredgetContactDetailsResponse.collectAsState()
+    // Remember and save the scroll index and offset manually
+    // Retrieve scroll index and offset from ViewModel
+    // Retrieve scroll index and offset from the singleton object
+    val scrollIndex = ContactScrollPositionManager.scrollIndex
+    val scrollOffset = ContactScrollPositionManager.scrollOffset
+
+    // Use rememberLazyListState to initialize with global scroll position
+    val listState = rememberLazyListState(
+        initialFirstVisibleItemIndex = scrollIndex,
+        initialFirstVisibleItemScrollOffset = scrollOffset
+    )
+
+    // Track and save the current scroll index and offset globally
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset }
+            .collect { (index, offset) ->
+                ContactScrollPositionManager.scrollIndex = index
+                ContactScrollPositionManager.scrollOffset = offset
+            }
+    }
 
     Log.d("contact loading ->", " loading value ${isLoading.value} ,${contactDetails.value?.data?.contactId} ")
 
@@ -177,7 +206,7 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
                 textAlign = TextAlign.Center
             )
 
-            ContactList(contacts = allContacts.value?.data ?: emptyList(), onEditClick = onEditClick, contactViewModel = contactViewModel)
+            ContactList(contacts = allContacts.value?.data ?: emptyList(), onEditClick = onEditClick, contactViewModel = contactViewModel,listState)
         }
 
         // Show CircularProgressIndicator if loading is true
@@ -206,13 +235,19 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
 }
 
 @Composable
-fun ContactList(contacts: List<ContactItem>, onEditClick: (ContactItem) -> Unit,contactViewModel: ContactViewModel) {
+fun ContactList(
+    contacts: List<ContactItem>,
+    onEditClick: (ContactItem) -> Unit,
+    contactViewModel: ContactViewModel,
+    listState: LazyListState // Receive the LazyListState here
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(0.2.dp)
+        verticalArrangement = Arrangement.spacedBy(0.2.dp),
+        state = listState // Set the LazyListState to retain scroll position
     ) {
         items(contacts) { contact ->
-            ContactItem(contact = contact, onEditClick,contactViewModel)
+            ContactItem(contact = contact, onEditClick, contactViewModel)
         }
     }
 }
