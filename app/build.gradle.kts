@@ -52,6 +52,21 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    applicationVariants.all {
+        outputs.all {
+            this as com.android.build.gradle.internal.api.ApkVariantOutputImpl
+
+            val name = "SSEditor"
+
+            val apkName = name +"_"+ defaultConfig.versionName  + ".apk"
+
+            outputFileName = apkName
+        }
+    }
+
+
+
+
 }
 
 dependencies {
