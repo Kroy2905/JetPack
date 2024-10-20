@@ -13,4 +13,6 @@ object Dimens {
     val TextSizeLarge = 20.sp
     val ButtonText = 18.sp
     val InputText = 30.sp
+    val ChatScreenCategoryTextSize = 14.sp
+    val ChatScreenCategoryBadgeBoxSize = 14.sp
 }

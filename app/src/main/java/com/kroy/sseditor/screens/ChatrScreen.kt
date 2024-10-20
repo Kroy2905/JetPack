@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -28,22 +29,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kroy.ssediotor.R
 import com.kroy.sseditor.ui.theme.CustomBoldTypography
+import com.kroy.sseditor.ui.theme.CustomRobotoMediumFontFamily
+import com.kroy.sseditor.ui.theme.Dimens
 import com.kroy.sseditor.ui.theme.Telegram
 import com.kroy.sseditor.ui.theme.TelegramDark
 import kotlin.random.Random
 
 @Composable
-fun TelegramScreen() {
+fun ChatScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -65,16 +70,36 @@ fun TelegramScreen() {
         // Bottom Navigation Bar (fixed at the bottom)
         BottomNavBar(
             modifier = Modifier
+                  .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+
+                            Color.LightGray.copy(alpha = 0.1f),
+                            Color.LightGray.copy(alpha = 0.1f),
+
+                            )
+                    )
+                    )
+                .fillMaxWidth()
                 .align(Alignment.BottomCenter)
                 .padding(12.dp)
         )
     }
 }
-
 @Composable
 fun StatusBar() {
     Column(
         modifier = Modifier
+             .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+
+                        Color.LightGray.copy(alpha = 0.1f),
+                        Color.LightGray.copy(alpha = 0.1f),
+
+                    )
+                )
+                )
             .fillMaxWidth()
             .padding(start = 8.dp, end = 8.dp, top = 8.dp) // Padding only at the sides and top
     ) {
@@ -82,7 +107,6 @@ fun StatusBar() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-
                 .padding(8.dp)
                 .height(15.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -96,44 +120,7 @@ fun StatusBar() {
                 fontWeight = FontWeight.W700,
                 modifier = Modifier.padding(start = 25.dp)
             )
-            Spacer(modifier = Modifier
-                .width(25.dp))
-
-            // Telegram Logo and Title in Rounded Box
-//            Box(
-//                modifier = Modifier
-//                    .wrapContentSize()
-//                    .weight(1f)
-//                    .background(Telegram, shape = RoundedCornerShape(14.dp))
-//                    .padding(horizontal = 10.dp, vertical = 4.dp),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                Row(
-//                    verticalAlignment = Alignment.CenterVertically,
-//                    horizontalArrangement = Arrangement.Center,
-//                    modifier = Modifier
-//                        .width(90.dp)
-//
-//                ) {
-//                    Icon(
-//                        painter = painterResource(id = R.drawable.ic_telegram_logo),
-//                        contentDescription = "Telegram Logo",
-//                        tint = Color.White,
-//                        modifier = Modifier
-//                            .padding(bottom = 2.dp)
-//
-//                            .rotate(-50f)
-//                            .size(15.dp)
-//                    )
-//                    Text(
-//                        text = "TELEGRAM",
-//                        color = Color.White,
-//                        fontSize = 13.sp,
-//                        fontWeight = FontWeight.Bold,
-//                        modifier = Modifier.padding(start = 4.dp,top = 2.dp)
-//                    )
-//                }
-//            }
+            Spacer(modifier = Modifier.width(25.dp))
 
             // Status Icons
             Row(
@@ -141,7 +128,7 @@ fun StatusBar() {
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 20.dp,)
+                    .padding(end = 20.dp)
             ) {
                 Icon(painterResource(id = R.drawable.ic_signal2), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(5.dp))
@@ -159,13 +146,12 @@ fun StatusBar() {
         }
 
         // Second Row - Telegram Title & Unread Tabs
-// Second Row - Telegram Title & Unread Tabs
         Row(
             modifier = Modifier
+                .padding(start = 10.dp)
                 .fillMaxWidth()
                 .padding(top = 8.dp) // Only top padding between first and second row
         ) {
-            // "Edit" aligned at the beginning
             Text(
                 text = "Edit",
                 color = TelegramDark, // Assuming you have defined TelegramDark
@@ -173,99 +159,133 @@ fun StatusBar() {
                 fontWeight = FontWeight.Bold
             )
 
-            // Centered "Chats" text
             Row(
                 modifier = Modifier
-                    .weight(1f) // This pushes the other content to the sides, making "Chats" center-aligned
+                    .weight(1f)
                     .align(Alignment.CenterVertically),
-                horizontalArrangement = Arrangement.Center // Aligns the text centrally within the available space
+                horizontalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = "Chats",
                     color = Color.White,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
+                    modifier = Modifier.align(Alignment.CenterVertically)
                 )
             }
 
-            // Two symbols/icons aligned at the end of the row
             Row(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // First Icon
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_add), // Replace with your icon
+                    painter = painterResource(id = R.drawable.ic_add_dotted),
                     contentDescription = "Search",
                     tint = TelegramDark,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier
+                        .rotate(180f)
+                        .size(20.dp)
                 )
-
-                Spacer(modifier = Modifier.width(10.dp)) // Spacing between icons
-
-                // Second Icon
+                Spacer(modifier = Modifier.width(10.dp))
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_sticker), // Replace with your icon
+                    painter = painterResource(id = R.drawable.ic_edit),
                     contentDescription = "More options",
                     tint = TelegramDark,
                     modifier = Modifier
-                        .padding(end= 5.dp)
+                        .padding(end = 5.dp)
                         .size(16.dp)
                 )
             }
         }
 
-
-        // Third Row - Telegram Title & Unread Tabs
+        // Third Row - Tabs with "Unread" centered vertically
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp),  // Only top padding between first and second row
-
+            verticalAlignment = Alignment.CenterVertically, // Center content vertically in the row
+            horizontalArrangement = Arrangement.Start // Spread the content across the width of the row
         ) {
+            val spacerValue = 12.dp
+            Spacer(modifier = Modifier.width(spacerValue))
+            // All tab
             Text(
-                text = "Chats",
-                color = Color.White,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                text = "All",
+                color = Color.Gray,
+                fontSize = Dimens.ChatScreenCategoryTextSize,
+                fontFamily = CustomRobotoMediumFontFamily,
+                modifier = Modifier.padding(end = 18.dp)
             )
+            Spacer(modifier = Modifier.width(spacerValue))
 
-            Row {
+
+
+
+            // Personal tab
+            Row(
+                modifier = Modifier
+                    .padding(end = 5.dp)
+            ) {
                 Text(
-                    text = "All",
+                    text = "Personal",
                     color = Color.Gray,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(end = 16.dp)
+                    fontSize = Dimens.ChatScreenCategoryTextSize,
+                    fontFamily = CustomRobotoMediumFontFamily,
+                    modifier = Modifier.padding(end = 3.dp)
                 )
-                Text(
-                    text = "Unread",
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(end = 16.dp)
+                BadgeBoxSmall(Random.nextInt(2, 10), 15)
+            }
+            Spacer(modifier = Modifier.width(spacerValue))
+
+
+            // "Unread" tab at the center, vertically and horizontally
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally, // Center content horizontally in the column
+                verticalArrangement = Arrangement.Center // Center content vertically in the column
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(bottom = 2.dp)
+                ) {
+                    Text(
+                        text = "Unread",
+                        color = Telegram,
+                        fontSize = Dimens.ChatScreenCategoryTextSize,
+                        fontFamily = CustomRobotoMediumFontFamily,
+                        modifier = Modifier.padding(end = 3.dp)
+                    )
+                    BadgeBoxSmall(Random.nextInt(2, 10), 15)
+                }
+                Divider(
+                    color = Telegram,
+                    thickness = 2.dp,
+                    modifier = Modifier
+                        .width(80.dp)  // Adjust width based on content
+                        .padding(top = 4.dp,end= 19.dp)
                 )
+            }
+            Spacer(modifier = Modifier.width(spacerValue))
+
+
+            // Channels tab
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+            ) {
                 Text(
                     text = "Channels",
                     color = Color.Gray,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
+                    fontSize = Dimens.ChatScreenCategoryTextSize,
+                    fontFamily = CustomRobotoMediumFontFamily,
+                    modifier = Modifier.padding(end = 3.dp)
                 )
+                BadgeBoxSmall(Random.nextInt(2, 10), 15)
             }
         }
-
-        // White Divider Line
-        Divider(
-            color = Color.White,
-            thickness = 1.dp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)  // Add a small spacing after the status bar content
-        )
     }
 }
+
+
 
 
 
@@ -273,8 +293,8 @@ fun StatusBar() {
 fun BottomNavBar(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .background(Color.Black),
+            .fillMaxWidth(),
+
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -370,23 +390,37 @@ fun ChatRow(chat: ChatItem) {
                 color = Color.Gray
             )
             if (chat.unreadCount > 0) {
-                BadgeBox(chat.unreadCount)
+                BadgeBox(chat.unreadCount,24)
             }
         }
     }
 }
 
 @Composable
-fun BadgeBox(unreadCount: Int) {
+fun BadgeBox(unreadCount: Int,size:Int) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .size(24.dp)
+            .size(size.dp)
             .background(Telegram, CircleShape)
     ) {
         Text(text = unreadCount.toString(), color = Color.White)
     }
 }
+
+@Composable
+fun BadgeBoxSmall(unreadCount: Int,size:Int) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .padding(top = 4.dp,end=18.dp)
+            .size(size.dp)
+            .background(Telegram, CircleShape)
+    ) {
+        Text(text = unreadCount.toString(), color = Color.White , fontSize = 12.sp)
+    }
+}
+
 
 data class ChatItem(
     val name: String,
@@ -403,5 +437,5 @@ data class ChatItem(
 )
 @Composable
 fun TelegramScreenPreview() {
-    TelegramScreen()
+    ChatScreen()
 }
