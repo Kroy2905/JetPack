@@ -39,9 +39,11 @@ import kotlinx.coroutines.delay
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import java.util.Calendar
 import java.util.Locale
 import kotlin.random.Random
 
@@ -104,6 +106,14 @@ object Utils {
 
         // Optionally, show some UI while waiting for the capture
         // Text(text = "Capturing Composable in 5 seconds...")
+    }
+
+    fun getYesterdaysDateFormatted(): String {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, -1) // Subtract one day to get yesterday's date
+
+        val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault()) // Change to "dd/MM"
+        return dateFormat.format(calendar.time)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

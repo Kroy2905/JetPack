@@ -42,6 +42,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -60,14 +61,17 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kroy.ssediotor.R
 import com.kroy.sseditor.models.ApiResponse
+import com.kroy.sseditor.models.ChatItem
 import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.models.ContactItem
 import com.kroy.sseditor.ui.theme.CustomTypography
 import com.kroy.sseditor.ui.theme.Primary
 import com.kroy.sseditor.utils.ContactScrollPositionManager
 import com.kroy.sseditor.utils.SelectedClient
+import com.kroy.sseditor.utils.Utils
 import com.kroy.sseditor.utils.Utils.CaptureAndSaveComposable
 import com.kroy.sseditor.utils.Utils.base64ToBitmap
+import com.kroy.sseditor.utils.Utils.getYesterdaysDateFormatted
 import com.kroy.sseditor.viewmodels.ContactViewModel
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -104,11 +108,13 @@ fun addRandomMinutesToTime(initialTime: String, min: Int, max: Int): String {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> Unit = {}) {
+    val context = LocalContext.current
     val contactViewModel: ContactViewModel = hiltViewModel()
     val isLoading: State<Boolean> = contactViewModel.isLoading.collectAsState()
 
     val allContacts: State<ApiResponse.AllContactResponse?> = contactViewModel.filteredContactResponse.collectAsState()
     val contactDetails: State<ApiResponse.ContactDetailsResponse?> = contactViewModel.filteredgetContactDetailsResponse.collectAsState()
+    val randomContacts: State<ApiResponse.RandomContactsResponse?> = contactViewModel.filteredRandomContactsResponse.collectAsState()
     // Remember and save the scroll index and offset manually
     // Retrieve scroll index and offset from ViewModel
     // Retrieve scroll index and offset from the singleton object
@@ -164,7 +170,7 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
             }
 
         // Update SelectedClient.time for future use
-      //  SelectedClient.time = addRandomMinutesToTime(SelectedClient.time, 2, 30)
+        //  SelectedClient.time = addRandomMinutesToTime(SelectedClient.time, 2, 30)
 
         val initialTimeString = currentTime // New time after random increment
         val backgroundBitmap = base64ToBitmap(SelectedClient.backgroundImage)
@@ -184,6 +190,28 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
             userReplySticker = userReplySticker,
             contactViewModel
         )
+    }
+
+    // Remember the list of ChatItem, initializing it based on the randomContacts value
+    val chatItems = remember { mutableStateListOf<ChatItem>() } // Initialize as a mutable state list
+
+    // Update the chatItems when randomContacts changes and isLoading is true
+    Log.d("random contacts ->","${randomContacts.value?.data}")
+    if (randomContacts.value?.data != null && isLoading.value) {
+        chatItems.clear() // Clear previous items before adding new ones
+        for (contact in randomContacts?.value?.data!!) {
+            // Create a ChatItem from RandomContact
+            val chatItem = ChatItem(
+                name = contact.contactName,
+                message = contact.comment1, // or any other comment you want to use as message
+                date = getYesterdaysDateFormatted(), // Get yesterday's date
+                profileImage = Utils.base64ToBitmap(contact.contactImage), // Convert the image string to Bitmap if needed
+                unreadCount = Random.nextInt(1, 8) // Set unread count, you can modify this based on your logic
+            )
+            // Add the ChatItem to the list
+            chatItems.add(chatItem)
+        }
+        Utils.generateNewChatScreen(chatList = chatItems, contactViewModel = contactViewModel)
     }
 
 
@@ -216,6 +244,11 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
                         contactViewModel.setLoading(true)
                         // Fetch the data and generate the screenshot
                         // TODO: Generate Chat screen
+                        contactViewModel.getRandomContacts(
+                            SelectedClient.clientId,
+                            SelectedClient.dayName,
+                            context
+                        )
                     },
                     modifier = Modifier
                         .padding(end = 10.dp)
@@ -284,7 +317,7 @@ fun ContactList(
 
 @Composable
 fun ContactItem(contact: ContactItem, onEditClick: (ContactItem) -> Unit,contactViewModel: ContactViewModel) {
-val context = LocalContext.current
+    val context = LocalContext.current
     val isLoading: State<Boolean> = contactViewModel.isLoading.collectAsState()
 
     Row(
@@ -317,13 +350,13 @@ val context = LocalContext.current
 
         IconButton(
             onClick = {
-               contactViewModel.setLoading(true)
+                contactViewModel.setLoading(true)
                 // fetch  the data and generate the screenshot
                 //TODO()  - Use @CustomeTelegramLayput to generate the screenshot
-                      contactViewModel.getcontactDetails(
-                          contactId = contact.contactId,
-                          context
-                      )
+                contactViewModel.getcontactDetails(
+                    contactId = contact.contactId,
+                    context
+                )
 
 
 
@@ -363,5 +396,5 @@ val context = LocalContext.current
 @Preview(showBackground = true)
 @Composable
 fun ContactScreenPreview() {
-   // ContactScreen()
+    // ContactScreen()
 }

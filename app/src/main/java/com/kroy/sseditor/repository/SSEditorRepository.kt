@@ -260,4 +260,32 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
     }
 
 
+    //edit contact details
+    private val _randomContacts = MutableStateFlow<ApiResponse.RandomContactsResponse>(ApiResponse.RandomContactsResponse())
+    val randomContactsResponse:StateFlow<ApiResponse>
+        get() = _randomContacts
+    suspend fun getRandomContacts(clientId: Int,dayName: String,context: Context){
+        try{
+            Log.d("get random contacts->","body = client Id $clientId , $dayName")
+            val response = apiService.getRandomContacts(clientId, dayName)
+            Log.d("get random contacts->","response = ${response.body()}")
+
+            if(response.isSuccessful && response.body()!=null){
+                // get the categories
+                _randomContacts.emit(response.body()!!)
+
+            }else{
+                // Show success toast
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, response.body()?.message, Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+
+    }
+
+
 }

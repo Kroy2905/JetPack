@@ -148,6 +148,23 @@ class ContactViewModel @Inject constructor(
         }
     }
 
+    private val getRandomContact: StateFlow<ApiResponse> get() = repository.randomContactsResponse
+
+    // Filtered response for all clients
+    private val _filteredRandomContactsResponse = MutableStateFlow<ApiResponse.RandomContactsResponse?>(null)
+    val filteredRandomContactsResponse: StateFlow<ApiResponse.RandomContactsResponse?> get() = _filteredRandomContactsResponse
+    fun getRandomContacts(clientId:Int, dayName: String,context:Context,) {
+        viewModelScope.launch {
+
+            repository.getRandomContacts(clientId, dayName, context)
+
+            // Assuming repository.allClients is updated after the API call
+            getRandomContact.collect { response ->
+                handleClientResponse(response)
+            }
+        }
+    }
+
 
 
 
@@ -205,6 +222,19 @@ class ContactViewModel @Inject constructor(
                 } else {
                     // Handle empty data scenario
                     _filterededitContactResponse.value = ApiResponse.EditContacttResponse(
+                        data = null,
+                        message = response.message,
+                        statusCode = response.statusCode
+                    )
+                }
+            }
+            is ApiResponse.RandomContactsResponse -> {
+                if (response.data!=null) {
+                    // Emit the successful response
+                    _filteredRandomContactsResponse.value = response
+                } else {
+                    // Handle empty data scenario
+                    _filteredRandomContactsResponse.value = ApiResponse.RandomContactsResponse(
                         data = null,
                         message = response.message,
                         statusCode = response.statusCode

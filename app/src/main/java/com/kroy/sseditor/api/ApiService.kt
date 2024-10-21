@@ -59,6 +59,12 @@ interface ApiService {
                            @Body editContactBody: editContactBody
     ) : Response <ApiResponse.EditContacttResponse>
 
+    @GET("contacts/randomcontacts")    // API to be written here
+    suspend fun getRandomContacts(@Query("clientId") clientId:Int,
+        @Query("dayName") dayName :String
+
+    ) : Response <ApiResponse.RandomContactsResponse>
+
 
 
 }
