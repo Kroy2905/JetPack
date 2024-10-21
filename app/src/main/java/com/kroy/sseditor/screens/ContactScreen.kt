@@ -3,7 +3,9 @@ package com.kroy.sseditor.screens
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
+import android.widget.ImageButton
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +19,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -45,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -181,11 +186,6 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
         )
     }
 
-    // Using a dummy list for preview
-    val dummyContacts = listOf(
-        ContactItem(contactName = "John Doe"),
-        ContactItem(contactName = "Jane Smith")
-    )
 
     Box(
         modifier = Modifier
@@ -193,20 +193,49 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
             .background(Primary)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            Text(
-                text = "Contacts",
-                style = CustomTypography.titleLarge.copy(
-                    fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                ),
+            Row(
                 modifier = Modifier
-                    .padding(vertical = 16.dp)
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Contacts",
+                    style = CustomTypography.titleLarge.copy(
+                        fontSize = 40.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    ),
+                    modifier = Modifier
+                        .padding(start = 20.dp)
+                        .weight(1f),
+                    textAlign = TextAlign.Center
+                )
+                IconButton(
+                    onClick = {
+                        contactViewModel.setLoading(true)
+                        // Fetch the data and generate the screenshot
+                        // TODO: Generate Chat screen
+                    },
+                    modifier = Modifier
+                        .padding(end = 10.dp)
+                        .size(50.dp) // Adjust size as needed
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_download),
+                        contentDescription = "Generate",
+                        modifier = Modifier.size(50.dp), // Adjust size of the icon
+                        colorFilter = ColorFilter.tint(Color.White)
+                    )
+                }
+            }
 
-            ContactList(contacts = allContacts.value?.data ?: emptyList(), onEditClick = onEditClick, contactViewModel = contactViewModel,listState)
+            ContactList(
+                contacts = allContacts.value?.data ?: emptyList(),
+                onEditClick = onEditClick,
+                contactViewModel = contactViewModel,
+                listState = listState
+            )
         }
 
         // Show CircularProgressIndicator if loading is true
@@ -232,6 +261,7 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
             )
         }
     }
+
 }
 
 @Composable

@@ -30,7 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kroy.sseditor.models.ChatItem
 import com.kroy.sseditor.models.ChatMessage
+import com.kroy.sseditor.screens.ChatScreen
 import com.kroy.sseditor.screens.CustomTelegramLayout
 import com.kroy.sseditor.viewmodels.ContactViewModel
 import kotlinx.coroutines.delay
@@ -81,6 +83,77 @@ object Utils {
 
         // Optionally, show some UI while waiting for the capture
         // Text(text = "Capturing Composable in 5 seconds...")
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    @Composable
+    fun generateNewChatScreen(
+        chatList: List<ChatItem>,
+        contactViewModel: ContactViewModel
+    ) {
+        val context = LocalContext.current
+
+
+
+        LaunchedEffect(Unit) {
+
+
+            generateChatScreenComposableToBitmap(context, chatList)
+            contactViewModel.setLoading(false)
+            contactViewModel.resetContactState()
+        }
+
+        // Optionally, show some UI while waiting for the capture
+        // Text(text = "Capturing Composable in 5 seconds...")
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun generateChatScreenComposableToBitmap(
+        context: Context,
+       chatList: List<ChatItem>
+    ) {
+        // Ensure context is an Activity
+        val activity = context as? Activity ?: return
+
+        val composeView = ComposeView(context).apply {
+            setContent {
+          ChatScreen(chats = chatList)
+            }
+        }
+
+        // Attach ComposeView to the window so it can be rendered
+        val parentView = activity.findViewById<ViewGroup>(android.R.id.content)
+        parentView?.addView(composeView)
+
+        // Define the target resolution
+        val targetWidth = 1290 // iPhone 15 Pro Max width in pixels
+        val targetHeight = 2796 // iPhone 15 Pro Max height in pixels
+
+        // Wait for the ComposeView to be attached to the window and laid out
+        composeView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                if (composeView.isAttachedToWindow) {
+                    composeView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                    // Create a bitmap with the target resolution
+                    val bitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888)
+                    val canvas = Canvas(bitmap)
+
+                    // Scale the canvas to fit the content correctly if needed
+                    val scaleX = targetWidth.toFloat() / composeView.width
+                    val scaleY = targetHeight.toFloat() / composeView.height
+                    canvas.scale(scaleX, scaleY)
+
+                    // Draw the ComposeView on the canvas
+                    composeView.draw(canvas)
+
+                    // Save the bitmap to gallery
+                    saveBitmapToGallery(context, bitmap)
+
+                    // Clean up: remove the view from its parent once done
+                    parentView?.removeView(composeView)
+                }
+            }
+        })
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
