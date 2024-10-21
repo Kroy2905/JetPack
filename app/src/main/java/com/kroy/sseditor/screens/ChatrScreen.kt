@@ -34,6 +34,8 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -42,16 +44,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kroy.ssediotor.R
+import com.kroy.sseditor.models.ChatItem
 import com.kroy.sseditor.ui.theme.CustomBoldTypography
 import com.kroy.sseditor.ui.theme.CustomRobotoMediumFontFamily
 import com.kroy.sseditor.ui.theme.Dimens
 import com.kroy.sseditor.ui.theme.Telegram
 import com.kroy.sseditor.ui.theme.TelegramDark
 import com.kroy.sseditor.ui.theme.TelegramLight
+import com.kroy.sseditor.utils.Utils
 import kotlin.random.Random
 
 @Composable
-fun ChatScreen() {
+fun ChatScreen(chats:List<ChatItem>) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -65,7 +69,8 @@ fun ChatScreen() {
 
             // Chat List (middle content)
             ChatListUI(
-                modifier = Modifier
+                modifier = Modifier,
+                chats
                    // .weight(1f) // Fills the remaining space right after the status bar
             )
         }
@@ -410,17 +415,8 @@ fun BottomNavBar(modifier: Modifier = Modifier) {
 
 
 @Composable
-fun ChatListUI(modifier: Modifier = Modifier) {
-    val chats = listOf(
-        ChatItem("Animesh Mondal", "Hi", "16/09", R.drawable.b, Random.nextInt(2, 10)),
-        ChatItem("VS", "Hey", "31/08", R.drawable.b, Random.nextInt(2, 10)),
-        ChatItem("Siam", "I kiss your neck alsoo", "25/07", R.drawable.a, Random.nextInt(2, 10)),
-        ChatItem("EXCEPTION", "Hey", "17/07", R.drawable.d, Random.nextInt(2, 10)),
-        ChatItem("Jsvindr Sng", "https://t.me/+i_voE00fHsMOODA9", "10/07", R.drawable.e, Random.nextInt(2, 10)),
-        ChatItem("Apple", "https://t.me/+qnGC9Zd2csJkZDU9", "06/07", R.drawable.e, Random.nextInt(2, 10)),
-        ChatItem("Binary Trading Trader", "Ftgmn...", "05/07", R.drawable.a, Random.nextInt(2, 10)),
-        ChatItem("Tronix Bot", "🦴🦴🦴🦴🦴", "04/07", R.drawable.b, Random.nextInt(2, 10))
-    )
+fun ChatListUI(modifier: Modifier = Modifier,chats: List<ChatItem>) {
+
 
     LazyColumn(
         horizontalAlignment = Alignment.Start,
@@ -444,7 +440,7 @@ fun ChatRow(chat: ChatItem) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(id = chat.profileImage),
+            bitmap = chat.profileImage!!.asImageBitmap(),
             contentDescription = "Profile picture",
             modifier = Modifier
                 .size(50.dp)
@@ -505,13 +501,7 @@ fun BadgeBoxSmall(unreadCount: Int,size:Int) {
 }
 
 
-data class ChatItem(
-    val name: String,
-    val message: String,
-    val date: String,
-    val profileImage: Int,
-    val unreadCount: Int
-)
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(
@@ -520,5 +510,16 @@ data class ChatItem(
 )
 @Composable
 fun TelegramScreenPreview() {
-    ChatScreen()
+    val context = LocalContext.current
+    val chats = listOf(
+        ChatItem("Animesh Mondal", "Hi", "16/09",Utils.getBitmapFromResource(context,R.drawable.b) , Random.nextInt(2, 10)),
+        ChatItem("VS", "Hey", "31/08", Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 10)),
+        ChatItem("Siam", "I kiss your neck alsoo", "25/07", Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+        ChatItem("EXCEPTION", "Hey", "17/07",Utils.getBitmapFromResource(context,R.drawable.f), Random.nextInt(2, 10)),
+        ChatItem("Jsvindr Sng", "https://t.me/+i_voE00fHsMOODA9", "10/07",Utils.getBitmapFromResource(context,R.drawable.e), Random.nextInt(2, 10)),
+        ChatItem("Apple", "https://t.me/+qnGC9Zd2csJkZDU9", "06/07",Utils.getBitmapFromResource(context,R.drawable.d), Random.nextInt(2, 10)),
+        ChatItem("Binary Trading Trader", "Ftgmn...", "05/07",Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+        ChatItem("Tronix Bot", "🦴🦴🦴🦴🦴", "04/07", Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 10))
+    )
+    ChatScreen(chats)
 }
