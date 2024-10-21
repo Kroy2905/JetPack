@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,6 +47,7 @@ import com.kroy.sseditor.ui.theme.CustomRobotoMediumFontFamily
 import com.kroy.sseditor.ui.theme.Dimens
 import com.kroy.sseditor.ui.theme.Telegram
 import com.kroy.sseditor.ui.theme.TelegramDark
+import com.kroy.sseditor.ui.theme.TelegramLight
 import kotlin.random.Random
 
 @Composable
@@ -70,7 +73,7 @@ fun ChatScreen() {
         // Bottom Navigation Bar (fixed at the bottom)
         BottomNavBar(
             modifier = Modifier
-                  .background(
+                .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
 
@@ -79,10 +82,10 @@ fun ChatScreen() {
 
                             )
                     )
-                    )
+                )
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-                .padding(12.dp)
+
         )
     }
 }
@@ -90,16 +93,16 @@ fun ChatScreen() {
 fun StatusBar() {
     Column(
         modifier = Modifier
-             .background(
+            .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
 
                         Color.LightGray.copy(alpha = 0.1f),
                         Color.LightGray.copy(alpha = 0.1f),
 
-                    )
+                        )
                 )
-                )
+            )
             .fillMaxWidth()
             .padding(start = 8.dp, end = 8.dp, top = 8.dp) // Padding only at the sides and top
     ) {
@@ -261,7 +264,7 @@ fun StatusBar() {
                     thickness = 2.dp,
                     modifier = Modifier
                         .width(80.dp)  // Adjust width based on content
-                        .padding(top = 4.dp,end= 19.dp)
+                        .padding(top = 4.dp, end = 19.dp)
                 )
             }
             Spacer(modifier = Modifier.width(spacerValue))
@@ -291,41 +294,121 @@ fun StatusBar() {
 
 @Composable
 fun BottomNavBar(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth(),
+    Column(modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .padding(top = 4.dp)
 
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = { /* Handle contacts */ }) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_contacts),
-                contentDescription = "Contacts",
-                tint = Color.White,
-                modifier = Modifier.size(24.dp)
-            )
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround,
+
+            ) {
+            // Contacts column
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_contacts),
+                    contentDescription = "Contacts",
+                    tint = Color.Gray,
+                    modifier = Modifier.size(28.dp)
+                )
+                Text(
+                    text = "Contacts",
+                    color = Color.Gray,
+                    fontSize = Dimens.ChatScreenBottomBarTextSize,
+                    fontFamily = CustomRobotoMediumFontFamily,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            // Chats column with badge overlay
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_pending_msg_white),
+                        contentDescription = "Pending messages",
+                        tint = Telegram.copy(0.72f),
+                        modifier = Modifier.size(28.dp)
+                    )
+                    Text(
+                        text = "Chats",
+                        color = Telegram,
+                        fontSize = Dimens.ChatScreenBottomBarTextSize,
+                        fontFamily = CustomRobotoMediumFontFamily,
+                        maxLines = 1,
+
+                        )
+                }
+
+                // Badge positioned on top of the icon
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+
+                        .offset(x = -1.dp, y = (0.5f).dp) // Adjust as needed for exact positioning
+                        .wrapContentWidth()
+                        .background(Color(0xFFE90707), RoundedCornerShape(8.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "1.${Random.nextInt(1, 4)}K",
+                        color = Color.White,
+                        fontSize = 10.sp,
+                        fontFamily = CustomRobotoMediumFontFamily,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(horizontal = 4.dp)
+                    )
+                }
+            }
+
+            // Settings column with profile picture
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.b),
+                    contentDescription = "Profile picture",
+                    modifier = Modifier
+                        .size(28.dp)
+                        .clip(CircleShape)
+                )
+                Text(
+                    text = "Settings",
+                    color = Color.Gray,
+                    fontSize = Dimens.ChatScreenBottomBarTextSize,
+                    fontFamily = CustomRobotoMediumFontFamily,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
 
         Box(
             modifier = Modifier
-                .size(60.dp)
-                .background(Color(0xFF1D9BF0), CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = "1.7K", color = Color.White, fontSize = 16.sp)
-        }
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(.4f)
+                .padding(top = 20.dp)
+                .height(5.dp)
+                .background(Color.White)
+        )
 
-        IconButton(onClick = { /* Handle settings */ }) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_settings),
-                contentDescription = "Profile",
-                colorFilter = ColorFilter.tint(Color.White), // Apply white tint
-                modifier = Modifier.size(32.dp)
-            )
-        }
+
     }
+
 }
+
+
 @Composable
 fun ChatListUI(modifier: Modifier = Modifier) {
     val chats = listOf(
@@ -413,7 +496,7 @@ fun BadgeBoxSmall(unreadCount: Int,size:Int) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .padding(top = 4.dp,end=18.dp)
+            .padding(top = 4.dp, end = 18.dp)
             .size(size.dp)
             .background(Telegram, CircleShape)
     ) {
