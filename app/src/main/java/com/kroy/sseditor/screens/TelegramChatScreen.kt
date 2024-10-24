@@ -525,7 +525,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                 .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Time
+            // Timetime
             Text(
                 text = removeLeadingZero(time) ,
                 color = Color.White,

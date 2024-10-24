@@ -7,6 +7,6 @@ object SelectedClient {
     var backgroundImage: String = ""
     var clientName: String = ""
     var dayName: String = "Day 2"
-    var time: String = "12:030 AM"
+    var time: String = "12:03 AM"
 
 }

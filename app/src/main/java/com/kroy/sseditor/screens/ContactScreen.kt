@@ -3,7 +3,6 @@ package com.kroy.sseditor.screens
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
-import android.widget.ImageButton
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,8 +18,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -39,12 +36,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -204,7 +197,7 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
             val chatItem = ChatItem(
                 name = contact.contactName,
                 message = contact.comment1, // or any other comment you want to use as message
-                date = getYesterdaysDateFormatted(), // Get yesterday's date
+                time = getYesterdaysDateFormatted(), // Get yesterday's date
                 profileImage = Utils.base64ToBitmap(contact.contactImage), // Convert the image string to Bitmap if needed
                 unreadCount = Random.nextInt(1, 8) // Set unread count, you can modify this based on your logic
             )
