@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -34,8 +36,10 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -142,19 +146,48 @@ fun StatusBar() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .height(15.dp),
+                .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Time
             Text(
                 text = Utils.removeLeadingZero(randomInitialTime.format(DateTimeFormatter.ofPattern("hh:mm"))),
                 color = Color.White,
-                fontSize = 12.sp,
+                fontSize = 15.sp,
                 style = CustomBoldTypography.titleMedium,
                 fontWeight = FontWeight.W700,
                 modifier = Modifier.padding(start = 25.dp)
             )
-            Spacer(modifier = Modifier.width(25.dp))
+
+
+            Spacer(modifier = Modifier.width(40.dp))
+
+            // Telegram Logo and Title in Rounded Box
+            Box(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .background(Color.Black, shape = RoundedCornerShape(14.dp))
+                    .padding(horizontal = 5.dp, vertical = 1.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier
+                        .width(110.dp)
+
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.hotspot),
+                        contentDescription = "Telegram Logo",
+                        modifier = Modifier
+                            .padding(vertical = 2.dp, horizontal = 1.dp)
+
+                            .size(18.dp)
+                    )
+
+                }
+            }
 
             // Status Icons
             Row(
@@ -164,9 +197,14 @@ fun StatusBar() {
                     .fillMaxWidth()
                     .padding(end = 20.dp)
             ) {
-                Icon(painterResource(id = R.drawable.ic_signal2), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(16.dp))
+                Icon(painterResource(id = R.drawable.ic_signal2), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(5.dp))
-                Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier.size(16.dp))
+                Text(
+                    text = "5G",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+             //   Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(5.dp))
                 Icon(
                     painter = painterResource(id = R.drawable.battery4),
@@ -189,7 +227,7 @@ fun StatusBar() {
             Text(
                 text = "Edit",
                 color = TelegramDark, // Assuming you have defined TelegramDark
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
 
@@ -202,9 +240,17 @@ fun StatusBar() {
                 Text(
                     text = "Chats",
                     color = Color.White,
-                    fontSize = 16.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.align(Alignment.CenterVertically)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.bluetick1),
+                    contentDescription = "Telegram Logo",
+                    modifier = Modifier
+                        .padding(top = 5.dp, start = 4.dp)
+
+                        .size(16.dp)
                 )
             }
 
@@ -218,7 +264,7 @@ fun StatusBar() {
                     tint = TelegramDark,
                     modifier = Modifier
                         .rotate(180f)
-                        .size(20.dp)
+                        .size(22.dp)
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Icon(
@@ -227,7 +273,7 @@ fun StatusBar() {
                     tint = TelegramDark,
                     modifier = Modifier
                         .padding(end = 5.dp)
-                        .size(16.dp)
+                        .size(18.dp)
                 )
             }
         }
@@ -240,7 +286,7 @@ fun StatusBar() {
             verticalAlignment = Alignment.CenterVertically, // Center content vertically in the row
             horizontalArrangement = Arrangement.Start // Spread the content across the width of the row
         ) {
-            val spacerValue = 12.dp
+            val spacerValue = 13.dp
             Spacer(modifier = Modifier.width(spacerValue))
             // All tab
             Text(
@@ -248,7 +294,7 @@ fun StatusBar() {
                 color = Color.Gray,
                 fontSize = Dimens.ChatScreenCategoryTextSize,
                 fontFamily = CustomRobotoMediumFontFamily,
-                modifier = Modifier.padding(end = 18.dp)
+                modifier = Modifier.padding(end = 10.dp)
             )
             Spacer(modifier = Modifier.width(spacerValue))
 
@@ -267,7 +313,11 @@ fun StatusBar() {
                     fontFamily = CustomRobotoMediumFontFamily,
                     modifier = Modifier.padding(end = 3.dp)
                 )
-                BadgeBoxSmall(Random.nextInt(2, 10), 15)
+                Box(modifier =Modifier.padding(top = 3.dp) ){
+                    BadgeBoxSmall(Random.nextInt(100, 150))
+                }
+
+
             }
             Spacer(modifier = Modifier.width(spacerValue))
 
@@ -288,14 +338,16 @@ fun StatusBar() {
                         fontFamily = CustomRobotoMediumFontFamily,
                         modifier = Modifier.padding(end = 3.dp)
                     )
-                    BadgeBoxSmall(Random.nextInt(2, 10), 15)
+                    Box(modifier =Modifier.padding(top = 3.dp) ){
+                        BadgeBoxSmall(Random.nextInt(550, 650))
+                    }
                 }
                 Divider(
                     color = Telegram,
                     thickness = 2.dp,
                     modifier = Modifier
                         .width(80.dp)  // Adjust width based on content
-                        .padding(top = 4.dp, end = 19.dp)
+                        .padding(top = 4.dp, end = 2.dp, start = 0.dp)
                 )
             }
             Spacer(modifier = Modifier.width(spacerValue))
@@ -304,16 +356,19 @@ fun StatusBar() {
             // Channels tab
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 10.dp)
+                    .padding(horizontal = 1.dp)
             ) {
                 Text(
                     text = "Channels",
+                    maxLines = 1,
                     color = Color.Gray,
                     fontSize = Dimens.ChatScreenCategoryTextSize,
                     fontFamily = CustomRobotoMediumFontFamily,
                     modifier = Modifier.padding(end = 3.dp)
                 )
-                BadgeBoxSmall(Random.nextInt(2, 10), 15)
+                Box(modifier =Modifier.padding(top = 3.dp) ){
+                  //  BadgeBoxSmall(Random.nextInt(50, 150))
+                }
             }
         }
     }
@@ -479,8 +534,9 @@ fun ChatRow(chat: ChatItem) {
         Image(
             bitmap = chat.profileImage!!.asImageBitmap(),
             contentDescription = "Profile picture",
+            contentScale = ContentScale.FillBounds,
             modifier = Modifier
-                .size(50.dp)
+                .size(60.dp)
                 .clip(CircleShape)
         )
 
@@ -489,13 +545,15 @@ fun ChatRow(chat: ChatItem) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = chat.name,
+                fontSize = 17.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
             Text(
                 text = chat.message,
                 color = Color.Gray,
-                maxLines = 1,
+                fontSize = 15.sp,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
         }
@@ -503,10 +561,12 @@ fun ChatRow(chat: ChatItem) {
         Column(horizontalAlignment = Alignment.End) {
             Text(
                 text = formattedTime,
+                fontWeight = FontWeight.SemiBold,
                 color = Color.Gray
             )
+            Spacer(modifier = Modifier.height(14.dp))
             if (chat.unreadCount > 0) {
-                BadgeBox(chat.unreadCount,24)
+                BadgeBox(chat.unreadCount,20)
             }
         }
     }
@@ -518,22 +578,27 @@ fun BadgeBox(unreadCount: Int,size:Int) {
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .size(size.dp)
-            .background(Telegram, CircleShape)
+            .background(Color.Gray, CircleShape)
     ) {
-        Text(text = unreadCount.toString(), color = Color.White)
+        Text(text = unreadCount.toString(), color = Color.Black)
     }
 }
 
 @Composable
-fun BadgeBoxSmall(unreadCount: Int,size:Int) {
+fun BadgeBoxSmall(unreadCount: Int) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .padding(top = 4.dp, end = 18.dp)
-            .size(size.dp)
-            .background(Telegram, CircleShape)
+            .wrapContentWidth()
+            .background(Telegram, shape = RoundedCornerShape(14.dp))
+            .padding(horizontal = 4.dp, vertical = 0.dp)
+            .width(20.dp)
+
     ) {
-        Text(text = unreadCount.toString(), color = Color.White , fontSize = 12.sp)
+        Text(text = unreadCount.toString(),
+            maxLines = 1,
+            color = Color.White ,
+            fontSize = 11.sp)
     }
 }
 
