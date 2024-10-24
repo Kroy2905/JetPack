@@ -359,7 +359,7 @@ fun StatusBar() {
                     .padding(horizontal = 1.dp)
             ) {
                 Text(
-                    text = "Channels",
+                    text = "Members",
                     maxLines = 1,
                     color = Color.Gray,
                     fontSize = Dimens.ChatScreenCategoryTextSize,
@@ -620,7 +620,7 @@ fun TelegramScreenPreview() {
         ChatItem("EXCEPTION", "Hey", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.f), Random.nextInt(2, 10)),
         ChatItem("Jsvindr Sng", "https://t.me/+i_voE00fHsMOODA9", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.e), Random.nextInt(2, 10)),
         ChatItem("Apple", "https://t.me/+qnGC9Zd2csJkZDU9", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.d), Random.nextInt(2, 10)),
-        ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+        ChatItem("Binary Trading Trader", "H this is the best text you can find ", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
         ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
         ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
         ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
