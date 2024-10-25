@@ -63,12 +63,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.kroy.ssediotor.R
+import com.kroy.sseditor.models.ChatItem
 import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.models.Client
 import com.kroy.sseditor.models.clientItem
 import com.kroy.sseditor.screens.AddClientScreen
 import com.kroy.sseditor.screens.AddContactScreen
 import com.kroy.sseditor.screens.CategoryScreen
+import com.kroy.sseditor.screens.ChatScreen
 import com.kroy.sseditor.screens.ClientScreen
 import com.kroy.sseditor.screens.ContactScreen
 import com.kroy.sseditor.screens.CustomTelegramLayout
@@ -96,6 +98,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import javax.inject.Inject
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class MainActivity :FragmentActivity() {
@@ -162,7 +165,28 @@ class MainActivity :FragmentActivity() {
 //                            senderImage = senderImage,
 //                            userReplySticker = userReplySticker
 //                        )
-                        App2(dataStoreHelper)
+
+                        val context = LocalContext.current
+
+                        val chats = listOf(
+                            ChatItem("Animesh Mondal", "Hi", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.b) , Random.nextInt(2, 10)),
+                            ChatItem("VS", "Hey", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 10)),
+                            ChatItem("Siam", "I kiss your neck alsoo", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+                            ChatItem("EXCEPTION", "Hey", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.f), Random.nextInt(2, 10)),
+                            ChatItem("Jsvindr Sng", "https://t.me/+i_voE00fHsMOODA9", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.e), Random.nextInt(2, 10)),
+                            ChatItem("Apple", "https://t.me/+qnGC9Zd2csJkZDU9", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.d), Random.nextInt(2, 10)),
+                            ChatItem("Binary Trading Trader", "H this is the best text you can find ", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+                            ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+                            ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+                            ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+                            ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+                            ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+                            ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+                            ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+                            ChatItem("Tronix Bot", "🦴🦴🦴🦴🦴", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 10))
+                        )
+                        ChatScreen(chats)
+                      //  App2(dataStoreHelper)
                         //SevenDayScreen()
 //                       CaptureAndSaveComposable(
 //                           contactName ="Random Name",
