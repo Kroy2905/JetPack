@@ -125,7 +125,7 @@ fun StatusBar() {
         Utils.parseTimeString(SelectedClient.time)
     }
     Log.d("time set->", "parse $initialTime")
-    val randomInitialTime = remember { Utils.generateRandomTime(initialTime, -25, 25) }
+    val randomInitialTime = remember { Utils.generateRandomTime(initialTime, 30, 30) }
     Column(
         modifier = Modifier
             .background(
@@ -524,8 +524,9 @@ fun ChatRow(chat: ChatItem) {
     }
     Log.d("time set->", "parse $initialTime")
     val randomInitialTime = remember { Utils.generateRandomTime(initialTime, -25, 25) }
-    val formattedTime = Utils.convertLettersToUppercase(randomInitialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),)
-
+    val formattedTime = Utils.convertLettersToUppercase(
+        randomInitialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
+    )
 
     Row(
         modifier = Modifier
@@ -552,31 +553,52 @@ fun ChatRow(chat: ChatItem) {
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
-            Text(
-                text = chat.message,
-                color = Color.Gray,
-                fontFamily = CustomRobotoMediumFontFamily,
-                fontSize = 17.sp,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
+
+            if (chat.message.isNullOrEmpty()) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.default_comment_img),
+                        contentDescription = "Photo icon",
+                        contentScale = ContentScale.FillBounds,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Photo",
+                        color = Color.Gray,
+                        fontFamily = CustomRobotoMediumFontFamily,
+                        fontSize = 17.sp
+                    )
+                }
+            } else {
+                Text(
+                    text = chat.message,
+                    color = Color.Gray,
+                    fontFamily = CustomRobotoMediumFontFamily,
+                    fontSize = 17.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
 
         Column(horizontalAlignment = Alignment.End) {
             Text(
                 text = formattedTime,
                 fontFamily = CustomRobotoMediumFontFamily,
-
                 fontWeight = FontWeight.SemiBold,
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.height(14.dp))
             if (chat.unreadCount > 0) {
-                BadgeBox(chat.unreadCount,20)
+                BadgeBox(chat.unreadCount, 20)
             }
         }
     }
 }
+
 
 @Composable
 fun BadgeBox(unreadCount: Int,size:Int) {
@@ -627,7 +649,7 @@ fun TelegramScreenPreview() {
     val chats = listOf(
         ChatItem("Animesh Mondal", "Hi", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.b) , Random.nextInt(2, 10)),
         ChatItem("VS", "Hey", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 10)),
-        ChatItem("Siam", "I kiss your neck alsoo", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+        ChatItem("Siam", "", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
         ChatItem("EXCEPTION", "Hey", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.f), Random.nextInt(2, 10)),
         ChatItem("Jsvindr Sng", "https://t.me/+i_voE00fHsMOODA9", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.e), Random.nextInt(2, 10)),
         ChatItem("Apple", "https://t.me/+qnGC9Zd2csJkZDU9", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.d), Random.nextInt(2, 10)),

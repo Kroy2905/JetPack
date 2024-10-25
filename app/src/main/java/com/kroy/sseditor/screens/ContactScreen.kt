@@ -205,6 +205,7 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
             chatItems.add(chatItem)
         }
         Utils.generateNewChatScreen(chatList = chatItems, contactViewModel = contactViewModel)
+
     }
 
 
