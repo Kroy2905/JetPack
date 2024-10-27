@@ -520,84 +520,77 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-
-                .padding(0.dp)
+                .padding(8.dp)
                 .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Timetime
+            // Time
+
             Text(
-                text = removeLeadingZero(time) ,
+                text = removeLeadingZero(time),
                 color = Color.White,
                 fontSize = 15.sp,
                 letterSpacing = 1.sp,
                 style = CustomMediumTypography.titleMedium,
                 fontWeight = FontWeight.W700,
-                modifier = Modifier.padding(start = 25.dp,top = 7.dp)
+                modifier = Modifier.padding(start = 20.dp)
             )
-            Spacer(modifier = Modifier
-                .width(25.dp))
+
+
+            Spacer(modifier = Modifier.width(20.dp))
 
             // Telegram Logo and Title in Rounded Box
-//            Box(
-//                modifier = Modifier
-//                    .wrapContentSize()
-//                    .weight(1f)
-//                    .background(Telegram, shape = RoundedCornerShape(14.dp))
-//                    .padding(horizontal = 10.dp, vertical = 4.dp),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                Row(
-//                    verticalAlignment = Alignment.CenterVertically,
-//                    horizontalArrangement = Arrangement.Center,
+            // Box that spans between Time and Network Status
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .background(Color.Black, shape = RoundedCornerShape(14.dp))
+                    .padding(horizontal = 4.dp, vertical = 2.dp),
+
+                ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start,
 //                    modifier = Modifier
-//                        .width(90.dp)
-//
-//                ) {
-//                    Icon(
-//                        painter = painterResource(id = R.drawable.ic_telegram_logo),
-//                        contentDescription = "Telegram Logo",
-//                        tint = Color.White,
-//                        modifier = Modifier
-//                            .padding(bottom = 2.dp)
-//
-//                            .rotate(-50f)
-//                            .size(15.dp)
-//                    )
-//                    Text(
-//                        text = "TELEGRAM",
-//                        color = Color.White,
-//                        fontSize = 13.sp,
-//                        fontWeight = FontWeight.Bold,
-//                        modifier = Modifier.padding(start = 4.dp,top = 2.dp)
-//                    )
-//                }
-//            }
+//                        .width(100.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.hotspot_bold),
+                        contentDescription = "Hotspot logo ",
+                        modifier = Modifier
+                            .padding(vertical = 4.dp, horizontal = 2.dp)
+                            .rotate(0f)
+                            .size(18.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.width(17.dp))
 
             // Status Icons
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 33.dp,)
+                    .wrapContentSize()
+                    .padding(end = 16.dp)
             ) {
-                Icon(painterResource(id = R.drawable.ic_signal2), contentDescription = "Signal", tint = Color.White, modifier = Modifier
-                    .padding(top=9.dp)
-                    .size(17.dp))
-                Spacer(modifier = Modifier
-
-                    .width(5.dp))
-                Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier
-                    .padding(top=9.dp)
-                    .size(17.dp))
-                Spacer(modifier = Modifier.width(5.dp))
+                Icon(painterResource(id = R.drawable.ic_signal2), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(16.dp))
+                Spacer(modifier = Modifier.width(7.dp))
+                Text(
+                    text = "5G",
+                    fontSize = 13.sp,
+                    fontFamily = CustomRegularFontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White
+                )
+                //   Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier.size(16.dp))
+                Spacer(modifier = Modifier.width(7.dp))
                 Icon(
                     painter = painterResource(id = R.drawable.battery4),
                     contentDescription = "Battery",
                     tint = Color.White,
                     modifier = Modifier
-                        .padding(top=9.dp)
                         .size(20.dp)
                         .rotate(0f)
                 )
