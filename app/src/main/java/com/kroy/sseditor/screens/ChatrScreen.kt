@@ -333,7 +333,7 @@ fun StatusBar() {
                     letterSpacing = (0.5f).sp,
                     fontSize = Dimens.ChatScreenCategoryTextSize,
                     fontFamily = CustomRobotoMediumFontFamily,
-                    modifier = Modifier.padding(end = 3.dp)
+                    modifier = Modifier.padding(end = 3.dp, bottom = 2.dp)
                 )
                 Box(modifier =Modifier.padding(top = 0.dp) ){
                     BadgeBoxSmall(Random.nextInt(100, 150))
@@ -361,7 +361,7 @@ fun StatusBar() {
                         letterSpacing = (0.5f).sp,
                         fontSize = Dimens.ChatScreenCategoryTextSize,
                         fontFamily = CustomRobotoMediumFontFamily,
-                        modifier = Modifier.padding(end = 3.dp)
+                        modifier = Modifier.padding(end = 3.dp, bottom = 3.dp)
                     )
                     Box(modifier =Modifier.padding(top = 0.dp) ){
                         BadgeBoxSmall(Random.nextInt(550, 650))
@@ -391,7 +391,7 @@ fun StatusBar() {
                     letterSpacing = (0.5f).sp,
                     fontSize = Dimens.ChatScreenCategoryTextSize,
                     fontFamily = CustomRobotoMediumFontFamily,
-                    modifier = Modifier.padding(end = 3.dp)
+                    modifier = Modifier.padding(end = 3.dp, bottom = 2.dp)
                 )
                 Box(modifier =Modifier.padding(top = 0.dp) ){
                     BadgeBoxSmall(Random.nextInt(100, 150))
@@ -601,7 +601,9 @@ fun ChatRow(chat: ChatItem) {
                         letterSpacing = (0.7f).sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+
+                            .weight(1f)
                     )
                     Text(
                         text = formattedTime,
@@ -619,7 +621,8 @@ fun ChatRow(chat: ChatItem) {
                 ) {
                     if (chat.message.isNullOrEmpty()) {
                         Row(
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.weight(1f)
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.default_comment_img),
@@ -636,7 +639,8 @@ fun ChatRow(chat: ChatItem) {
                                 fontSize = (13.5f).sp,
                                 fontWeight = FontWeight.Thin,
                                 maxLines = 2,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
+
                             )
                         }
                     } else {
@@ -648,22 +652,23 @@ fun ChatRow(chat: ChatItem) {
                             fontWeight = FontWeight.Thin,
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f)
 
 
                         )
                     }
 
-                    // Spacer to push the BadgeBox to the end
-                    Spacer(modifier = Modifier.weight(1f))
+//                    // Spacer to push the BadgeBox to the end
+//                    Spacer(modifier = Modifier.weight(1f))
 
                     // Display BadgeBox if there are unread messages, with slight downward offset
-                    if (chat.unreadCount > 0) {
+
                         BadgeBox(
                             unreadCount = chat.unreadCount,
                             size = 18,
                             modifier = Modifier.offset(y = 4.dp) // Adjust the offset as needed
                         )
-                    }
+
                 }
                 // Add a divider after each chat item
                 Divider(
@@ -699,8 +704,10 @@ fun BadgeBox(unreadCount: Int, size: Int, modifier: Modifier = Modifier) {
             Text(
                 text = unreadCount.toString(),
                 fontFamily = CustomRobotoMediumFontFamily,
-                fontSize = 13.sp,
+                fontSize = (12.7f).sp,
                 fontWeight = FontWeight.Thin,
+                modifier = Modifier
+                .padding(bottom = 3.dp),
                 color = Color.Black
             )
         }
@@ -746,21 +753,21 @@ fun BadgeBoxSmall(unreadCount: Int) {
 fun TelegramScreenPreview() {
     val context = LocalContext.current
     val chats = listOf(
-        ChatItem("Akash Gupta", "Hi", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.b) , Random.nextInt(2, 10)),
-        ChatItem("Effi", "Hey", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 10)),
-        ChatItem("Anil Suryavanshi", "", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+        ChatItem("Akash Gupta", "Hi", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.b) , Random.nextInt(2, 5)),
+        ChatItem("Effi", "Hey", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 5)),
+        ChatItem("Anil Suryavanshi", "", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),
         ChatItem("EXCEPTION", "Hey", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.f), Random.nextInt(2, 10)),
-        ChatItem("Jsvindr Sng", "https://t.me/+i_voE00fHsMOODA9", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.e), Random.nextInt(2, 10)),
-        ChatItem("Apple", "https://t.me/+qnGC9Zd2csJkZDU9", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.d), Random.nextInt(2, 10)),
+        ChatItem("Jsvindr Sng", "https://t.me/+i_voE00fHsMOODA9", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.e), Random.nextInt(2, 5)),
+        ChatItem("Apple", "https://t.me/+qnGC9Zd2csJkZDU9", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.d), Random.nextInt(2, 5)),
         ChatItem("Binary Trading Trader", "H this is the best text you can find from eleaborate he ", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
-        ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
-        ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
-        ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
-        ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
-        ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
-        ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
-        ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
-        ChatItem("Tronix Bot", "🦴🦴🦴🦴🦴", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 10))
+        ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),
+        ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),
+        ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),
+        ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),
+        ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),
+        ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),
+        ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),
+        ChatItem("Tronix Bot", "🦴🦴🦴🦴🦴", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 5))
     )
     ChatScreen(chats)
 }
