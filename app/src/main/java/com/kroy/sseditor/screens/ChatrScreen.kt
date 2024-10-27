@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
@@ -62,6 +63,8 @@ import com.kroy.sseditor.ui.theme.TelegramDark
 import com.kroy.sseditor.ui.theme.UnreadMessages
 import com.kroy.sseditor.utils.SelectedClient
 import com.kroy.sseditor.utils.Utils
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
@@ -537,18 +540,23 @@ fun BottomNavBar(modifier: Modifier = Modifier) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ChatListUI(modifier: Modifier = Modifier,chats: List<ChatItem>) {
-
+fun ChatListUI(modifier: Modifier = Modifier, chats: List<ChatItem>) {
+    // Parse the initial time from the SelectedClient
+    val initialTime = remember {
+        Utils.parseTimeString(SelectedClient.time)
+    }
 
     LazyColumn(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top,
-        modifier = modifier
-
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
-        items(chats) { chat ->
-            ChatRow(chat)
+        itemsIndexed(chats) { index, chat ->
+            // Increment time for each chat based on its index
+            val timeOffset = (index * 2) +  Random.nextInt(0, 2) // Increment time by 1 or 2 minutes for each item
+            val adjustedTime = remember { initialTime.plusMinutes(timeOffset.toLong()) }
+
+            ChatRow(chat = chat, time = adjustedTime)
             Divider(color = Color.Gray, thickness = 0.1.dp)
         }
     }
@@ -556,15 +564,13 @@ fun ChatListUI(modifier: Modifier = Modifier,chats: List<ChatItem>) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ChatRow(chat: ChatItem) {
-    val initialTime = remember {
-        Utils.parseTimeString(chat.time)
+fun ChatRow(chat: ChatItem, time: LocalTime) {
+    // Format the time
+    val formattedTime = remember {
+        Utils.convertLettersToUppercase(
+            time.format(DateTimeFormatter.ofPattern("hh:mm a"))
+        )
     }
-    Log.d("time set->", "parse $initialTime")
-    val randomInitialTime = remember { Utils.generateRandomTime(initialTime, -25, 25) }
-    val formattedTime = Utils.convertLettersToUppercase(
-        randomInitialTime.format(DateTimeFormatter.ofPattern("hh:mm a")),
-    )
 
     Column {
         Row(
@@ -597,13 +603,11 @@ fun ChatRow(chat: ChatItem) {
                     Text(
                         text = chat.name,
                         fontFamily = CustomRobotoMediumFontFamily,
-                        fontSize = (14.5f).sp,
-                        letterSpacing = (0.7f).sp,
+                        fontSize = 14.5.sp,
+                        letterSpacing = 0.7.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
-                        modifier = Modifier
-
-                            .weight(1f)
+                        modifier = Modifier.weight(1f)
                     )
                     Text(
                         text = formattedTime,
@@ -622,7 +626,7 @@ fun ChatRow(chat: ChatItem) {
                     if (chat.message.isNullOrEmpty()) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f)
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.default_comment_img),
@@ -631,16 +635,14 @@ fun ChatRow(chat: ChatItem) {
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-
                             Text(
                                 text = "Photo",
                                 color = Color.Gray,
                                 fontFamily = CustomRobotoMediumFontFamily,
-                                fontSize = (13.5f).sp,
+                                fontSize = 13.5.sp,
                                 fontWeight = FontWeight.Thin,
                                 maxLines = 2,
-                                overflow = TextOverflow.Ellipsis,
-
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
                     } else {
@@ -648,40 +650,33 @@ fun ChatRow(chat: ChatItem) {
                             text = chat.message,
                             color = Color.Gray,
                             fontFamily = CustomRobotoMediumFontFamily,
-                            fontSize = (14.7f).sp,
+                            fontSize = 14.7.sp,
                             fontWeight = FontWeight.Thin,
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.weight(1f)
-
-
                         )
                     }
 
-//                    // Spacer to push the BadgeBox to the end
-//                    Spacer(modifier = Modifier.weight(1f))
-
                     // Display BadgeBox if there are unread messages, with slight downward offset
-
-                        BadgeBox(
-                            unreadCount = chat.unreadCount,
-                            size = 18,
-                            modifier = Modifier.offset(y = 4.dp) // Adjust the offset as needed
-                        )
-
+                    BadgeBox(
+                        unreadCount = chat.unreadCount,
+                        size = 18,
+                        modifier = Modifier.offset(y = 4.dp)
+                    )
                 }
+
                 // Add a divider after each chat item
                 Divider(
                     color = Color.Gray.copy(alpha = 0.3f),
-                    thickness = (0.18f).dp,
+                    thickness = 0.18.dp,
                     modifier = Modifier.padding(top = 18.dp)
                 )
             }
         }
-
-
     }
 }
+
 
 
 
