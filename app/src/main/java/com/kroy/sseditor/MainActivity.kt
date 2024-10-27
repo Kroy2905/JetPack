@@ -109,7 +109,9 @@ class MainActivity :FragmentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        // Make the activity full screen
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        hideSystemUI() // Initial call to hide the system UI
 
         Permissions().checkAndRequestPermissions(this,this)
 
@@ -185,8 +187,8 @@ class MainActivity :FragmentActivity() {
                             ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
                             ChatItem("Tronix Bot", "🦴🦴🦴🦴🦴", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 10))
                         )
-                       // ChatScreen(chats)
-                        App2(dataStoreHelper)
+                       ChatScreen(chats)
+                     //  App2(dataStoreHelper)
                         //SevenDayScreen()
 //                       CaptureAndSaveComposable(
 //                           contactName ="Random Name",
@@ -238,8 +240,28 @@ class MainActivity :FragmentActivity() {
             }
         }
     }
+    private fun hideSystemUI() {
+        window.decorView.systemUiVisibility = (
+                android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        or android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        or android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
+                        or android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        or android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        or android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+    }
+
+    // Ensure system UI stays hidden when regaining focus
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            hideSystemUI()
+        }
+    }
 
 }
+// Function to hide system UI for full-screen mode
+
+
 
 
 

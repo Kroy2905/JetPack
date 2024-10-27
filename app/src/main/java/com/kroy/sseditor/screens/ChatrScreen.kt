@@ -153,7 +153,7 @@ fun StatusBar() {
             Text(
                 text = Utils.removeLeadingZero(randomInitialTime.format(DateTimeFormatter.ofPattern("hh:mm"))),
                 color = Color.White,
-                fontSize = 17.sp,
+                fontSize = 14.sp,
                 style = CustomBoldTypography.titleMedium,
                 fontWeight = FontWeight.W700,
                 modifier = Modifier.padding(start = 25.dp)
@@ -168,7 +168,7 @@ fun StatusBar() {
                 modifier = Modifier
                     .weight(1f)
                     .background(Color.Black, shape = RoundedCornerShape(14.dp))
-                    .padding(horizontal = 6.dp, vertical = 5.dp),
+                    .padding(horizontal = 4.dp, vertical = 2.dp),
 
             ) {
                 Row(
@@ -195,12 +195,13 @@ fun StatusBar() {
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier
                     .wrapContentSize()
-                    .padding(end = 20.dp)
+                    .padding(end = 16.dp)
             ) {
-                Icon(painterResource(id = R.drawable.ic_signal2), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(20.dp))
+                Icon(painterResource(id = R.drawable.ic_signal2), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(
                     text = "5G",
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
@@ -211,7 +212,7 @@ fun StatusBar() {
                     contentDescription = "Battery",
                     tint = Color.White,
                     modifier = Modifier
-                        .size(22.dp)
+                        .size(20.dp)
                         .rotate(0f)
                 )
             }
@@ -228,7 +229,7 @@ fun StatusBar() {
                 text = "Edit",
                 style = CustomBoldTypography.titleMedium,
                 color = TelegramDark, // Assuming you have defined TelegramDark
-                fontSize = 20.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Normal
             )
 
@@ -242,7 +243,7 @@ fun StatusBar() {
                     text = "Chats",
                     color = Color.White,
                     style = CustomBoldTypography.titleMedium,
-                    fontSize = 20.sp,
+                    fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.align(Alignment.CenterVertically)
                 )
@@ -288,7 +289,7 @@ fun StatusBar() {
             verticalAlignment = Alignment.CenterVertically, // Center content vertically in the row
             horizontalArrangement = Arrangement.Start // Spread the content across the width of the row
         ) {
-            val spacerValue = 16.dp
+            val spacerValue = 14.dp
             Spacer(modifier = Modifier.width(spacerValue))
             // All tab
             Text(
@@ -539,7 +540,7 @@ fun ChatRow(chat: ChatItem) {
             contentDescription = "Profile picture",
             contentScale = ContentScale.Fit,
             modifier = Modifier
-                .size(70.dp)
+                .size(55.dp)
                 .clip(CircleShape)
         )
 
@@ -549,7 +550,7 @@ fun ChatRow(chat: ChatItem) {
             Text(
                 text = chat.name,
                 fontFamily = CustomRobotoMediumFontFamily,
-                fontSize = 18.sp,
+                fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
@@ -562,14 +563,17 @@ fun ChatRow(chat: ChatItem) {
                         painter = painterResource(id = R.drawable.default_comment_img),
                         contentDescription = "Photo icon",
                         contentScale = ContentScale.FillBounds,
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "Photo",
                         color = Color.Gray,
                         fontFamily = CustomRobotoMediumFontFamily,
-                        fontSize = 17.sp
+                        fontSize = (13.5f).sp,
+                        fontWeight = FontWeight.Thin,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             } else {
@@ -577,7 +581,8 @@ fun ChatRow(chat: ChatItem) {
                     text = chat.message,
                     color = Color.Gray,
                     fontFamily = CustomRobotoMediumFontFamily,
-                    fontSize = 17.sp,
+                    fontSize = (14.7f).sp,
+                    fontWeight = FontWeight.Thin,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -587,13 +592,14 @@ fun ChatRow(chat: ChatItem) {
         Column(horizontalAlignment = Alignment.End) {
             Text(
                 text = formattedTime,
+                fontSize = 14.sp,
                 fontFamily = CustomRobotoMediumFontFamily,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.height(14.dp))
             if (chat.unreadCount > 0) {
-                BadgeBox(chat.unreadCount, 20)
+                BadgeBox(chat.unreadCount, 18)
             }
         }
     }
@@ -610,6 +616,7 @@ fun BadgeBox(unreadCount: Int,size:Int) {
     ) {
         Text(text = unreadCount.toString(),
             fontFamily = CustomRobotoMediumFontFamily,
+            fontSize = 13.sp,
             fontWeight = FontWeight.Thin,
             color = Color.Black)
     }
@@ -622,8 +629,8 @@ fun BadgeBoxSmall(unreadCount: Int) {
         modifier = Modifier
             .wrapContentWidth()
             .background(Telegram, shape = RoundedCornerShape(14.dp))
-            .padding(horizontal = 4.dp, vertical = 0.dp)
-            .width(24.dp)
+            .padding(horizontal = 3.dp, vertical = 0.dp)
+            .width(22.dp)
 
     ) {
         Text(text = unreadCount.toString(),
@@ -631,7 +638,7 @@ fun BadgeBoxSmall(unreadCount: Int) {
             fontWeight = FontWeight.Thin,
             maxLines = 1,
             color = Color.White ,
-            fontSize = 12.sp)
+            fontSize = 10.sp)
     }
 }
 
