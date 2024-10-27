@@ -171,13 +171,13 @@ class MainActivity :FragmentActivity() {
                         val context = LocalContext.current
 
                         val chats = listOf(
-                            ChatItem("Animesh Mondal", "Hi", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.b) , Random.nextInt(2, 10)),
-                            ChatItem("VS", "Hey", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 10)),
-                            ChatItem("Siam", "", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+                            ChatItem("Akash Gupta", "Hi", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.b) , Random.nextInt(2, 10)),
+                            ChatItem("Effi", "Hey", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 10)),
+                            ChatItem("Anil Suryavanshi", "", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
                             ChatItem("EXCEPTION", "Hey", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.f), Random.nextInt(2, 10)),
                             ChatItem("Jsvindr Sng", "https://t.me/+i_voE00fHsMOODA9", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.e), Random.nextInt(2, 10)),
                             ChatItem("Apple", "https://t.me/+qnGC9Zd2csJkZDU9", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.d), Random.nextInt(2, 10)),
-                            ChatItem("Binary Trading Trader", "H this is the best text you can find ", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+                            ChatItem("Binary Trading Trader", "H this is the best text you can find from eleaborate he ", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
                             ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
                             ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
                             ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
@@ -187,8 +187,8 @@ class MainActivity :FragmentActivity() {
                             ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
                             ChatItem("Tronix Bot", "🦴🦴🦴🦴🦴", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 10))
                         )
-                       ChatScreen(chats)
-                     //  App2(dataStoreHelper)
+                      // ChatScreen(chats)
+                       App2(dataStoreHelper)
                         //SevenDayScreen()
 //                       CaptureAndSaveComposable(
 //                           contactName ="Random Name",
