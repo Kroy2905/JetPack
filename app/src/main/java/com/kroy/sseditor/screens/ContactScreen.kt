@@ -326,12 +326,12 @@ fun ContactItem(contact: ContactItem, onEditClick: (ContactItem) -> Unit,contact
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = contact.contactName,
+                text = "${contact.contactId}. ${contact.contactName}",
                 modifier = Modifier
-                    .padding(start = 6.dp),
+                    .padding(start = 4.dp),
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
+                    fontSize = 18.sp
                 ),
                 color = Color.Black
             )
