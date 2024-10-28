@@ -218,12 +218,13 @@ fun StatusBar() {
                     fontSize = 13.sp,
                     fontFamily = CustomRegularFontFamily,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.White
+                    color = Color.White,
+                    modifier = Modifier.padding(top = 2.dp)
                 )
              //   Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(7.dp))
                 Icon(
-                    painter = painterResource(id = R.drawable.battery4),
+                    painter = painterResource(id = R.drawable.battery_full),
                     contentDescription = "Battery",
                     tint = Color.White,
                     modifier = Modifier
@@ -339,7 +340,7 @@ fun StatusBar() {
                     modifier = Modifier.padding(end = 3.dp, bottom = 2.dp)
                 )
                 Box(modifier =Modifier.padding(top = 0.dp) ){
-                    BadgeBoxSmall(Random.nextInt(100, 150))
+                    BadgeBoxSmall(Random.nextInt(250, 350))
                 }
 
 
@@ -367,7 +368,7 @@ fun StatusBar() {
                         modifier = Modifier.padding(end = 3.dp, bottom = 3.dp)
                     )
                     Box(modifier =Modifier.padding(top = 0.dp) ){
-                        BadgeBoxSmall(Random.nextInt(550, 650))
+                        BadgeBoxSmall(Random.nextInt(250, 350))
                     }
                 }
                 Divider(
@@ -397,7 +398,7 @@ fun StatusBar() {
                     modifier = Modifier.padding(end = 3.dp, bottom = 2.dp)
                 )
                 Box(modifier =Modifier.padding(top = 0.dp) ){
-                    BadgeBoxSmall(Random.nextInt(100, 150))
+                    BadgeBoxSmall(Random.nextInt(250, 350))
                 }
             }
         }
@@ -553,7 +554,8 @@ fun ChatListUI(modifier: Modifier = Modifier, chats: List<ChatItem>) {
     ) {
         itemsIndexed(chats) { index, chat ->
             // Increment time for each chat based on its index
-            val timeOffset = (index * 2) +  Random.nextInt(0, 2) // Increment time by 1 or 2 minutes for each item
+            // Calculate the time offset such that the first chat has the largest time
+            val timeOffset = ((10 - index) * 2) + Random.nextInt(0, 2) // Decrement time by 1 or 2 minutes for each item
             val adjustedTime = remember { initialTime.plusMinutes(timeOffset.toLong()) }
 
             ChatRow(chat = chat, time = adjustedTime)
