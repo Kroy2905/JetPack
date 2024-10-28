@@ -585,7 +585,7 @@ fun ChatRow(chat: ChatItem, time: LocalTime) {
             Image(
                 bitmap = chat.profileImage!!.asImageBitmap(),
                 contentDescription = "Profile picture",
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(50.dp)
                     .clip(CircleShape)

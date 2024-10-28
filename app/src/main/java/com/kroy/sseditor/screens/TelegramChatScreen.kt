@@ -582,12 +582,13 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                     fontSize = 13.sp,
                     fontFamily = CustomRegularFontFamily,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.White
+                    color = Color.White,
+                    modifier = Modifier.padding(top = 2.dp)
                 )
                 //   Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(7.dp))
                 Icon(
-                    painter = painterResource(id = R.drawable.battery4),
+                    painter = painterResource(id = R.drawable.battery_full),
                     contentDescription = "Battery",
                     tint = Color.White,
                     modifier = Modifier
