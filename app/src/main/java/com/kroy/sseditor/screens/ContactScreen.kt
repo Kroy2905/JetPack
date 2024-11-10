@@ -31,13 +31,19 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +52,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -104,7 +111,6 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
     val context = LocalContext.current
     val contactViewModel: ContactViewModel = hiltViewModel()
     val isLoading: State<Boolean> = contactViewModel.isLoading.collectAsState()
-
     val allContacts: State<ApiResponse.AllContactResponse?> = contactViewModel.filteredContactResponse.collectAsState()
     val contactDetails: State<ApiResponse.ContactDetailsResponse?> = contactViewModel.filteredgetContactDetailsResponse.collectAsState()
     val randomContacts: State<ApiResponse.RandomContactsResponse?> = contactViewModel.filteredRandomContactsResponse.collectAsState()
@@ -208,6 +214,12 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
 
     }
 
+    var searchQuery by remember { mutableStateOf("") }
+
+    // Filtered contacts based on search query
+    val filteredContacts = allContacts.value?.data?.filter {
+        it.contactName.contains(searchQuery, ignoreCase = true)
+    } ?: emptyList()
 
     Box(
         modifier = Modifier
@@ -236,8 +248,6 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
                 IconButton(
                     onClick = {
                         contactViewModel.setLoading(true)
-                        // Fetch the data and generate the screenshot
-                        // TODO: Generate Chat screen
                         contactViewModel.getRandomContacts(
                             SelectedClient.clientId,
                             SelectedClient.dayName,
@@ -246,26 +256,45 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
                     },
                     modifier = Modifier
                         .padding(end = 10.dp)
-                        .size(50.dp) // Adjust size as needed
+                        .size(50.dp)
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_download),
                         contentDescription = "Generate",
-                        modifier = Modifier.size(50.dp), // Adjust size of the icon
+                        modifier = Modifier.size(50.dp),
                         colorFilter = ColorFilter.tint(Color.White)
                     )
                 }
             }
 
+            // Add a search box
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                maxLines = 1,
+                label = { Text("Search Contacts") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color.White,
+                    cursorColor = Color.White,
+                    focusedBorderColor = Color.White,
+                    unfocusedBorderColor = Color.White,
+                    focusedLabelColor = Color.White,
+                    unfocusedLabelColor = Color.White,
+                )
+
+            )
+
             ContactList(
-                contacts = allContacts.value?.data ?: emptyList(),
+                contacts = filteredContacts,
                 onEditClick = onEditClick,
                 contactViewModel = contactViewModel,
-                listState = listState
+                listState = rememberLazyListState()
             )
         }
 
-        // Show CircularProgressIndicator if loading is true
         if (isLoading.value) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
@@ -288,7 +317,6 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
             )
         }
     }
-
 }
 
 @Composable
@@ -312,7 +340,7 @@ fun ContactList(
 @Composable
 fun ContactItem(contact: ContactItem, onEditClick: (ContactItem) -> Unit,contactViewModel: ContactViewModel) {
     val context = LocalContext.current
-    val isLoading: State<Boolean> = contactViewModel.isLoading.collectAsState()
+   // val isLoading: State<Boolean> = contactViewModel.isLoading.collectAsState()
 
     Row(
         modifier = Modifier
@@ -387,8 +415,9 @@ fun ContactItem(contact: ContactItem, onEditClick: (ContactItem) -> Unit,contact
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun ContactScreenPreview() {
-    // ContactScreen()
+     ContactScreen(onAddContact = {}, onEditClick = {})
 }
