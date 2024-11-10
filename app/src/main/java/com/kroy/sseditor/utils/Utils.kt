@@ -49,7 +49,6 @@ import kotlin.random.Random
 
 object Utils {
 
-
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     fun CaptureAndSaveComposable(
@@ -325,6 +324,31 @@ object Utils {
         return input.map {
             if (it.isLetter()) it.uppercaseChar() else it
         }.joinToString("")
+    }
+
+    fun getBatteryImage(dayName:String):Int{
+        Log.d("day entered ->","$dayName")
+        val index =  com.kroy.ssediotor.R.drawable.battery80
+       val list = listOf(
+           com.kroy.ssediotor.R.drawable.battery80,
+           com.kroy.ssediotor.R.drawable.battery50,
+           com.kroy.ssediotor.R.drawable.battery90,
+           com.kroy.ssediotor.R.drawable.battery25,
+           com.kroy.ssediotor.R.drawable.battery70,
+           com.kroy.ssediotor.R.drawable.battery35,
+           com.kroy.ssediotor.R.drawable.battery60,
+           )
+        when(dayName){
+            "Day 1" -> return list[0]
+            "Day 2" -> return list[3]
+            "Day 3" -> return list[1]
+            "Day 4" -> return list[5]
+            "Day 5" -> return list[2]
+            "Day 6" -> return list[4]
+            "Day 7" -> return list[6]
+        }
+
+        return index
     }
 
 

@@ -56,6 +56,7 @@ import com.kroy.sseditor.ui.theme.CustomRobotoMediumFontFamily
 import com.kroy.sseditor.ui.theme.CustomSemiBoldFontFamily
 import com.kroy.sseditor.ui.theme.Telegram
 import com.kroy.sseditor.ui.theme.UnreadMessages
+import com.kroy.sseditor.utils.SelectedClient
 import com.kroy.sseditor.utils.Utils
 import com.kroy.sseditor.utils.Utils.convertLettersToUppercase
 import com.kroy.sseditor.utils.Utils.generateRandomTime
@@ -588,7 +589,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                 //   Icon(painterResource(id = R.drawable.ic_wifi), contentDescription = "Wi-Fi", tint = Color.White, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(7.dp))
                 Icon(
-                    painter = painterResource(id = R.drawable.battery_full),
+                    painter = painterResource(id =Utils.getBatteryImage(SelectedClient.dayName)),
                     contentDescription = "Battery",
                     tint = Color.White,
                     modifier = Modifier
