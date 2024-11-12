@@ -58,16 +58,13 @@ import com.kroy.sseditor.ui.theme.CustomMediumTypography
 import com.kroy.sseditor.ui.theme.CustomRegularFontFamily
 import com.kroy.sseditor.ui.theme.CustomRobotoBlackFontFamily
 import com.kroy.sseditor.ui.theme.CustomRobotoMediumFontFamily
-import com.kroy.sseditor.ui.theme.CustomSemiBoldFontFamily
 import com.kroy.sseditor.ui.theme.Dimens
-import com.kroy.sseditor.ui.theme.RandomBgcolors
+import com.kroy.sseditor.ui.theme.RandomBgColorPairs
 import com.kroy.sseditor.ui.theme.Telegram
 import com.kroy.sseditor.ui.theme.TelegramDark
 import com.kroy.sseditor.ui.theme.UnreadMessages
 import com.kroy.sseditor.utils.SelectedClient
 import com.kroy.sseditor.utils.Utils
-import com.kroy.sseditor.utils.Utils.getNewRandomIndex
-import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlin.random.Random
@@ -586,11 +583,16 @@ fun ChatRow(chat: ChatItem, time: LocalTime) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Profile Image
+            val gradientPair = RandomBgColorPairs.random()
             Box(
                 modifier = Modifier
                     .size(50.dp)
                     .clip(CircleShape)
-                    .background(RandomBgcolors[getNewRandomIndex()]) // Default background color
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(gradientPair.first, gradientPair.second) // Apply gradient from the pair
+                        )
+                    )
             ) {
                 if (chat.profileImage != null) {
                     Image(
@@ -601,16 +603,30 @@ fun ChatRow(chat: ChatItem, time: LocalTime) {
                             .fillMaxSize()
                     )
                 } else {
+                    val initials = chat.name.split(" ").filter { it.isNotBlank() }
+                        .let { words ->
+                            when {
+                                words.size == 1 -> words.first().firstOrNull()?.uppercase() ?: "N"
+                                words.size > 1 -> {
+                                    val firstInitial = words.first().firstOrNull()?.uppercase() ?: ""
+                                    val lastInitial = words.last().firstOrNull()?.uppercase() ?: ""
+                                    "$firstInitial$lastInitial"
+                                }
+                                else -> "N"
+                            }
+                        }
+
+
                     Text(
-                        text = chat.name.firstOrNull()?.toString()?.uppercase() ?: "N",
-                        fontSize = 28.sp,
+                        text = initials,
+                        fontSize = 26.sp,
 
                          fontFamily = CustomRobotoBlackFontFamily,
                         fontWeight = FontWeight.W800,
                         color = Color.White,
                      //   style = MaterialTheme.typography.body1,
                         modifier = Modifier
-                            .padding(6.dp)
+                            .padding(bottom = 5.dp)
                             .align(Alignment.Center)
 
                     )

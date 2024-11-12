@@ -46,17 +46,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.kroy.ssediotor.R
 import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.ui.theme.BottomIconTint
-import com.kroy.sseditor.ui.theme.CustomBoldTypography
-import com.kroy.sseditor.ui.theme.CustomFontFamily
-import com.kroy.sseditor.ui.theme.CustomMediumFontFamily
 import com.kroy.sseditor.ui.theme.CustomMediumTypography
 import com.kroy.sseditor.ui.theme.CustomRegularFontFamily
-import com.kroy.sseditor.ui.theme.CustomRegularTypography
+
 import com.kroy.sseditor.ui.theme.CustomRobotoBlackFontFamily
 import com.kroy.sseditor.ui.theme.CustomRobotoMediumFontFamily
-import com.kroy.sseditor.ui.theme.CustomSemiBoldFontFamily
-import com.kroy.sseditor.ui.theme.RandomBgcolors
-import com.kroy.sseditor.ui.theme.Telegram
+import com.kroy.sseditor.ui.theme.RandomBgColorPairs
 import com.kroy.sseditor.ui.theme.UnreadMessages
 import com.kroy.sseditor.utils.SelectedClient
 import com.kroy.sseditor.utils.Utils
@@ -94,7 +89,7 @@ fun previewTelegram() {
 
 
     CustomTelegramLayout(
-        contactName = "Random Name",
+        contactName = "Random Name Ratthore",
         contactPic = null,
         messages = sampleMessages,
         initialTimeString = "12:48 AM",
@@ -692,12 +687,18 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
 
 
                 // Profile Picture Positioning
+                // Profile Image
+                val gradientPair = RandomBgColorPairs.random()
                 Box(
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
                         .size(33.dp)
                         .clip(CircleShape)
-                        .background(RandomBgcolors[Utils.getNewRandomIndex()]) // Default background color
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(gradientPair.first, gradientPair.second) // Apply gradient from the pair
+                            )
+                        ) // Default background color
                 ) {
                     if (contactPic!= null) {
                         Image(
@@ -708,9 +709,23 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                                 .fillMaxSize()
                         )
                     } else {
+
+                        val initials = contactName.split(" ").filter { it.isNotBlank() }
+                            .let { words ->
+                                when {
+                                    words.size == 1 -> words.first().firstOrNull()?.uppercase() ?: "N"
+                                    words.size > 1 -> {
+                                        val firstInitial = words.first().firstOrNull()?.uppercase() ?: ""
+                                        val lastInitial = words.last().firstOrNull()?.uppercase() ?: ""
+                                        "$firstInitial$lastInitial"
+                                    }
+                                    else -> "N"
+                                }
+                            }
+
                         Text(
-                            text = contactName.firstOrNull()?.toString()?.uppercase() ?: "N",
-                            fontSize = 16.sp,
+                            text = initials,
+                            fontSize = 14.sp,
 
                             fontFamily = CustomRobotoBlackFontFamily,
                             fontWeight = FontWeight.W800,
