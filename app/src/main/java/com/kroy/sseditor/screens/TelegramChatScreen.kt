@@ -3,7 +3,6 @@ package com.kroy.sseditor.screens
 import android.graphics.Bitmap
 import android.os.Build
 import android.util.Log
-import android.widget.Space
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -17,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +32,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -48,7 +45,6 @@ import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.ui.theme.BottomIconTint
 import com.kroy.sseditor.ui.theme.CustomMediumTypography
 import com.kroy.sseditor.ui.theme.CustomRegularFontFamily
-
 import com.kroy.sseditor.ui.theme.CustomRobotoBlackFontFamily
 import com.kroy.sseditor.ui.theme.CustomRobotoMediumFontFamily
 import com.kroy.sseditor.ui.theme.RandomBgColorPairs
@@ -57,7 +53,6 @@ import com.kroy.sseditor.utils.SelectedClient
 import com.kroy.sseditor.utils.Utils
 import com.kroy.sseditor.utils.Utils.convertLettersToUppercase
 import com.kroy.sseditor.utils.Utils.generateRandomTime
-import com.kroy.sseditor.utils.Utils.getBitmapFromResource
 import com.kroy.sseditor.utils.Utils.parseTimeString
 import com.kroy.sseditor.utils.Utils.removeLeadingZero
 import java.time.format.DateTimeFormatter
