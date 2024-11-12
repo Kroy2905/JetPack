@@ -16,3 +16,17 @@ val TelegramLight = Color(0xFF1D9BF0)
 val UnreadMessages = Color(0xFF2D8EFC)
 val TelegramDark = Color(0xFF065EC2)
 val BottomIconTint = Color(0xFF8F9092)
+val RandomBgcolors = listOf(
+    Color(0xFF921A40),
+    Color(0xFF6650a4),
+    Color(0xFF3203B6),
+    Color(0xFFF80C31),
+    Color(0xFF07BD0E),
+    Color(0xFFF1B709),
+    Color(0xFFBB3308),
+    Color(0xFF324EE9),
+    Color(0xFF03D6F1),
+    Color(0xFF3CF3E2),
+
+)
+

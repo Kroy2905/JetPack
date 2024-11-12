@@ -27,6 +27,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -55,14 +56,17 @@ import com.kroy.sseditor.ui.theme.CustomBoldFontFamily
 import com.kroy.sseditor.ui.theme.CustomBoldTypography
 import com.kroy.sseditor.ui.theme.CustomMediumTypography
 import com.kroy.sseditor.ui.theme.CustomRegularFontFamily
+import com.kroy.sseditor.ui.theme.CustomRobotoBlackFontFamily
 import com.kroy.sseditor.ui.theme.CustomRobotoMediumFontFamily
 import com.kroy.sseditor.ui.theme.CustomSemiBoldFontFamily
 import com.kroy.sseditor.ui.theme.Dimens
+import com.kroy.sseditor.ui.theme.RandomBgcolors
 import com.kroy.sseditor.ui.theme.Telegram
 import com.kroy.sseditor.ui.theme.TelegramDark
 import com.kroy.sseditor.ui.theme.UnreadMessages
 import com.kroy.sseditor.utils.SelectedClient
 import com.kroy.sseditor.utils.Utils
+import com.kroy.sseditor.utils.Utils.getNewRandomIndex
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -582,14 +586,37 @@ fun ChatRow(chat: ChatItem, time: LocalTime) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Profile Image
-            Image(
-                bitmap = chat.profileImage!!.asImageBitmap(),
-                contentDescription = "Profile picture",
-                contentScale = ContentScale.Crop,
+            Box(
                 modifier = Modifier
                     .size(50.dp)
                     .clip(CircleShape)
-            )
+                    .background(RandomBgcolors[getNewRandomIndex()]) // Default background color
+            ) {
+                if (chat.profileImage != null) {
+                    Image(
+                        bitmap = chat.profileImage!!.asImageBitmap(),
+                        contentDescription = "Profile picture",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                } else {
+                    Text(
+                        text = chat.name.firstOrNull()?.toString()?.uppercase() ?: "N",
+                        fontSize = 28.sp,
+
+                         fontFamily = CustomRobotoBlackFontFamily,
+                        fontWeight = FontWeight.W800,
+                        color = Color.White,
+                     //   style = MaterialTheme.typography.body1,
+                        modifier = Modifier
+                            .padding(6.dp)
+                            .align(Alignment.Center)
+
+                    )
+                }
+            }
+
 
             Spacer(modifier = Modifier.width(8.dp))
 
@@ -682,6 +709,7 @@ fun ChatRow(chat: ChatItem, time: LocalTime) {
 
 
 
+
 @Composable
 fun BadgeBox(unreadCount: Int, size: Int, modifier: Modifier = Modifier) {
     Box(
@@ -752,10 +780,10 @@ fun TelegramScreenPreview() {
     val chats = listOf(
         ChatItem("Akash Gupta", "Hi", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.b) , Random.nextInt(2, 5)),
         ChatItem("Effi", "Hey", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 5)),
-        ChatItem("Anil Suryavanshi", "", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),
+        ChatItem("Anil Suryavanshi", "", SelectedClient.time, null, Random.nextInt(2, 5)),
         ChatItem("EXCEPTION", "Hey", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.f), Random.nextInt(2, 10)),
-        ChatItem("Jsvindr Sng", "https://t.me/+i_voE00fHsMOODA9", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.e), Random.nextInt(2, 5)),
-        ChatItem("Apple", "https://t.me/+qnGC9Zd2csJkZDU9", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.d), Random.nextInt(2, 5)),
+        ChatItem("Jsvindr Sng", "https://t.me/+i_voE00fHsMOODA9", SelectedClient.time,null, Random.nextInt(2, 5)),
+        ChatItem("Apple", "https://t.me/+qnGC9Zd2csJkZDU9", SelectedClient.time,null, Random.nextInt(2, 5)),
         ChatItem("Binary Trading Trader", "H this is the best text you can find from eleaborate he ", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
         ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),
         ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),

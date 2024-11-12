@@ -52,8 +52,10 @@ import com.kroy.sseditor.ui.theme.CustomMediumFontFamily
 import com.kroy.sseditor.ui.theme.CustomMediumTypography
 import com.kroy.sseditor.ui.theme.CustomRegularFontFamily
 import com.kroy.sseditor.ui.theme.CustomRegularTypography
+import com.kroy.sseditor.ui.theme.CustomRobotoBlackFontFamily
 import com.kroy.sseditor.ui.theme.CustomRobotoMediumFontFamily
 import com.kroy.sseditor.ui.theme.CustomSemiBoldFontFamily
+import com.kroy.sseditor.ui.theme.RandomBgcolors
 import com.kroy.sseditor.ui.theme.Telegram
 import com.kroy.sseditor.ui.theme.UnreadMessages
 import com.kroy.sseditor.utils.SelectedClient
@@ -93,7 +95,7 @@ fun previewTelegram() {
 
     CustomTelegramLayout(
         contactName = "Random Name",
-        contactPic = contactPic,
+        contactPic = null,
         messages = sampleMessages,
         initialTimeString = "12:48 AM",
         backgroundBitmap = backgroundBitmap,
@@ -690,17 +692,37 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
 
 
                 // Profile Picture Positioning
-                Image(
-                    bitmap = contactPic!!.asImageBitmap(),
-                    contentDescription = "Profile",
+                Box(
                     modifier = Modifier
-                        .padding(top = 5.dp)
+                        .align(Alignment.CenterEnd)
                         .size(33.dp)
-                        .background(Color(0xFF40BAF7), CircleShape)
-                        .clip(CircleShape) // Clip the image to a circular shape
-                        .align(Alignment.CenterEnd),
-                    contentScale = ContentScale.Crop // Ensures the image fills the bounds of the circular shape
-                )
+                        .clip(CircleShape)
+                        .background(RandomBgcolors[Utils.getNewRandomIndex()]) // Default background color
+                ) {
+                    if (contactPic!= null) {
+                        Image(
+                            bitmap = contactPic.asImageBitmap(),
+                            contentDescription = "Profile picture",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxSize()
+                        )
+                    } else {
+                        Text(
+                            text = contactName.firstOrNull()?.toString()?.uppercase() ?: "N",
+                            fontSize = 16.sp,
+
+                            fontFamily = CustomRobotoBlackFontFamily,
+                            fontWeight = FontWeight.W800,
+                            color = Color.White,
+                            //   style = MaterialTheme.typography.body1,
+                            modifier = Modifier
+                                .padding(6.dp)
+                                .align(Alignment.Center)
+
+                        )
+                    }
+                }
 
 
             }

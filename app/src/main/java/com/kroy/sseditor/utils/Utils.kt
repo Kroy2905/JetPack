@@ -34,6 +34,7 @@ import com.kroy.sseditor.models.ChatItem
 import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.screens.ChatScreen
 import com.kroy.sseditor.screens.CustomTelegramLayout
+import com.kroy.sseditor.ui.theme.RandomBgcolors
 import com.kroy.sseditor.viewmodels.ContactViewModel
 import kotlinx.coroutines.delay
 import java.io.ByteArrayOutputStream
@@ -350,6 +351,23 @@ object Utils {
 
         return index
     }
+    // Variable to store the last random index
+    var lastIndex = -1
+
+    // Function to generate a new random index
+    fun getNewRandomIndex(): Int {
+        var newIndex: Int
+        do {
+            newIndex = Random.nextInt(0, RandomBgcolors.size)
+        } while (newIndex == lastIndex)
+        lastIndex = newIndex
+        return newIndex
+    }
+
+
+
+
+
 
 
 

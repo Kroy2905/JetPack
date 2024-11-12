@@ -285,7 +285,7 @@ fun EditContactScreen(
         // Save button with validation
         Button(
             onClick = {
-                if ( imageBase64.isNotEmpty() && backgroundImageBase64.isNotEmpty()) {
+                if ( backgroundImageBase64.isNotEmpty()) {
                     editContactViewModel.editContact(
                         contactId = SelectedContact.contactId,
                         editContactBody = editContactBody(

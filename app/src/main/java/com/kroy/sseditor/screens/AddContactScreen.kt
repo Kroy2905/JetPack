@@ -289,9 +289,9 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
 //                    comment3.isNotEmpty() && (comment1.isEmpty() || comment2.isEmpty()) -> {
 //                        Toast.makeText(context, "Fill Comment 1 and 2 first", Toast.LENGTH_SHORT).show()
 //                    }
-                    imageBase64.isEmpty() -> {
-                        Toast.makeText(context, "Contact Image is required", Toast.LENGTH_SHORT).show()
-                    }
+//                    imageBase64.isEmpty() -> {
+//                        Toast.makeText(context, "Contact Image is required", Toast.LENGTH_SHORT).show()
+//                    }
                     backgroundImageBase64.isEmpty() -> {
                         Toast.makeText(context, "Screenshot Image is required", Toast.LENGTH_SHORT).show()
                     }

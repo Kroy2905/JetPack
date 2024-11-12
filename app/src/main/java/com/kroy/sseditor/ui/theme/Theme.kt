@@ -78,6 +78,12 @@ val CustomTypography = Typography(
 
 
 )
+val CustomRobotoBlackFontFamily = FontFamily(
+    Font(R.font.roboto_black),
+
+    // Replace with your custom font file,
+
+)
 
 val CustomBoldFontFamily = FontFamily(
     Font(R.font.rubik_bold),
