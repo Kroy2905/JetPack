@@ -45,7 +45,7 @@ import com.kroy.sseditor.models.ChatMessage
 import com.kroy.sseditor.ui.theme.BottomIconTint
 import com.kroy.sseditor.ui.theme.CustomMediumTypography
 import com.kroy.sseditor.ui.theme.CustomRegularFontFamily
-import com.kroy.sseditor.ui.theme.CustomRobotoBlackFontFamily
+import com.kroy.sseditor.ui.theme.CustomComfortaaFontFamily
 import com.kroy.sseditor.ui.theme.CustomRobotoMediumFontFamily
 import com.kroy.sseditor.ui.theme.RandomBgColorPairs
 import com.kroy.sseditor.ui.theme.UnreadMessages
@@ -84,7 +84,7 @@ fun previewTelegram() {
 
 
     CustomTelegramLayout(
-        contactName = "Random Name Ratthore",
+        contactName = "Random Name zatthore",
         contactPic = null,
         messages = sampleMessages,
         initialTimeString = "12:48 AM",
@@ -686,8 +686,9 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                 val gradientPair = RandomBgColorPairs.random()
                 Box(
                     modifier = Modifier
+                        .wrapContentWidth()
                         .align(Alignment.CenterEnd)
-                        .size(33.dp)
+                        .size(34.dp)
                         .clip(CircleShape)
                         .background(
                             brush = Brush.linearGradient(
@@ -722,7 +723,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                             text = initials,
                             fontSize = 14.sp,
 
-                            fontFamily = CustomRobotoBlackFontFamily,
+                            fontFamily = CustomComfortaaFontFamily,
                             fontWeight = FontWeight.W800,
                             color = Color.White,
                             //   style = MaterialTheme.typography.body1,

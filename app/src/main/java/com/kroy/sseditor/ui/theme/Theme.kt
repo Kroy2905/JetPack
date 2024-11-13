@@ -12,8 +12,6 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.Font
@@ -22,7 +20,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import com.kroy.ssediotor.R
-import java.time.format.TextStyle
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -78,8 +75,8 @@ val CustomTypography = Typography(
 
 
 )
-val CustomRobotoBlackFontFamily = FontFamily(
-    Font(R.font.roboto_black),
+val CustomComfortaaFontFamily = FontFamily(
+    Font(R.font.comfortaa_bold),
 
     // Replace with your custom font file,
 
