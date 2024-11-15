@@ -76,7 +76,7 @@ val CustomTypography = Typography(
 
 )
 val CustomComfortaaFontFamily = FontFamily(
-    Font(R.font.comfortaa_bold),
+    Font(R.font.proximasoft),
 
     // Replace with your custom font file,
 

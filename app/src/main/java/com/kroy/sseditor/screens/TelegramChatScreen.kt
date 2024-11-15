@@ -84,7 +84,7 @@ fun previewTelegram() {
 
 
     CustomTelegramLayout(
-        contactName = "Random Name zatthore",
+        contactName = "Random",
         contactPic = null,
         messages = sampleMessages,
         initialTimeString = "12:48 AM",
@@ -721,7 +721,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
 
                         Text(
                             text = initials,
-                            fontSize = 14.sp,
+                            fontSize = 15.sp,
 
                             fontFamily = CustomComfortaaFontFamily,
                             fontWeight = FontWeight.W800,

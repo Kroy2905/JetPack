@@ -613,7 +613,7 @@ fun ChatRow(chat: ChatItem, time: LocalTime) {
 
                     Text(
                         text = initials,
-                        fontSize = 23.sp,
+                        fontSize = 27.sp,
 
                          fontFamily = CustomComfortaaFontFamily,
                         fontWeight = FontWeight.W900,
@@ -790,10 +790,10 @@ fun TelegramScreenPreview() {
     val chats = listOf(
         ChatItem("Akash Gupta", "Hi", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.b) , Random.nextInt(2, 5)),
         ChatItem("Effi", "Hey", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 5)),
-        ChatItem("Anil Suryavanshi", "", SelectedClient.time, null, Random.nextInt(2, 5)),
+        ChatItem("Anil muryavanshi", "", SelectedClient.time, null, Random.nextInt(2, 5)),
         ChatItem("EXCEPTION", "Hey", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.f), Random.nextInt(2, 10)),
         ChatItem("Jsvindr Sng", "https://t.me/+i_voE00fHsMOODA9", SelectedClient.time,null, Random.nextInt(2, 5)),
-        ChatItem("Apple", "https://t.me/+qnGC9Zd2csJkZDU9", SelectedClient.time,null, Random.nextInt(2, 5)),
+        ChatItem("Zpple", "https://t.me/+qnGC9Zd2csJkZDU9", SelectedClient.time,null, Random.nextInt(2, 5)),
         ChatItem("Binary Trading Trader", "H this is the best text you can find from eleaborate he ", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
         ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),
         ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),
