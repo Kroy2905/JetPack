@@ -464,6 +464,7 @@ fun BottomNavBar(modifier: Modifier = Modifier) {
                 }
 
                 // Badge positioned on top of the icon
+                val peningMsgList = listOf<String>("3.9K","4.0K","4.1K",)
                 Box(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
@@ -474,7 +475,7 @@ fun BottomNavBar(modifier: Modifier = Modifier) {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "4.${Random.nextInt(6, 7)}K",
+                        text = peningMsgList[Random.nextInt(0, 3)],
                       //  text = "1K",
                         color = Color.White,
                         fontSize = 11.sp,
@@ -613,7 +614,7 @@ fun ChatRow(chat: ChatItem, time: LocalTime) {
 
                     Text(
                         text = initials,
-                        fontSize = 30.sp,
+                        fontSize = 28.sp,
 
                          fontFamily = CustomComfortaaFontFamily,
                         fontWeight = FontWeight.W900,

@@ -85,10 +85,10 @@ fun LoginScreen(
     ) {
         // Logo at the top-left corner
         Image(
-            painter = painterResource(id = R.drawable.logo2),  // Logo image
+            painter = painterResource(id = R.drawable.logo_circle),  // Logo image
             contentDescription = "Logo",
             modifier = Modifier
-                .width(200.dp)
+            //    .width(200.dp)
                 .size(100.dp) // Adjust logo size
                 .align(Alignment.TopStart),
             contentScale = ContentScale.Fit

@@ -62,10 +62,10 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
                 // get the categories
                 _userlogin.emit(response.body()!!)
 
-            }else{
+            }else {
                 // Show success toast
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context,response.body()?.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
                 }
 
             }
