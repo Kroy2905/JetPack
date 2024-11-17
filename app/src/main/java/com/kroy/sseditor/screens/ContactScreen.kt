@@ -205,7 +205,7 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
                 message = contact.comment1, // or any other comment you want to use as message
                 time = getYesterdaysDateFormatted(), // Get yesterday's date
                 profileImage = Utils.base64ToBitmap(contact.contactImage), // Convert the image string to Bitmap if needed
-                unreadCount = Random.nextInt(2, 4) // Set unread count, you can modify this based on your logic
+                unreadCount = Random.nextInt(1, 5) // Set unread count, you can modify this based on your logic
             )
             // Add the ChatItem to the list
             chatItems.add(chatItem)
