@@ -291,7 +291,7 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
                 contacts = filteredContacts,
                 onEditClick = onEditClick,
                 contactViewModel = contactViewModel,
-                listState = rememberLazyListState()
+                listState = listState
             )
         }
 

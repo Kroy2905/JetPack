@@ -790,7 +790,7 @@ fun TelegramScreenPreview() {
     val chats = listOf(
         ChatItem("Akash Gupta", "Hi", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.b) , Random.nextInt(2, 5)),
         ChatItem("Effi", "Hey", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 5)),
-        ChatItem("Anil muryavanshi", "", SelectedClient.time, null, Random.nextInt(2, 5)),
+        ChatItem("Anil Wuryavanshi", "", SelectedClient.time, null, Random.nextInt(2, 5)),
         ChatItem("EXCEPTION", "Hey", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.f), Random.nextInt(2, 10)),
         ChatItem("Jsvindr Sng", "https://t.me/+i_voE00fHsMOODA9", SelectedClient.time,null, Random.nextInt(2, 5)),
         ChatItem("Zpple", "https://t.me/+qnGC9Zd2csJkZDU9", SelectedClient.time,null, Random.nextInt(2, 5)),
