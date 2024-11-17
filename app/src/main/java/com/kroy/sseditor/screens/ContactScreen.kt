@@ -347,7 +347,7 @@ fun ContactItem(contact: ContactItem, onEditClick: (ContactItem) -> Unit,contact
             .fillMaxWidth()
             .padding(10.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(Color.LightGray)
+            .background(Color.White)
             .clickable { }
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically

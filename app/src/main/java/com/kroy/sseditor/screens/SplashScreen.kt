@@ -39,11 +39,11 @@ fun SplashScreen() {
                 .padding(16.dp) // Add some padding to avoid edge alignment
         ) {
             Image(
-                painterResource(id = R.drawable.logo2),
+                painterResource(id = R.drawable.logo_circle),
                 contentDescription = null,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .size(250.dp, 150.dp)
+                    .size(250.dp, 250.dp)
                     .align(Alignment.CenterHorizontally)
             )
 

@@ -721,14 +721,14 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
 
                         Text(
                             text = initials,
-                            fontSize = 15.sp,
+                            fontSize = 20.sp,
 
                             fontFamily = CustomComfortaaFontFamily,
                             fontWeight = FontWeight.W800,
                             color = Color.White,
                             //   style = MaterialTheme.typography.body1,
                             modifier = Modifier
-                                .padding(6.dp)
+                                .padding(bottom = 2.dp)
                                 .align(Alignment.Center)
 
                         )

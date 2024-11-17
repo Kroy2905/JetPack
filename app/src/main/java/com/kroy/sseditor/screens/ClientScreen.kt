@@ -48,7 +48,7 @@ fun ClientScreen(onAddClient: () -> Unit, onClientClick: (clientItem) -> Unit,on
                 text = "Clients",
                 style = CustomTypography.titleLarge.copy(
                     fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.ExtraBold,
                     color = Color.White
                 ),
                 modifier = Modifier
@@ -115,7 +115,7 @@ fun ClientItem(client: clientItem, onClick: (clientItem) -> Unit, onEditClick: (
             .fillMaxWidth()
             .padding(8.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(Color.LightGray)
+            .background(Color.White)
             .clickable { onClick(client) }
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically

@@ -613,7 +613,7 @@ fun ChatRow(chat: ChatItem, time: LocalTime) {
 
                     Text(
                         text = initials,
-                        fontSize = 27.sp,
+                        fontSize = 30.sp,
 
                          fontFamily = CustomComfortaaFontFamily,
                         fontWeight = FontWeight.W900,
