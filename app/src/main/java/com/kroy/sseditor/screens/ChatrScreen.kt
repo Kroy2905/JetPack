@@ -326,7 +326,7 @@ fun StatusBar() {
                     .padding(end = 5.dp, bottom = 7.dp)
             ) {
                 Text(
-                    text = "Personal",
+                    text = "Members",
                     color = Color.Gray,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = (0.5f).sp,
@@ -383,7 +383,7 @@ fun StatusBar() {
                     .padding(end = 1.dp, bottom = 7.dp)
             ) {
                 Text(
-                    text = "Members",
+                    text = "Channel",
                     maxLines = 1,
                     color = Color.Gray,
                     fontWeight = FontWeight.Bold,
@@ -459,12 +459,8 @@ fun BottomNavBar(modifier: Modifier = Modifier) {
                         fontWeight = FontWeight.Thin,
                         fontFamily = CustomRobotoMediumFontFamily,
                         maxLines = 1,
-
                         )
                 }
-
-                // Badge positioned on top of the icon
-                val peningMsgList = listOf<String>("3.9K","4.0K","4.1K",)
                 Box(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
@@ -475,7 +471,7 @@ fun BottomNavBar(modifier: Modifier = Modifier) {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = peningMsgList[Random.nextInt(0, 3)],
+                        text = Utils.getTotalUnreadMessages(SelectedClient.dayName),
                       //  text = "1K",
                         color = Color.White,
                         fontSize = 11.sp,

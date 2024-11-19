@@ -350,4 +350,29 @@ object Utils {
 
         return index
     }
+    fun getTotalUnreadMessages(dayName:String):String{
+        Log.d("day entered ->","$dayName")
+        val index =  "3.9K"
+        val list = listOf(
+            listOf("3.9K","4.1K","4.2K"), // day 1
+            listOf("2.5K","2.7K","2.8K"), // day 2
+            listOf("3.1K","3.2K","3.4K"), // day 3
+            listOf("1.9K","2.1K","4.1K"), // day 4
+            listOf("1.8K","1.9K","2.1K"), // day 5
+            listOf("2.1K","2.2K","2.3K"), // day 6
+            listOf("4.9K","5.1K","5.2K"), // day 7
+
+        )
+        when(dayName){
+            "Day 1" -> return list[0][Random.nextInt(0, 3)]
+            "Day 2" -> return list[1][Random.nextInt(0, 3)]
+            "Day 3" -> return list[2][Random.nextInt(0, 3)]
+            "Day 4" -> return list[3][Random.nextInt(0, 3)]
+            "Day 5" -> return list[4][Random.nextInt(0, 3)]
+            "Day 6" -> return list[5][Random.nextInt(0, 3)]
+            "Day 7" -> return list[6][Random.nextInt(0, 3)]
+        }
+
+        return index
+    }
 }
