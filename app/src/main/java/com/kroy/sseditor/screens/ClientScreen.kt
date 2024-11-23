@@ -30,9 +30,10 @@ import com.kroy.sseditor.ui.theme.CustomTypography
 import com.kroy.sseditor.ui.theme.Primary
 import com.kroy.sseditor.utils.Utils.base64ToBitmap
 import com.kroy.sseditor.viewmodels.ClientViewModel
+import com.kroy.sseditor.viewmodels.SharedViewModel
 
 @Composable
-fun ClientScreen(onAddClient: () -> Unit, onClientClick: (clientItem) -> Unit,onEditClick: (clientItem) -> Unit) {
+fun ClientScreen(onAddClient: () -> Unit, onClientClick: (clientItem) -> Unit,onEditClick: (clientItem) -> Unit,sharedViewModel: SharedViewModel) {
     val clientViewModel: ClientViewModel = hiltViewModel()
     val allClients: State<ApiResponse.AllClientResponse?> = clientViewModel.filteredClientResponse.collectAsState()
     val isLoading: State<Boolean> = clientViewModel.isLoading.collectAsState()
@@ -57,7 +58,7 @@ fun ClientScreen(onAddClient: () -> Unit, onClientClick: (clientItem) -> Unit,on
                 textAlign = TextAlign.Center
             )
 
-
+            sharedViewModel.filterAndSetClients(allClients.value?.data ?: emptyList())
             ClientList(clients = allClients.value?.data ?: emptyList(), onClick = onClientClick,onEditClick)
         }
         // Show CircularProgressIndicator if loading is true

@@ -73,6 +73,7 @@ import com.kroy.sseditor.utils.Utils.CaptureAndSaveComposable
 import com.kroy.sseditor.utils.Utils.base64ToBitmap
 import com.kroy.sseditor.utils.Utils.getYesterdaysDateFormatted
 import com.kroy.sseditor.viewmodels.ContactViewModel
+import com.kroy.sseditor.viewmodels.SharedViewModel
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -107,7 +108,7 @@ fun addRandomMinutesToTime(initialTime: String, min: Int, max: Int): String {
 @SuppressLint("UnrememberedMutableState")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> Unit = {}) {
+fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> Unit = {},onTransferContact:()->Unit,sharedViewModel: SharedViewModel) {
     val context = LocalContext.current
     val contactViewModel: ContactViewModel = hiltViewModel()
     val isLoading: State<Boolean> = contactViewModel.isLoading.collectAsState()
@@ -221,6 +222,7 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
         it.contactName.contains(searchQuery, ignoreCase = true)
     } ?: emptyList()
 
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -233,6 +235,10 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
                     .padding(vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Forward button
+
+
+                // Heading
                 Text(
                     text = "Contacts",
                     style = CustomTypography.titleLarge.copy(
@@ -242,9 +248,30 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
                     ),
                     modifier = Modifier
                         .padding(start = 20.dp)
-                        .weight(1f),
-                    textAlign = TextAlign.Center
+                        .weight(1f)
                 )
+                IconButton(
+                    onClick = {
+                              onTransferContact()
+                              },
+                    modifier = Modifier
+
+                        .padding(start = 10.dp,end=5.dp)
+                        .clip(CircleShape)
+                        .background(Color.White)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_forward),
+                        contentDescription = "Forward",
+                        modifier = Modifier
+                           .padding(5.dp)
+                            .size(30.dp),
+
+                        colorFilter = ColorFilter.tint(Primary)
+                    )
+                }
+
+                // Generate button
                 IconButton(
                     onClick = {
                         contactViewModel.setLoading(true)
@@ -261,13 +288,13 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
                     Image(
                         painter = painterResource(id = R.drawable.ic_download),
                         contentDescription = "Generate",
-                        modifier = Modifier.size(50.dp),
+                        modifier = Modifier.size(60.dp),
                         colorFilter = ColorFilter.tint(Color.White)
                     )
                 }
             }
 
-            // Add a search box
+            // Search box
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
@@ -284,7 +311,6 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
                     focusedLabelColor = Color.White,
                     unfocusedLabelColor = Color.White,
                 )
-
             )
 
             ContactList(
@@ -317,6 +343,7 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
             )
         }
     }
+
 }
 
 @Composable
@@ -419,5 +446,5 @@ fun ContactItem(contact: ContactItem, onEditClick: (ContactItem) -> Unit,contact
 @Preview(showBackground = true)
 @Composable
 fun ContactScreenPreview() {
-     ContactScreen(onAddContact = {}, onEditClick = {})
+     ContactScreen(onAddContact = {}, onEditClick = {}, onTransferContact = {}, SharedViewModel())
 }
