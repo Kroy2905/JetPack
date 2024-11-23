@@ -49,11 +49,12 @@ fun PreviewContactManager() {
 
 @Composable
 fun ContactTransferScreen(
-    allContacts: List<ContactItem>,
-    allClients: List<Client>,
-    onTransfer: (List<String>) -> Unit
+    allContacts: List<ContactItem>, // List of all contacts
+    allClients: List<Client>,       // List of all clients
+    onTransfer: (List<String>) -> Unit // Callback for transfer action
 ) {
     var selectedClient by remember { mutableStateOf("") }
+    var selectedDay by remember { mutableStateOf("") } // Track selected day
     var currentPage by remember { mutableStateOf(1) }
     val pageSize = 50
 
@@ -62,6 +63,8 @@ fun ContactTransferScreen(
 
     val paginatedContacts = allContacts.chunked(pageSize)
     val currentContacts = paginatedContacts.getOrNull(currentPage - 1) ?: emptyList()
+
+    val days = List(7) { "Day ${it + 1}" } // Days from "Day 1" to "Day 7"
 
     fun resetPreviousPageItems(previousPage: Int) {
         val previousContacts = paginatedContacts.getOrNull(previousPage - 1) ?: emptyList()
@@ -75,10 +78,22 @@ fun ContactTransferScreen(
             .background(Color.White)
             .padding(16.dp)
     ) {
+        // Client Dropdown
         DropDownMenu(
-            allClients = allClients,
-            selectedClient = selectedClient,
-            onClientSelected = { selectedClient = it }
+            allItems = allClients.map { it.name },
+            selectedItem = selectedClient,
+            placeholder = "Select Client",
+            onItemSelected = { selectedClient = it }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Day Dropdown
+        DropDownMenu(
+            allItems = days,
+            selectedItem = selectedDay,
+            placeholder = "Select Day",
+            onItemSelected = { selectedDay = it }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -117,6 +132,7 @@ fun ContactTransferScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Contact List
         LazyColumn(
             modifier = Modifier
                 .border(2.dp, Primary)
@@ -205,6 +221,7 @@ fun ContactTransferScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Transfer Button
         Button(
             onClick = { onTransfer(selectedContacts.map { it.contactName }) },
             modifier = Modifier
@@ -218,6 +235,57 @@ fun ContactTransferScreen(
                 fontWeight = FontWeight.W700,
                 color = Color.White
             )
+        }
+    }
+}
+
+@Composable
+fun DropDownMenu(
+    allItems: List<String>,
+    selectedItem: String,
+    placeholder: String,
+    onItemSelected: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box {
+        Text(
+            text = if (selectedItem.isNotEmpty()) selectedItem else placeholder,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.W500,
+            modifier = Modifier
+                .border(2.dp, Primary)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .clickable { expanded = true }
+                .padding(18.dp),
+            color = Primary
+        )
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            allItems.forEach { item ->
+                DropdownMenuItem(
+                    onClick = {
+                        onItemSelected(item)
+                        expanded = false
+                    },
+                    text = {
+                        Text(
+                            text = item,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.W500,
+                            color = Color.White
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Primary)
+                )
+            }
         }
     }
 }
