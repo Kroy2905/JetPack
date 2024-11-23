@@ -1,5 +1,7 @@
 package com.kroy.sseditor.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -21,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,6 +56,7 @@ fun ContactTransferScreen(
     allClients: List<Client>,       // List of all clients
     onTransfer: (List<String>) -> Unit // Callback for transfer action
 ) {
+    val context = LocalContext.current
     var selectedClient by remember { mutableStateOf("") }
     var selectedDay by remember { mutableStateOf("") } // Track selected day
     var currentPage by remember { mutableStateOf(1) }
@@ -71,6 +75,7 @@ fun ContactTransferScreen(
         selectedContacts.removeAll(previousContacts) // Remove items from the previous page
         selectAllState[previousPage] = false // Reset "Select All" for the previous page
     }
+    Log.d("Selected List ", " client = $selectedClient , day $selectedDay , contacts =  $selectedContacts")
 
     Column(
         modifier = Modifier
@@ -223,7 +228,20 @@ fun ContactTransferScreen(
 
         // Transfer Button
         Button(
-            onClick = { onTransfer(selectedContacts.map { it.contactName }) },
+            onClick = {
+
+                if(selectedContacts.isEmpty()){
+                    Toast.makeText(context, "Please select atleast one contact", Toast.LENGTH_SHORT).show()
+                }
+                else if(selectedClient == ""){
+                    Toast.makeText(context, "Please select a client", Toast.LENGTH_SHORT).show()
+                  }else if( selectedDay==""){
+                    Toast.makeText(context, "Please select a day", Toast.LENGTH_SHORT).show()
+                  }else{
+                    //TODO() : make API call to transfer
+
+                }
+                      },
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(19.dp)),
@@ -317,7 +335,7 @@ fun DropDownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
           modifier = Modifier
-              .padding(0.dp,0.dp)
+              .padding(0.dp, 0.dp)
               .fillMaxWidth(.92f)
         ) {
             allClients.forEach { client ->
