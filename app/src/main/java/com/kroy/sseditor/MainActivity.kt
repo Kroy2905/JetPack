@@ -277,6 +277,7 @@ fun App2(dataStoreHelper: DataStoreHelper,sharedViewModel: SharedViewModel) {
                 },
                 onTransferContact = {
                     //TODO():  on transfer click go to TransferContact  page
+                    navController.navigate("transfercontact")
                 },
                 sharedViewModel
             )

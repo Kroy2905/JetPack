@@ -215,6 +215,11 @@ fun ContactScreen(onAddContact: () -> Unit = {}, onEditClick: (ContactItem) -> U
 
     }
 
+    if(allContacts.value?.data != null ){ // setting all contacts
+        sharedViewModel.setContacts(allContacts.value?.data!!)
+    }
+
+
     var searchQuery by remember { mutableStateOf("") }
 
     // Filtered contacts based on search query
