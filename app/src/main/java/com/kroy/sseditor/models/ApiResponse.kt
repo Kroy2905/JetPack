@@ -48,6 +48,11 @@ sealed class ApiResponse {
         val message: String = "",
         val statusCode: Int = 0
     ) : ApiResponse()
+    data class CopyContactsResponse(
+        val data: copyContactData? = null, // Replace with actual data type if different
+        val message: String = "",
+        val statusCode: Int = 0
+    ) : ApiResponse()
 }
 
 // Example user data class
@@ -57,6 +62,10 @@ data class UserData(
 )
 data class addUserData(
     val clientId: Int = 0
+)
+data class copyContactData(
+    val totalTimeTaken: String = "",
+    val duplicateContact : ContactItem? = null
 )
 
 // Example client item data class

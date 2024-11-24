@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kroy.sseditor.models.ApiResponse
 import com.kroy.sseditor.models.addContactBody
+import com.kroy.sseditor.models.copyContactReqBody
 import com.kroy.sseditor.models.editContactBody
 import com.kroy.sseditor.repository.SSEditorRepository
 import com.kroy.sseditor.utils.DataStoreHelper
@@ -165,6 +166,23 @@ class ContactViewModel @Inject constructor(
         }
     }
 
+    private val copyContact: StateFlow<ApiResponse> get() = repository.copyContactsResponse
+
+    // Filtered response for all clients
+    private val _filteredCopyContactsResponse = MutableStateFlow<ApiResponse.CopyContactsResponse?>(null)
+    val filteredCopyContactsResponse: StateFlow<ApiResponse.CopyContactsResponse?> get() = _filteredCopyContactsResponse
+    fun copyContacts(copyContactReqBody: copyContactReqBody,context:Context) {
+        viewModelScope.launch {
+
+            repository.copyContacts(copyContactReqBody,context)
+
+            // Assuming repository.allClients is updated after the API call
+            copyContact.collect { response ->
+                handleClientResponse(response)
+            }
+        }
+    }
+
 
 
 
@@ -182,7 +200,7 @@ class ContactViewModel @Inject constructor(
                     // Handle empty data scenario
                     _filteredContactResponse.value = ApiResponse.AllContactResponse(
                         data = emptyList(),
-                        message = "No clients found",
+                        message = response.message,
                         statusCode = response.statusCode
                     )
                 }
@@ -241,6 +259,19 @@ class ContactViewModel @Inject constructor(
                     )
                 }
             }
+            is ApiResponse.CopyContactsResponse -> {
+                if (response.data!=null) {
+                    // Emit the successful response
+                    _filteredCopyContactsResponse.value = response
+                } else {
+                    // Handle empty data scenario
+                    _filteredCopyContactsResponse.value = ApiResponse.CopyContactsResponse(
+                        data = null,
+                        message = response.message,
+                        statusCode = response.statusCode
+                    )
+                }
+            }
             else -> {
                 // Handle other response types if necessary
                 _filteredContactResponse.value = null
@@ -251,6 +282,7 @@ class ContactViewModel @Inject constructor(
     fun resetContactState() {
 //       _filteredaddContactResponse.value = null
 //        _filteredContactResponse.value = null
+        _filteredCopyContactsResponse.value = null
         _filteredgetContactDetailsResponse.value= null
         _filteredRandomContactsResponse.value = null
     }

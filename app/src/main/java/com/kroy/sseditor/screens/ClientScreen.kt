@@ -58,7 +58,7 @@ fun ClientScreen(onAddClient: () -> Unit, onClientClick: (clientItem) -> Unit,on
                 textAlign = TextAlign.Center
             )
 
-            sharedViewModel.filterAndSetClients(allClients.value?.data ?: emptyList())
+            sharedViewModel.setClients(allClients.value?.data ?: emptyList())
             ClientList(clients = allClients.value?.data ?: emptyList(), onClick = onClientClick,onEditClick)
         }
         // Show CircularProgressIndicator if loading is true

@@ -8,6 +8,7 @@ import com.kroy.sseditor.models.ApiResponse
 import com.kroy.sseditor.models.TweetListItem
 import com.kroy.sseditor.models.addClientBody
 import com.kroy.sseditor.models.addContactBody
+import com.kroy.sseditor.models.copyContactReqBody
 import com.kroy.sseditor.models.editClientBody
 import com.kroy.sseditor.models.editContactBody
 import com.kroy.sseditor.models.userloginBody
@@ -138,7 +139,7 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
             }else{
                 // Show success toast
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, response.body()?.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -192,7 +193,7 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
                 Log.d("add contact->","entered not successful")
 
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context,  response.body()?.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context,  response.message(), Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -219,7 +220,7 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
 
             }else{
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, response.body()?.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context,  response.message(), Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -240,7 +241,7 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
                 contactId = contactId,
                 editContactBody = editContactBody
             )
-            Log.d(" edit contact details->","response = ${response.body()}")
+            Log.d(" edit contact details->","response = ${response.body()?.data}")
 
             if(response.isSuccessful && response.body()!=null){
                 // get the categories
@@ -249,7 +250,7 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
             }else{
                 // Show success toast
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, response.body()?.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context,  response.message(), Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -260,7 +261,7 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
     }
 
 
-    //edit contact details
+    //random contact details
     private val _randomContacts = MutableStateFlow<ApiResponse.RandomContactsResponse>(ApiResponse.RandomContactsResponse())
     val randomContactsResponse:StateFlow<ApiResponse>
         get() = _randomContacts
@@ -270,14 +271,42 @@ class SSEditorRepository @Inject constructor(private  val apiService: ApiService
             val response = apiService.getRandomContacts(clientId, dayName)
             Log.d("get random contacts->","response = ${response.body()}")
 
-            if(response.isSuccessful && response.body()!=null){
+            if(response.isSuccessful && response.body()?.data!=null){
                 // get the categories
                 _randomContacts.emit(response.body()!!)
 
             }else{
                 // Show success toast
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, response.body()?.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+
+    }
+
+
+    //copy contacts
+    private val _copyContacts = MutableStateFlow<ApiResponse.CopyContactsResponse>(ApiResponse.CopyContactsResponse())
+    val copyContactsResponse:StateFlow<ApiResponse>
+        get() = _copyContacts
+    suspend fun copyContacts(copyContactReqBody: copyContactReqBody,context: Context){
+        try{
+            Log.d("copy contacts->","body = $copyContactReqBody")
+            val response = apiService.copyContacts(copyContactReqBody)
+            Log.d("copy contacts->","response = ${response.body()}")
+
+            if(response.isSuccessful && response.body()?.data!=null){
+                // get the categories
+                _copyContacts.emit(response.body()!!)
+
+            }else{
+                // Show success toast
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context,  response.message(), Toast.LENGTH_SHORT).show()
                 }
 
             }

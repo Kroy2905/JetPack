@@ -4,6 +4,7 @@ import com.kroy.sseditor.models.ApiResponse
 import com.kroy.sseditor.models.TweetListItem
 import com.kroy.sseditor.models.addClientBody
 import com.kroy.sseditor.models.addContactBody
+import com.kroy.sseditor.models.copyContactReqBody
 import com.kroy.sseditor.models.editClientBody
 import com.kroy.sseditor.models.editContactBody
 import com.kroy.sseditor.models.userloginBody
@@ -64,6 +65,11 @@ interface ApiService {
         @Query("dayName") dayName :String
 
     ) : Response <ApiResponse.RandomContactsResponse>
+    @POST("contacts/copy")    // API to be written here
+    suspend fun copyContacts(@Body copyContactReqBody: copyContactReqBody
+
+    ) : Response <ApiResponse.CopyContactsResponse>
+
 
 
 

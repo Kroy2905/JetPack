@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -25,9 +24,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -35,14 +32,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -52,11 +46,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.FragmentActivity
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -64,44 +55,32 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.kroy.ssediotor.R
-import com.kroy.sseditor.models.ChatItem
-import com.kroy.sseditor.models.ChatMessage
-import com.kroy.sseditor.models.Client
 import com.kroy.sseditor.models.clientItem
 import com.kroy.sseditor.screens.AddClientScreen
 import com.kroy.sseditor.screens.AddContactScreen
 import com.kroy.sseditor.screens.CategoryScreen
-import com.kroy.sseditor.screens.ChatScreen
 import com.kroy.sseditor.screens.ClientScreen
 import com.kroy.sseditor.screens.ContactScreen
 import com.kroy.sseditor.screens.ContactTransferScreen
-import com.kroy.sseditor.screens.CustomTelegramLayout
 import com.kroy.sseditor.screens.DetailScreen
 import com.kroy.sseditor.screens.EditClientScreen
 import com.kroy.sseditor.screens.EditContactScreen
 import com.kroy.sseditor.screens.LoginScreen
 import com.kroy.sseditor.screens.SevenDayScreen
 import com.kroy.sseditor.screens.SplashScreen
-import com.kroy.sseditor.screens.formatTime
-import com.kroy.sseditor.ui.theme.Primary
 import com.kroy.sseditor.ui.theme.SSEditorTheme
 import com.kroy.sseditor.utils.DataStoreHelper
 import com.kroy.sseditor.utils.Permissions
 import com.kroy.sseditor.utils.SelectedClient
 import com.kroy.sseditor.utils.SelectedContact
-import com.kroy.sseditor.utils.Utils
-import com.kroy.sseditor.utils.Utils.CaptureAndSaveComposable
 import com.kroy.sseditor.viewmodels.SharedViewModel
-import com.kroy.sseditor.viewmodels.UserViewModel
 
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import javax.inject.Inject
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class MainActivity :FragmentActivity() {
@@ -302,7 +281,10 @@ fun App2(dataStoreHelper: DataStoreHelper,sharedViewModel: SharedViewModel) {
             ContactTransferScreen(allContacts =
                 sharedViewModel.contacts.value!!,
                 allClients = sharedViewModel.clients.value!!,
-                onTransfer = {
+                onTransferComplete = {
+                    navController.navigate("contact") {
+                        popUpTo("transfercontact") { inclusive = true }
+                    }
                     //TODO() : on transfer click
                 }
             )
