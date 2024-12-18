@@ -67,7 +67,7 @@ import kotlin.random.Random
 fun previewTelegram() {
     val context = LocalContext.current
     val sampleMessages = listOf(
-        ChatMessage("Rathore sir you are th32423 32432432 ", "12:50 AM", isSender = true),
+        ChatMessage("Rdxvc dsf dsdsf dsf dss dsff ewrewrewretretretre dsfdsfdsfd fdsdsf ", "12:50 AM", isSender = true),
         ChatMessage("Saare trades win gaye", "12:50 AM", isSender = true),
 //        ChatMessage("How 435943594", "12:50 AM", isSender = true)
     )
@@ -222,9 +222,12 @@ fun ChatBubble(
             .padding(bottom = if (isLastMessage) 6.dp else 2.dp) // Adjust padding for the last message
     ) {
         Box(
+
             modifier = Modifier
                 .wrapContentWidth()
-                .padding(start = 2.dp) // Adjust start padding
+
+                .padding(start = 2.dp) ,// Adjust start padding
+            contentAlignment = Alignment.CenterStart
         ) {
             // Main chat bubble
             Box(
@@ -251,72 +254,96 @@ fun ChatBubble(
                 val timeLength = formattedTime.length
                 val spaceLength = 2 // Length of the space between message and timer
                 val combinedLength = messageLength + timeLength + spaceLength
+                Text(
+                    text = "$message \t\t\t\t\t\t\t\t",
+                    fontFamily = CustomRobotoMediumFontFamily,
+                    fontWeight = FontWeight.Thin,
+
+                    color = Color.White,
+                    fontSize = 15.sp,
+                    letterSpacing = -0.5.sp,
+                    maxLines = Int.MAX_VALUE,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.wrapContentWidth()
+
+                )
+                Text(
+                    text = formattedTime,
+                    fontFamily = CustomRobotoMediumFontFamily,
+                    fontWeight = FontWeight.Thin,
+                    fontSize = (9.2f).sp,
+                    color = Color.Gray,
+                    modifier = Modifier
+                        .padding(top = 6.dp, end = 4.dp, bottom = 3.dp)
+                        .align(Alignment.BottomEnd)
+                )
 
                 // If the combined length exceeds 25 characters, adjust layout
-                if (combinedLength > 40) {
-                    val allowedMessageLength =  (timeLength + spaceLength)
-                    val displayMessage = if (allowedMessageLength < messageLength) {
-                       // message.take(allowedMessageLength) // Take only part of the message
-                        message
-                    } else {
-                        message // If it fits, display the whole message
-                    }
-
-                    // Display the message and timer in a Column
-                    Column {
-                        // Display the trimmed message
-                        Text(
-                            text = displayMessage,
-                            fontFamily = CustomRobotoMediumFontFamily,
-                            fontWeight = FontWeight.Thin,
-
-                            color = Color.White,
-                            fontSize = 15.sp,
-                            letterSpacing =
-                            -0.5.sp,
-                            maxLines = Int.MAX_VALUE,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.wrapContentWidth()
-                        )
-
-                        // Timer text aligned at the end of the box
-                        Text(
-                            text = formattedTime,
-                            fontFamily = CustomRobotoMediumFontFamily,
-                            fontWeight = FontWeight.Thin,
-                            fontSize = (9.2f).sp,
-                            color = Color.Gray,
-                            modifier = Modifier
-                                .align(Alignment.End) // Align timer at the end of the box
-                                .padding(top = 2.dp) // Optional: add padding above the timer
-                        )
-                    }
-                } else {
-                    // If the combined length is less than or equal to 25 characters
-                    Text(
-                        text = buildAnnotatedString {
-                            append(message)
-                            append(" ") // Add space between message and time
-                            withStyle(style = SpanStyle(fontSize = (9.2f).sp, color = Color.Gray)) {
-                                // Add a Spacer here
-                                append(" ") // A space can act as a placeholder for the top padding
-                                append(formattedTime)
-                            }
-                        },
-                        fontFamily = CustomRobotoMediumFontFamily,
-                        fontWeight = FontWeight.Thin,
-
-                        color = Color.White,
-                        fontSize = 15.sp,
-                        maxLines = Int.MAX_VALUE,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.wrapContentWidth() // Box adjusts based on content
-                    )
-
-// Add a Spacer to provide top padding for the time
-                    Spacer(modifier = Modifier.height(18.dp)) // Adjust the height as needed
-
-                }
+//                if (combinedLength > 40) {
+//                    val allowedMessageLength =  (timeLength + spaceLength)
+//                    val displayMessage = if (allowedMessageLength < messageLength) {
+//                       // message.take(allowedMessageLength) // Take only part of the message
+//                        message
+//                    } else {
+//                        message // If it fits, display the whole message
+//                    }
+//
+//                    // Display the message and timer in a Column
+//                    Column {
+//                        // Display the trimmed message
+//                        Text(
+//                            text = displayMessage,
+//                            fontFamily = CustomRobotoMediumFontFamily,
+//                            fontWeight = FontWeight.Thin,
+//
+//                            color = Color.White,
+//                            fontSize = 15.sp,
+//                            letterSpacing =
+//                            -0.5.sp,
+//                            maxLines = Int.MAX_VALUE,
+//                            overflow = TextOverflow.Ellipsis,
+//                            modifier = Modifier.wrapContentWidth()
+//                        )
+//
+//                        // Timer text aligned at the end of the box
+//                        Text(
+//                            text = formattedTime,
+//                            fontFamily = CustomRobotoMediumFontFamily,
+//                            fontWeight = FontWeight.Thin,
+//                            fontSize = (9.2f).sp,
+//                            color = Color.Gray,
+//                            modifier = Modifier
+//                                .align(Alignment.End) // Align timer at the end of the box
+//                                .padding(top = 2.dp) // Optional: add padding above the timer
+//                        )
+//                    }
+//                }
+//                else {
+//                    // If the combined length is less than or equal to 25 characters
+//                    Text(
+//                        text = buildAnnotatedString {
+//                            append(message)
+//                            append(" ") // Add space between message and time
+//                            withStyle(style = SpanStyle(fontSize = (9.2f).sp, color = Color.Gray)) {
+//                                // Add a Spacer here
+//                                append(" ") // A space can act as a placeholder for the top padding
+//                                append(formattedTime)
+//                            }
+//                        },
+//                        fontFamily = CustomRobotoMediumFontFamily,
+//                        fontWeight = FontWeight.Thin,
+//
+//                        color = Color.White,
+//                        fontSize = 15.sp,
+//                        maxLines = Int.MAX_VALUE,
+//                        overflow = TextOverflow.Ellipsis,
+//                        modifier = Modifier.wrapContentWidth() // Box adjusts based on content
+//                    )
+//
+//// Add a Spacer to provide top padding for the time
+//                    Spacer(modifier = Modifier.height(18.dp)) // Adjust the height as needed
+//
+//                }
             }
 
             // Show triangle only if this is the last message

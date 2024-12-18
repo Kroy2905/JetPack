@@ -98,7 +98,7 @@ fun LoginScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth(.9f)
-                .fillMaxHeight(.4f)
+                .wrapContentHeight()
                 .clip(RoundedCornerShape(16.dp)) // Rounded corners for the Box
                 .background(color = Color.White) // Box background color
                 .padding(16.dp)
