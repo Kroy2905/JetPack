@@ -677,7 +677,7 @@ fun ChatRow(chat: ChatItem, time: LocalTime) {
                                 fontFamily = CustomRobotoMediumFontFamily,
                                 fontSize = 13.5.sp,
                                 fontWeight = FontWeight.Thin,
-                                maxLines = 2,
+                                maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
                         }
@@ -789,9 +789,9 @@ fun TelegramScreenPreview() {
         ChatItem("Effi", "Hey", SelectedClient.time, Utils.getBitmapFromResource(context,R.drawable.b), Random.nextInt(2, 5)),
         ChatItem("Anil Wuryavanshi", "", SelectedClient.time, null, Random.nextInt(2, 5)),
         ChatItem("EXCEPTION", "Hey", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.f), Random.nextInt(2, 10)),
-        ChatItem("Jsvindr Sng", "https://t.me/+i_voE00fHsMOODA9", SelectedClient.time,null, Random.nextInt(2, 5)),
+        ChatItem("Jsvindr Sng", "https://t.me/+i_voE00fHsMOODA9 jhkjhj ijiuoiu kokpokpok kokpo jpokkkjk;jopk jkjkj kkljkj", SelectedClient.time,null, Random.nextInt(2, 5)),
         ChatItem("Zpple", "https://t.me/+qnGC9Zd2csJkZDU9", SelectedClient.time,null, Random.nextInt(2, 5)),
-        ChatItem("Binary Trading Trader", "H this is the best text you can find from eleaborate he ", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
+        ChatItem("Binary Trading Trader", "H this is the best text you can find from eleaborate he fghfgfhfhfghgfhgfhgffghgfhgffghgfhgfhfghgfhgfhfghgfhgfhgfhgfhgfh ", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 10)),
         ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),
         ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),
         ChatItem("Binary Trading Trader", "Ftgmn...", SelectedClient.time,Utils.getBitmapFromResource(context,R.drawable.a), Random.nextInt(2, 5)),
