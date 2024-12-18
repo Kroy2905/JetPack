@@ -67,7 +67,7 @@ import kotlin.random.Random
 fun previewTelegram() {
     val context = LocalContext.current
     val sampleMessages = listOf(
-        ChatMessage("Rdxvc dsf dsdsf dsf dss dsff ewrewrewretretretre dsfdsfdsfd fdsdsf ", "12:50 AM", isSender = true),
+        ChatMessage("Rdxvc dsf dsdsf dsf d sdfjdslkfj kdskjflkds jks djgkds jf jsdfk jdsf kjdsf;lk ssdkjfdslkfss", "12:50 AM", isSender = true),
         ChatMessage("Saare trades win gaye", "12:50 AM", isSender = true),
 //        ChatMessage("How 435943594", "12:50 AM", isSender = true)
     )
@@ -271,10 +271,10 @@ fun ChatBubble(
                     text = formattedTime,
                     fontFamily = CustomRobotoMediumFontFamily,
                     fontWeight = FontWeight.Thin,
-                    fontSize = (9.2f).sp,
+                    fontSize = (9.0f).sp,
                     color = Color.Gray,
                     modifier = Modifier
-                        .padding(top = 6.dp, end = 4.dp, bottom = 3.dp)
+                        .padding(top = 6.dp, end = 4.dp, bottom = 0.dp)
                         .align(Alignment.BottomEnd)
                 )
 
