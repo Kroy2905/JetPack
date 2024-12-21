@@ -280,15 +280,21 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
                     contactName.isEmpty() -> {
                         Toast.makeText(context, "Contact Name is required", Toast.LENGTH_SHORT).show()
                     }
-//                    comment1.isEmpty() -> {
-//                        Toast.makeText(context, "Comment 1 cannot be empty", Toast.LENGTH_SHORT).show()
-//                    }
-//                    comment2.isNotEmpty() && comment1.isEmpty() -> {
-//                        Toast.makeText(context, "Fill Comment 1 first", Toast.LENGTH_SHORT).show()
-//                    }
-//                    comment3.isNotEmpty() && (comment1.isEmpty() || comment2.isEmpty()) -> {
-//                        Toast.makeText(context, "Fill Comment 1 and 2 first", Toast.LENGTH_SHORT).show()
-//                    }
+                    comment1.length >= 60 -> {
+                        Toast.makeText(context, "Comment 1 cannot have more than 60 characters", Toast.LENGTH_SHORT).show()
+                    }
+                    comment2.length >= 60 -> {
+                        Toast.makeText(context, "Comment 2 cannot have more than 60 characters", Toast.LENGTH_SHORT).show()
+                    }
+                    comment3.length >= 60 -> {
+                        Toast.makeText(context, "Comment 3 cannot have more than 60 characters", Toast.LENGTH_SHORT).show()
+                    }
+                    comment2.isNotEmpty() && comment1.isEmpty() -> {
+                        Toast.makeText(context, "Fill Comment 1 first", Toast.LENGTH_SHORT).show()
+                    }
+                    comment3.isNotEmpty() && (comment1.isEmpty() || comment2.isEmpty()) -> {
+                        Toast.makeText(context, "Fill Comment 1 and 2 first", Toast.LENGTH_SHORT).show()
+                    }
 //                    imageBase64.isEmpty() -> {
 //                        Toast.makeText(context, "Contact Image is required", Toast.LENGTH_SHORT).show()
 //                    }

@@ -67,7 +67,7 @@ import kotlin.random.Random
 fun previewTelegram() {
     val context = LocalContext.current
     val sampleMessages = listOf(
-        ChatMessage("Rdxvc dsf dsdsf dsf d sdfjdslkfj kdskjflkds jks djgkds jf jsdfk jdsf kjdsf;lk ssdkjfdslkfss", "12:50 AM", isSender = true),
+        ChatMessage("Rdxvc dsf dsdsf dsf d sdfjdslkfj kdskjflkds jks djgkds jf jsdfk jdsf kjdsf;lk ssdkjfdslkfss4", "12:50 AM", isSender = true),
         ChatMessage("Saare trades win gaye", "12:50 AM", isSender = true),
 //        ChatMessage("How 435943594", "12:50 AM", isSender = true)
     )
