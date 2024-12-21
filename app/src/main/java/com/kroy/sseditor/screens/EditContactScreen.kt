@@ -239,7 +239,7 @@ fun EditContactScreen(
         // Comment Fields
         OutlinedTextField(
             value = comment1State,
-            onValueChange = { comment1State = it },
+            onValueChange = { if (it.length <= 60) comment1State = it },
             label = { Text("Comment 1") },
 
             modifier = Modifier.fillMaxWidth(0.9f),
@@ -254,7 +254,7 @@ fun EditContactScreen(
 
         OutlinedTextField(
             value = comment2State,
-            onValueChange = { comment2State = it },
+            onValueChange = {  if (it.length <= 60) comment2State = it },
             label = { Text("Comment 2") },
             enabled = comment1State.isNotEmpty(),
             modifier = Modifier.fillMaxWidth(0.9f),
@@ -269,7 +269,7 @@ fun EditContactScreen(
 
         OutlinedTextField(
             value = comment3State,
-            onValueChange = { comment3State = it },
+            onValueChange = {  if (it.length <= 60) comment3State = it },
             label = { Text("Comment 3") },
             enabled = comment1State.isNotEmpty() && comment2State.isNotEmpty(),
             modifier = Modifier.fillMaxWidth(0.9f),

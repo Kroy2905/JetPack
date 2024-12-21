@@ -148,7 +148,7 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
         // Contact Name
         OutlinedTextField(
             value = contactName,
-            onValueChange = { contactName = it },
+            onValueChange = {  if (it.length <= 60) contactName = it },
             label = { Text("Contact Name", color = Primary) },
             modifier = Modifier
                 .fillMaxWidth(0.9f)
@@ -165,7 +165,7 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
         // Comment Fields with validation
         OutlinedTextField(
             value = comment1,
-            onValueChange = { comment1 = it },
+            onValueChange = { if (it.length <= 60) comment1 = it},
             label = { Text("Comment 1", color = Primary) },
             modifier = Modifier
                 .fillMaxWidth(0.9f)
@@ -181,7 +181,7 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
 
         OutlinedTextField(
             value = comment2,
-            onValueChange = { comment2 = it },
+            onValueChange = { if (it.length <= 60) comment2 = it },
             label = { Text("Comment 2", color = Primary) },
             modifier = Modifier
                 .fillMaxWidth(0.9f)
@@ -198,7 +198,7 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
 
         OutlinedTextField(
             value = comment3,
-            onValueChange = { comment3 = it },
+            onValueChange = { if (it.length <= 60) comment3 = it},
             label = { Text("Comment 3", color = Primary) },
             modifier = Modifier
                 .fillMaxWidth(0.9f)
@@ -280,15 +280,15 @@ fun AddContactScreen(onContactAdded: (Int) -> Unit) {
                     contactName.isEmpty() -> {
                         Toast.makeText(context, "Contact Name is required", Toast.LENGTH_SHORT).show()
                     }
-                    comment1.length >= 60 -> {
-                        Toast.makeText(context, "Comment 1 cannot have more than 60 characters", Toast.LENGTH_SHORT).show()
-                    }
-                    comment2.length >= 60 -> {
-                        Toast.makeText(context, "Comment 2 cannot have more than 60 characters", Toast.LENGTH_SHORT).show()
-                    }
-                    comment3.length >= 60 -> {
-                        Toast.makeText(context, "Comment 3 cannot have more than 60 characters", Toast.LENGTH_SHORT).show()
-                    }
+//                    comment1.length >= 60 -> {
+//                        Toast.makeText(context, "Comment 1 cannot have more than 60 characters", Toast.LENGTH_SHORT).show()
+//                    }
+//                    comment2.length >= 60 -> {
+//                        Toast.makeText(context, "Comment 2 cannot have more than 60 characters", Toast.LENGTH_SHORT).show()
+//                    }
+//                    comment3.length >= 60 -> {
+//                        Toast.makeText(context, "Comment 3 cannot have more than 60 characters", Toast.LENGTH_SHORT).show()
+//                    }
                     comment2.isNotEmpty() && comment1.isEmpty() -> {
                         Toast.makeText(context, "Fill Comment 1 first", Toast.LENGTH_SHORT).show()
                     }
