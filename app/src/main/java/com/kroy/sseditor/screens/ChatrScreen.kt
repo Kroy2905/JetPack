@@ -335,7 +335,7 @@ fun StatusBar() {
                     modifier = Modifier.padding(end = 3.dp, bottom = 2.dp)
                 )
                 Box(modifier =Modifier.padding(top = 0.dp) ){
-                    BadgeBoxSmall(Random.nextInt(250, 350))
+                    BadgeBoxSmall(Random.nextInt(100, 400))
                 }
 
 
@@ -363,7 +363,7 @@ fun StatusBar() {
                         modifier = Modifier.padding(end = 3.dp, bottom = 3.dp)
                     )
                     Box(modifier =Modifier.padding(top = 0.dp) ){
-                        BadgeBoxSmall(Random.nextInt(250, 350))
+                        BadgeBoxSmall(Random.nextInt(100, 400))
                     }
                 }
                 Divider(
@@ -393,7 +393,7 @@ fun StatusBar() {
                     modifier = Modifier.padding(end = 3.dp, bottom = 2.dp)
                 )
                 Box(modifier =Modifier.padding(top = 0.dp) ){
-                    BadgeBoxSmall(Random.nextInt(250, 350))
+                    BadgeBoxSmall(Random.nextInt(100, 400))
                 }
             }
         }
