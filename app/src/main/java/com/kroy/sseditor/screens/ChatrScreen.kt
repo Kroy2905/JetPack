@@ -130,8 +130,9 @@ fun StatusBar() {
     val initialTime = remember {
         Utils.parseTimeString(SelectedClient.time)
     }
+
     Log.d("time set->", "parse $initialTime")
-    val randomInitialTime = remember { Utils.generateRandomTime(initialTime, 30, 30) }
+    val randomInitialTime = remember { initialTime.plusMinutes(1) } // in the utils there is a +1 for max
     Column(
         modifier = Modifier
             .background(
@@ -176,7 +177,7 @@ fun StatusBar() {
                 modifier = Modifier
                     .weight(1f)
                     .background(Color.Black, shape = RoundedCornerShape(14.dp))
-                    .padding(horizontal = 4.dp, vertical = 2.dp),
+                    .padding(horizontal = 6.dp, vertical = 2.dp),
 
             ) {
                 Row(
@@ -204,7 +205,7 @@ fun StatusBar() {
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier
                     .wrapContentSize()
-                    .padding(end = 16.dp)
+                    .padding(end = 13.dp)
             ) {
                 Icon(painterResource(id = R.drawable.ic_signal2), contentDescription = "Signal", tint = Color.White, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(7.dp))
@@ -335,7 +336,7 @@ fun StatusBar() {
                     modifier = Modifier.padding(end = 3.dp, bottom = 2.dp)
                 )
                 Box(modifier =Modifier.padding(top = 0.dp) ){
-                    BadgeBoxSmall(Random.nextInt(100, 400))
+                    BadgeBoxSmall(Random.nextInt(50, 100))
                 }
 
 
@@ -363,7 +364,7 @@ fun StatusBar() {
                         modifier = Modifier.padding(end = 3.dp, bottom = 3.dp)
                     )
                     Box(modifier =Modifier.padding(top = 0.dp) ){
-                        BadgeBoxSmall(Random.nextInt(100, 400))
+                        BadgeBoxSmall(Random.nextInt(50, 100))
                     }
                 }
                 Divider(
@@ -393,7 +394,7 @@ fun StatusBar() {
                     modifier = Modifier.padding(end = 3.dp, bottom = 2.dp)
                 )
                 Box(modifier =Modifier.padding(top = 0.dp) ){
-                    BadgeBoxSmall(Random.nextInt(100, 400))
+                    BadgeBoxSmall(Random.nextInt(50, 100))
                 }
             }
         }
@@ -470,16 +471,16 @@ fun BottomNavBar(modifier: Modifier = Modifier) {
                         .background(Color(0xFFF35959), RoundedCornerShape(8.dp)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = Utils.getTotalUnreadMessages(SelectedClient.dayName),
-                      //  text = "1K",
-                        color = Color.White,
-                        fontSize = 11.sp,
-                        fontFamily = CustomRobotoMediumFontFamily,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(horizontal = 4.dp)
-                    )
+//                    Text(
+//                        text = Utils.getTotalUnreadMessages(SelectedClient.dayName),
+//                      //  text = "1K",
+//                        color = Color.White,
+//                        fontSize = 11.sp,
+//                        fontFamily = CustomRobotoMediumFontFamily,
+//                        maxLines = 1,
+//                        overflow = TextOverflow.Ellipsis,
+//                        modifier = Modifier.padding(horizontal = 4.dp)
+//                    )
                 }
             }
 
@@ -539,21 +540,40 @@ fun ChatListUI(modifier: Modifier = Modifier, chats: List<ChatItem>) {
         Utils.parseTimeString(SelectedClient.time)
     }
 
+    val timeOffsets = remember(chats) {
+        val totalChats = chats.size
+
+        val useSmallRange = Random.nextBoolean() // randomly true or false
+
+        val (minRange, maxRange) = if (useSmallRange) {
+            1 to minOf(2, totalChats)
+        } else {
+            5 to minOf(7, totalChats)
+        }
+
+        val n1 = Random.nextInt(minRange, maxRange + 1)
+
+        chats.indices.map { index ->
+            if (index < n1) 1 else 0
+        }
+    }
+
+
     LazyColumn(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top,
         modifier = modifier.fillMaxSize()
     ) {
         itemsIndexed(chats) { index, chat ->
-            // Increment time for each chat based on its index
-            // Calculate the time offset such that the first chat has the largest time
-            val timeOffset = ((10 - index) * 2) + Random.nextInt(0, 2) // Decrement time by 1 or 2 minutes for each item
-            val adjustedTime = remember { initialTime.plusMinutes(timeOffset.toLong()) }
+            val adjustedTime = remember(timeOffsets[index]) {
+                initialTime.plusMinutes(timeOffsets[index].toLong())
+            }
 
             ChatRow(chat = chat, time = adjustedTime)
             Divider(color = Color.Gray, thickness = 0.1.dp)
         }
     }
+
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -766,7 +786,7 @@ fun BadgeBoxSmall(unreadCount: Int) {
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .background(UnreadMessages, RoundedCornerShape(18.dp))
-                    .padding(horizontal = 7.dp, vertical = 1.dp)
+                    .padding(horizontal = 7.5.dp, vertical = 0.dp)
             )
 
         }
