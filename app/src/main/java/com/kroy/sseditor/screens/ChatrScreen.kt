@@ -132,7 +132,13 @@ fun StatusBar() {
     }
 
     Log.d("time set->", "parse $initialTime")
-    val randomInitialTime = remember { initialTime.plusMinutes(1) } // in the utils there is a +1 for max
+    val randomInitialTime = remember {
+        if (SelectedClient.primeAccounts.contains(SelectedClient.clientName)) {
+            initialTime.plusMinutes(1)
+        } else {
+            Utils.generateRandomTime(initialTime, 30, 30) // Utils has +1 for max internally
+        }
+    }
     Column(
         modifier = Modifier
             .background(
@@ -540,6 +546,7 @@ fun ChatListUI(modifier: Modifier = Modifier, chats: List<ChatItem>) {
         Utils.parseTimeString(SelectedClient.time)
     }
 
+
     val timeOffsets = remember(chats) {
         val totalChats = chats.size
 
@@ -565,9 +572,34 @@ fun ChatListUI(modifier: Modifier = Modifier, chats: List<ChatItem>) {
         modifier = modifier.fillMaxSize()
     ) {
         itemsIndexed(chats) { index, chat ->
-            val adjustedTime = remember(timeOffsets[index]) {
-                initialTime.plusMinutes(timeOffsets[index].toLong())
+            val timeOffset = remember {
+                if (SelectedClient.primeAccounts.contains(SelectedClient.clientName)) {
+                    val totalChats = chats.size
+                    val useSmallRange = Random.nextBoolean()
+
+                    val (minRange, maxRange) = if (useSmallRange) {
+                        1 to minOf(2, totalChats)
+                    } else {
+                        5 to minOf(7, totalChats)
+                    }
+
+                    val n1 = Random.nextInt(minRange, maxRange + 1)
+
+                    if (index < n1) 1 else 0
+                } else {
+                    ((10 - index) * 2) + Random.nextInt(0, 2) // Decrement time by 1 or 2 minutes
+                }
             }
+
+            val adjustedTime = remember {
+                if (SelectedClient.primeAccounts.contains(SelectedClient.clientName)) {
+                    initialTime.plusMinutes(timeOffsets[index].toLong())
+                } else {
+                    initialTime.plusMinutes(timeOffset.toLong())
+
+                }
+            }
+
 
             ChatRow(chat = chat, time = adjustedTime)
             Divider(color = Color.Gray, thickness = 0.1.dp)

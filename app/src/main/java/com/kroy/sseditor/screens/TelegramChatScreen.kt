@@ -271,7 +271,7 @@ fun ChatBubble(
                     text = formattedTime,
                     fontFamily = CustomRobotoMediumFontFamily,
                     fontWeight = FontWeight.Thin,
-                    fontSize = (9.0f).sp,
+                    fontSize = (10.0f).sp,
                     color = Color.Gray,
                     modifier = Modifier
                         .padding(top = 6.dp, end = 4.dp, bottom = 0.dp)
@@ -655,7 +655,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                                 .wrapContentSize()
                         ) {
                             Text(
-                                text = "${Random.nextInt(1250, 1320 + 1)}" ,
+                                text = "${Random.nextInt(50, 99 + 1)}" ,
                                 fontFamily = CustomRobotoMediumFontFamily,
                                 fontWeight = FontWeight.Thin,
                                 fontSize = (12f).sp,
@@ -663,7 +663,7 @@ fun CustomTopBar(time: String,contactName: String,contactPic: Bitmap?) {
                                 modifier = Modifier
                                     .align(Alignment.BottomEnd)
                                     .background(UnreadMessages, RoundedCornerShape(10.dp))
-                                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                                    .padding(horizontal = 8.dp, vertical = 1.dp)
                             )
 
                         }
@@ -778,8 +778,8 @@ fun ReceiverImageMessage(time: String,senderImage: Bitmap?) {
     ) {
         Box(
             modifier = Modifier
-                .widthIn(150.dp, 200.dp)
-                .heightIn(min = 200.dp, max = 300.dp)
+                .widthIn(180.dp, 220.dp)
+                .heightIn(min = 230.dp, max = 330.dp)
                 .padding(start = 1.dp, bottom = 3.dp)
                 .clip(RoundedCornerShape(16.dp)) // Clip to rounded corners
                 .border(
@@ -804,7 +804,7 @@ fun ReceiverImageMessage(time: String,senderImage: Bitmap?) {
                 text = convertLettersToUppercase(time) ,
                 fontFamily = CustomRobotoMediumFontFamily,
                 fontWeight = FontWeight.Thin,
-                fontSize = (9.2f).sp,
+                fontSize = (10.2f).sp,
                 color = Color.White,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -859,8 +859,8 @@ fun ReceiverStickerMessage(time: String,userReplySticker: Bitmap?) {
     ) {
         Box(
             modifier = Modifier
-                .widthIn(100.dp, 180.dp)
-                .heightIn(min = 120.dp, max = 180.dp)
+                .widthIn(120.dp, 190.dp)
+                .heightIn(min = 140.dp, max = 200.dp)
                 .padding(2.dp)
         ) {
             Image(
@@ -882,7 +882,7 @@ fun ReceiverStickerMessage(time: String,userReplySticker: Bitmap?) {
                     text = convertLettersToUppercase(time) ,
                     fontFamily = CustomRobotoMediumFontFamily,
                     fontWeight = FontWeight.Thin,
-                    fontSize = (9.2f).sp,
+                    fontSize = (10f).sp,
                     color = Color.White,
 
                 )

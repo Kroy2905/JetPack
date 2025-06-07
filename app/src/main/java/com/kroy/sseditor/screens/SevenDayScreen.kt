@@ -41,7 +41,6 @@ import java.util.Calendar
 @Composable
 fun preview4(){
 
-   // SevenDayScreen()
 }
 
 
