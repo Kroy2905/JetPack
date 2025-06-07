@@ -74,15 +74,28 @@ fun ChatScreen(chats:List<ChatItem>) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
+            val initialTime = remember {
+                Utils.parseTimeString(SelectedClient.time)
+            }
+
+            Log.d("time set->", "parse $initialTime")
+            val randomInitialTime = remember {
+                if (SelectedClient.primeAccounts.contains(SelectedClient.clientName)) {
+                    initialTime.plusMinutes(1)
+                } else {
+                    Utils.generateRandomTime(initialTime, 1, 15) // Utils has +1 for max internally
+                }
+            }
             // Top Status Bar
-            StatusBar()
+            StatusBar(randomInitialTime.plusMinutes(1))
 
             // Chat List (middle content)
             ChatListUI(
                 modifier = Modifier
                     .weight(1f)
                 ,// Fills the remaining space right after the status bar,
-                chats
+                chats,
+                randomInitialTime
 
             )
 
@@ -126,19 +139,8 @@ fun ChatScreen(chats:List<ChatItem>) {
 }
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun StatusBar() {
-    val initialTime = remember {
-        Utils.parseTimeString(SelectedClient.time)
-    }
+fun StatusBar(randomInitialTime:LocalTime) {
 
-    Log.d("time set->", "parse $initialTime")
-    val randomInitialTime = remember {
-        if (SelectedClient.primeAccounts.contains(SelectedClient.clientName)) {
-            initialTime.plusMinutes(1)
-        } else {
-            Utils.generateRandomTime(initialTime, 30, 30) // Utils has +1 for max internally
-        }
-    }
     Column(
         modifier = Modifier
             .background(
@@ -540,10 +542,10 @@ fun BottomNavBar(modifier: Modifier = Modifier) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ChatListUI(modifier: Modifier = Modifier, chats: List<ChatItem>) {
+fun ChatListUI(modifier: Modifier = Modifier, chats: List<ChatItem>,randomInitialTime: LocalTime) {
     // Parse the initial time from the SelectedClient
     val initialTime = remember {
-        Utils.parseTimeString(SelectedClient.time)
+        (randomInitialTime)
     }
 
 
@@ -572,34 +574,9 @@ fun ChatListUI(modifier: Modifier = Modifier, chats: List<ChatItem>) {
         modifier = modifier.fillMaxSize()
     ) {
         itemsIndexed(chats) { index, chat ->
-            val timeOffset = remember {
-                if (SelectedClient.primeAccounts.contains(SelectedClient.clientName)) {
-                    val totalChats = chats.size
-                    val useSmallRange = Random.nextBoolean()
-
-                    val (minRange, maxRange) = if (useSmallRange) {
-                        1 to minOf(2, totalChats)
-                    } else {
-                        5 to minOf(7, totalChats)
-                    }
-
-                    val n1 = Random.nextInt(minRange, maxRange + 1)
-
-                    if (index < n1) 1 else 0
-                } else {
-                    ((10 - index) * 2) + Random.nextInt(0, 2) // Decrement time by 1 or 2 minutes
-                }
-            }
-
-            val adjustedTime = remember {
-                if (SelectedClient.primeAccounts.contains(SelectedClient.clientName)) {
+            val adjustedTime = remember(timeOffsets[index]) {
                     initialTime.plusMinutes(timeOffsets[index].toLong())
-                } else {
-                    initialTime.plusMinutes(timeOffset.toLong())
-
                 }
-            }
-
 
             ChatRow(chat = chat, time = adjustedTime)
             Divider(color = Color.Gray, thickness = 0.1.dp)
